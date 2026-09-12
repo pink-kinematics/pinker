@@ -20,10 +20,14 @@ from pinker.utils import custom_configuration_vector
 from pinker.visualization import start_meshcat_visualizer
 
 if __name__ == "__main__":
-    full_robot = load_robot_description("upkie_description", root_joint=None)
-    robot = full_robot.buildReducedRobot(
-        list_of_joints_to_lock=["left_wheel", "right_wheel"]
-    )
+    robot = load_robot_description("upkie_description", root_joint=None)
+
+    # A large posture cost on the wheels keeps them locked in place, as this
+    # example only bends the knees. Other joints are only regularized.
+    posture_cost = np.full(robot.model.nv, 1e-3)  # [cost] / [rad]
+    for wheel in ("left_wheel", "right_wheel"):
+        joint = robot.model.joints[robot.model.getJointId(wheel)]
+        posture_cost[joint.idx_v] = 1.0
 
     # Initialize visualization
     viz = start_meshcat_visualizer(robot)
@@ -45,7 +49,7 @@ if __name__ == "__main__":
             orientation_cost=0.0,  # [cost] / [rad]
         ),
         "posture": PostureTask(
-            cost=1e-3,  # [cost] / [rad]
+            cost=posture_cost,  # [cost] / [rad]
         ),
     }
 
