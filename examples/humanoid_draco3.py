@@ -16,6 +16,7 @@ from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
 from pinker import solve_ik
+from pinker.kinematics import rpy_to_matrix
 from pinker.tasks import FrameTask, JointCouplingTask, PostureTask
 from pinker.visualization import start_meshcat_visualizer
 
@@ -39,8 +40,8 @@ class WavingPose:
         """
         T = self.init.copy()
         R = T.rotation
-        R = np.dot(R, pin.utils.rpyToMatrix(0.0, 0.0, np.pi / 2))
-        R = np.dot(R, pin.utils.rpyToMatrix(0.0, -np.pi, 0.0))
+        R = np.dot(R, rpy_to_matrix(0.0, 0.0, np.pi / 2))
+        R = np.dot(R, rpy_to_matrix(0.0, -np.pi, 0.0))
         T.rotation = R
         T.translation[0] += 0.5
         T.translation[1] += 0.1 + 0.05 * np.sin(8.0 * t)

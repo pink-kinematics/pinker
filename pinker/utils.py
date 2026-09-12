@@ -108,4 +108,3 @@ class VectorSpace:
     def zeros(self) -> np.ndarray:
         """Zero vector of the space."""
         return self.__zeros
-

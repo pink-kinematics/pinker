@@ -16,6 +16,7 @@ from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
 from pinker import PinkerError, solve_ik
+from pinker.kinematics import rpy_to_matrix
 from pinker.tasks import FrameTask
 from pinker.visualization import start_meshcat_visualizer
 
@@ -70,7 +71,7 @@ if __name__ == "__main__":
         T = base_task.transform_target_to_world
         u = np.array([np.cos(t), np.sin(t)])
         T.translation[:2] = center_translation + CIRCLE_RADIUS * u
-        T.rotation = pin.utils.rpyToMatrix(0.0, 0.0, 0.5 * np.pi * t)
+        T.rotation = rpy_to_matrix(0.0, 0.0, 0.5 * np.pi * t)
 
         # Update fingertip target
         fingertip_task.transform_target_to_world.translation[2] = (
