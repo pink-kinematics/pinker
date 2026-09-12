@@ -179,8 +179,9 @@ proxsuite = "*"
 scs = "*"
 
 [tool.pixi.feature.test.tasks]
-test = { cmd = "python -m unittest discover --failfast", depends-on = ["build"] }
-test-kinematics = { cmd = "python -m unittest discover --failfast --start-directory tests/kinematics --top-level-directory .", depends-on = ["build"] }
+_test-kinematics = { cmd = "python -m unittest discover --failfast --start-directory tests/kinematics --top-level-directory tests/kinematics", depends-on = ["build"] }
+_test-python = { cmd = "python -m unittest discover --failfast", depends-on = ["build"] }
+test = { depends-on = ["_test-python", "_test-kinematics"] }
 
 [tool.pixi.environments]
 coverage = { features = ["py312", "coverage"], solve-group = "py312" }
