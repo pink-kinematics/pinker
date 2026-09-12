@@ -118,31 +118,40 @@ def assert_kinematics_equal(
 
 
 def assert_liegroup_equal(
-    mp: pin.Model, mk: kin.Model, q: np.ndarray, rng: np.random.Generator
+    pin_model: pin.Model,
+    kin_model: kin.Model,
+    q: np.ndarray,
+    rng: np.random.Generator,
 ) -> None:
     """Check configuration-space operations around one configuration."""
-    v = rng.standard_normal(mp.nv)
-    q_pin = pin.integrate(mp, q, v)
-    q_kin = kin.integrate(mk, q, v)
+    v = rng.standard_normal(pin_model.nv)
+    q_pin = pin.integrate(pin_model, q, v)
+    q_kin = kin.integrate(kin_model, q, v)
     assert np.allclose(q_pin, q_kin, atol=TOL)
     q2 = q_pin
     assert np.allclose(
-        pin.difference(mp, q, q2), kin.difference(mk, q, q2), atol=TOL
-    )
-    assert np.allclose(
-        pin.dDifference(mp, q, q2, pin.ARG0),
-        kin.dDifference(mk, q, q2, kin.ARG0),
+        pin.difference(pin_model, q, q2),
+        kin.difference(kin_model, q, q2),
         atol=TOL,
     )
     assert np.allclose(
-        pin.dDifference(mp, q, q2, pin.ARG1),
-        kin.dDifference(mk, q, q2, kin.ARG1),
+        pin.dDifference(pin_model, q, q2, pin.ARG0),
+        kin.dDifference(kin_model, q, q2, kin.ARG0),
+        atol=TOL,
+    )
+    assert np.allclose(
+        pin.dDifference(pin_model, q, q2, pin.ARG1),
+        kin.dDifference(kin_model, q, q2, kin.ARG1),
         atol=TOL,
     )
 
 
 def random_configuration(
-    mp: pin.Model, rng: np.random.Generator
+    pin_model: pin.Model, rng: np.random.Generator
 ) -> np.ndarray:
     """Random valid configuration, built by integrating a random tangent."""
-    return pin.integrate(mp, pin.neutral(mp), 2.0 * rng.standard_normal(mp.nv))
+    return pin.integrate(
+        pin_model,
+        pin.neutral(pin_model),
+        2.0 * rng.standard_normal(pin_model.nv),
+    )

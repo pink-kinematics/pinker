@@ -19,7 +19,7 @@ from compare import (
     random_configuration,
 )
 
-from pinker import kinematics as mq
+from pinker import kinematics as kin
 
 HERE = os.path.dirname(__file__)
 # Extra URDFs from a Pinocchio checkout next to the pinker workspace, when
@@ -46,16 +46,16 @@ def build_pair(urdf_path: str, root: str):
     }[root]
     root_mq = {
         "fixed": None,
-        "freeflyer": mq.JointModelFreeFlyer(),
-        "planar": mq.JointModelPlanar(),
+        "freeflyer": kin.JointModelFreeFlyer(),
+        "planar": kin.JointModelPlanar(),
     }[root]
-    mp = (
+    pin_model = (
         pin.buildModelFromUrdf(urdf_path, root_pin)
         if root_pin is not None
         else pin.buildModelFromUrdf(urdf_path)
     )
-    mm = mq.buildModelFromUrdf(urdf_path, root_mq)
-    return mp, mm
+    kin_model = kin.buildModelFromUrdf(urdf_path, root_mq)
+    return pin_model, kin_model
 
 
 class TestVersusPinocchio(unittest.TestCase):
@@ -66,85 +66,92 @@ class TestVersusPinocchio(unittest.TestCase):
         for urdf_path in URDF_PATHS:
             for root in ROOT_JOINTS:
                 with self.subTest(urdf=os.path.basename(urdf_path), root=root):
-                    mp, mm = build_pair(urdf_path, root)
-                    assert_models_equal(mp, mm)
+                    pin_model, mm = build_pair(urdf_path, root)
+                    assert_models_equal(pin_model, mm)
 
     def test_kinematics(self):
         """Kinematics match on random configurations."""
         for urdf_path in URDF_PATHS:
             for root in ROOT_JOINTS:
                 with self.subTest(urdf=os.path.basename(urdf_path), root=root):
-                    mp, mm = build_pair(urdf_path, root)
+                    pin_model, mm = build_pair(urdf_path, root)
                     rng = np.random.default_rng(42)
                     for _ in range(10):
-                        q = random_configuration(mp, rng)
-                        assert_kinematics_equal(mp, mm, q)
-                        assert_liegroup_equal(mp, mm, q, rng)
+                        q = random_configuration(pin_model, rng)
+                        assert_kinematics_equal(pin_model, mm, q)
+                        assert_liegroup_equal(pin_model, mm, q, rng)
 
     def test_spherical_joint(self):
         """Programmatic model with a spherical joint matches Pinocchio."""
-        mp = pin.Model()
-        mm = mq.Model()
+        pin_model = pin.Model()
+        kin_model = kin.Model()
         placement_1 = pin.SE3.Random()
-        j1p = mp.addJoint(
+        j1p = pin_model.addJoint(
             0, pin.JointModelSpherical(), placement_1, "shoulder"
         )
-        j1m = mm.addJoint(
+        j1m = kin_model.addJoint(
             0,
-            mq.JointModelSpherical(),
-            mq.SE3(placement_1.rotation, placement_1.translation),
+            kin.JointModelSpherical(),
+            kin.SE3(placement_1.rotation, placement_1.translation),
             "shoulder",
         )
-        mp.addJointFrame(j1p)
-        mm.addJointFrame(j1m)
+        pin_model.addJointFrame(j1p)
+        kin_model.addJointFrame(j1m)
         inertia = pin.Inertia.Random()
-        mp.appendBodyToJoint(j1p, inertia, pin.SE3.Identity())
-        mm.appendBodyToJoint(
-            j1m, mq.Inertia(inertia.mass, inertia.lever, inertia.inertia)
+        pin_model.appendBodyToJoint(j1p, inertia, pin.SE3.Identity())
+        kin_model.appendBodyToJoint(
+            j1m, kin.Inertia(inertia.mass, inertia.lever, inertia.inertia)
         )
-        mp.addBodyFrame("upper_arm", j1p, pin.SE3.Identity(), -1)
-        mm.addBodyFrame("upper_arm", j1m)
+        pin_model.addBodyFrame("upper_arm", j1p, pin.SE3.Identity(), -1)
+        kin_model.addBodyFrame("upper_arm", j1m)
         placement_2 = pin.SE3.Random()
-        j2p = mp.addJoint(j1p, pin.JointModelRY(), placement_2, "elbow")
-        j2m = mm.addJoint(
+        j2p = pin_model.addJoint(j1p, pin.JointModelRY(), placement_2, "elbow")
+        j2m = kin_model.addJoint(
             j1m,
-            mq.JointModelRY(),
-            mq.SE3(placement_2.rotation, placement_2.translation),
+            kin.JointModelRY(),
+            kin.SE3(placement_2.rotation, placement_2.translation),
             "elbow",
         )
-        mp.addJointFrame(j2p)
-        mm.addJointFrame(j2m)
-        mp.appendBodyToJoint(j2p, inertia, pin.SE3.Identity())
-        mm.appendBodyToJoint(
-            j2m, mq.Inertia(inertia.mass, inertia.lever, inertia.inertia)
+        pin_model.addJointFrame(j2p)
+        kin_model.addJointFrame(j2m)
+        pin_model.appendBodyToJoint(j2p, inertia, pin.SE3.Identity())
+        kin_model.appendBodyToJoint(
+            j2m, kin.Inertia(inertia.mass, inertia.lever, inertia.inertia)
         )
-        mp.addBodyFrame("forearm", j2p, pin.SE3.Identity(), -1)
-        mm.addBodyFrame("forearm", j2m)
+        pin_model.addBodyFrame("forearm", j2p, pin.SE3.Identity(), -1)
+        kin_model.addBodyFrame("forearm", j2m)
 
         rng = np.random.default_rng(7)
         for _ in range(10):
-            q = random_configuration(mp, rng)
-            assert_kinematics_equal(mp, mm, q)
-            assert_liegroup_equal(mp, mm, q, rng)
+            q = random_configuration(pin_model, rng)
+            assert_kinematics_equal(pin_model, kin_model, q)
+            assert_liegroup_equal(pin_model, kin_model, q, rng)
 
     def test_neutral_and_limits(self):
         """Neutral configuration and limit vectors match."""
         for root in ROOT_JOINTS:
             with self.subTest(root=root):
-                mp, mm = build_pair(URDF_PATHS[0], root)
-                self.assertTrue(np.allclose(pin.neutral(mp), mq.neutral(mm)))
+                pin_model, kin_model = build_pair(URDF_PATHS[0], root)
                 self.assertTrue(
-                    np.allclose(mp.velocityLimit, mm.velocityLimit)
+                    np.allclose(pin.neutral(pin_model), kin.neutral(kin_model))
+                )
+                self.assertTrue(
+                    np.allclose(
+                        pin_model.velocityLimit, kin_model.velocityLimit
+                    )
                 )
 
     def test_frame_lookup_matches(self):
         """existFrame/getFrameId behave like Pinocchio, including misses."""
-        mp, mm = build_pair(URDF_PATHS[0], "fixed")
-        for frame in mm.frames:
-            self.assertTrue(mp.existFrame(frame.name))
-            self.assertTrue(mm.existFrame(frame.name))
+        pin_model, kin_model = build_pair(URDF_PATHS[0], "fixed")
+        for frame in kin_model.frames:
+            self.assertTrue(pin_model.existFrame(frame.name))
+            self.assertTrue(kin_model.existFrame(frame.name))
             self.assertEqual(
-                mp.getFrameId(frame.name), mm.getFrameId(frame.name)
+                pin_model.getFrameId(frame.name),
+                kin_model.getFrameId(frame.name),
             )
-        self.assertFalse(mm.existFrame("no_such_frame"))
-        self.assertEqual(mm.getFrameId("no_such_frame"), mm.nframes)
+        self.assertFalse(kin_model.existFrame("no_such_frame"))
+        self.assertEqual(
+            kin_model.getFrameId("no_such_frame"), kin_model.nframes
+        )
