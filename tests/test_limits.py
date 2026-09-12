@@ -11,9 +11,9 @@ import numpy as np
 import pinocchio as pin
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.limits import ConfigurationLimit, VelocityLimit
-from pink.solve_ik import build_ik
+from pinker import Configuration
+from pinker.limits import ConfigurationLimit, VelocityLimit
+from pinker.solve_ik import build_ik
 
 
 class TestLimits(unittest.TestCase):

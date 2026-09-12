@@ -162,7 +162,7 @@ class RelativeFrameTask(Task):
 
         where :math:`b` denotes our frame, :math:`t` the target frame and
         :math:`0` the inertial frame. See also
-        :func:`pink.tasks.task.Task.compute_error` for more context.
+        :func:`pinker.tasks.task.Task.compute_error` for more context.
 
         Args:
             configuration: Robot configuration :math:`q`.
@@ -216,8 +216,8 @@ class RelativeFrameTask(Task):
 
         The formula implemented here is more general than the one detailed in
         [Caron2023]_. See also
-        :func:`pink.tasks.task.Task.compute_jacobian` for more context on task
-        Jacobians.
+        :func:`pinker.tasks.task.Task.compute_jacobian` for more context on
+        task Jacobians.
 
         Args:
             configuration: Robot configuration :math:`q`.

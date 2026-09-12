@@ -1,4 +1,4 @@
-:github_url: https://github.com/pink-kinematics/pink/tree/main/doc/limits.rst
+:github_url: https://github.com/pink-kinematics/pinker/tree/main/doc/limits.rst
 
 .. _Limits:
 
@@ -6,5 +6,5 @@
 Limits
 ******
 
-.. automodule:: pink.limits
+.. automodule:: pinker.limits
     :members:

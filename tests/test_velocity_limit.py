@@ -11,8 +11,8 @@ import numpy as np
 import pinocchio as pin
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink.exceptions import PinkError
-from pink.limits import VelocityLimit
+from pinker.exceptions import PinkerError
+from pinker.limits import VelocityLimit
 
 
 class TestVelocityLimit(unittest.TestCase):
@@ -56,7 +56,7 @@ class TestVelocityLimit(unittest.TestCase):
 
     def test_velocity_limit_argument_wrong_shape(self):
         """A velocity_limit of the wrong dimension is rejected."""
-        with self.assertRaises(PinkError):
+        with self.assertRaises(PinkerError):
             VelocityLimit(
                 self.model, velocity_limit=np.ones(self.model.nv + 1)
             )

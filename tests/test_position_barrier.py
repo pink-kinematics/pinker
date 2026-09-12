@@ -10,9 +10,9 @@ import unittest
 import numpy as np
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.barriers import PositionBarrier
-from pink.exceptions import NoPositionLimitProvided
+from pinker import Configuration
+from pinker.barriers import PositionBarrier
+from pinker.exceptions import NoPositionLimitProvided
 
 
 class TestPositionBarrier(unittest.TestCase):

@@ -38,7 +38,7 @@ class JointCouplingTask(LinearHolonomicTask):
     angle. The ratios are then :math:`r_1 = 1` and :math:`r_2 = -1`.
 
     This task is a particular case of the more general
-    :class:`pink.tasks.linear_holonomic_task.LinearHolonomicTask`.
+    :class:`pinker.tasks.linear_holonomic_task.LinearHolonomicTask`.
 
     Attributes:
         joint_names: a list of joint names consisting of a linear holonomic

@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pin-pink",
+# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pinker",
 # "qpsolvers", "robot_descriptions"]
 # ///
 
@@ -17,11 +17,11 @@ import qpsolvers
 from loop_rate_limiters import RateLimiter
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-import pink
-from pink import solve_ik
-from pink.barriers import PositionBarrier
-from pink.tasks import FrameTask, PostureTask
-from pink.visualization import start_meshcat_visualizer
+import pinker
+from pinker import solve_ik
+from pinker.barriers import PositionBarrier
+from pinker.tasks import FrameTask, PostureTask
+from pinker.visualization import start_meshcat_visualizer
 
 if __name__ == "__main__":
     robot = load_robot_description(
@@ -53,7 +53,7 @@ if __name__ == "__main__":
         ]
     )
 
-    configuration = pink.Configuration(robot.model, robot.data, q_ref)
+    configuration = pinker.Configuration(robot.model, robot.data, q_ref)
 
     base_task = FrameTask(
         "base",

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # /// script
-# dependencies = ["daqp", "loop-rate-limiters", "viser", "pin-pink",
+# dependencies = ["daqp", "loop-rate-limiters", "viser", "pinker",
 # "qpsolvers", "robot_descriptions"]
 # ///
 
@@ -37,11 +37,11 @@ from pinocchio import visualize
 from robot_descriptions.loaders.pinocchio import load_robot_description
 from scipy.spatial.transform import Rotation, Slerp
 
-import pink
-from pink import solve_ik
-from pink.tasks import DampingTask, FrameTask, ManipulabilityTask, PostureTask
-from pink.utils import custom_configuration_vector
-from pink.visualization import start_viser_visualizer
+import pinker
+from pinker import solve_ik
+from pinker.tasks import DampingTask, FrameTask, ManipulabilityTask, PostureTask
+from pinker.utils import custom_configuration_vector
+from pinker.visualization import start_viser_visualizer
 
 WINDOW_DURATION = 5.0  # seconds of data to show in the manipulability plot
 CONTROL_FREQUENCY = 200.0  # Hz
@@ -310,14 +310,14 @@ if __name__ == "__main__":
     )
 
     # Create two separate configurations
-    configuration_manip_task = pink.Configuration(
+    configuration_manip_task = pinker.Configuration(
         robot.model,
         robot.data,
         q_ref,
         collision_model=robot.collision_model,
         collision_data=robot.collision_data,
     )
-    configuration_no_manip_task = pink.Configuration(
+    configuration_no_manip_task = pinker.Configuration(
         robot.model,
         robot.data,
         q_ref.copy(),

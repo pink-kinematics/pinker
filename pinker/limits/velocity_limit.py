@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, List, Optional, Tuple
 import numpy as np
 import pinocchio as pin
 
-from ..exceptions import PinkError
+from ..exceptions import PinkerError
 from .limit import Limit
 
 if TYPE_CHECKING:
@@ -57,7 +57,7 @@ class VelocityLimit(Limit):
         else:
             velocity_limit = np.asarray(velocity_limit, dtype=float).flatten()
             if model.nv > 0 and velocity_limit.shape[0] != model.nv:
-                raise PinkError(f"{velocity_limit.shape=} but {model.nv=}")
+                raise PinkerError(f"{velocity_limit.shape=} but {model.nv=}")
 
         has_velocity_limit = np.logical_and(
             velocity_limit < 1e20,

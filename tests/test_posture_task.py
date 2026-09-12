@@ -11,9 +11,9 @@ import numpy as np
 import pinocchio as pin
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.exceptions import TargetNotSet
-from pink.tasks import PostureTask
+from pinker import Configuration
+from pinker.exceptions import TargetNotSet
+from pinker.tasks import PostureTask
 
 
 class TestPostureTask(unittest.TestCase):

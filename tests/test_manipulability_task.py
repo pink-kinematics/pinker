@@ -9,8 +9,8 @@ import numpy as np
 import pinocchio as pin
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.tasks import ManipulabilityTask
+from pinker import Configuration
+from pinker.tasks import ManipulabilityTask
 
 
 class TestManipulabilityTask(unittest.TestCase):

@@ -1,4 +1,4 @@
-:github_url: https://github.com/pink-kinematics/pink/tree/main/doc/inverse-kinematics.rst
+:github_url: https://github.com/pink-kinematics/pinker/tree/main/doc/inverse-kinematics.rst
 
 ******************
 Inverse kinematics
@@ -18,9 +18,9 @@ instance how it appears in a closed-loop inverse kinematics:
 
 See the ``examples/`` folder in the repository for complete use cases.
 
-.. autofunction:: pink.solve_ik.solve_ik
+.. autofunction:: pinker.solve_ik.solve_ik
 
-It is also possible to ask Pink to only build the underlying inverse kinematics
+It is also possible to ask Pinker to only build the underlying inverse kinematics
 problem via the :func:`.build_ik` function:
 
-.. autofunction:: pink.solve_ik.build_ik
+.. autofunction:: pinker.solve_ik.build_ik

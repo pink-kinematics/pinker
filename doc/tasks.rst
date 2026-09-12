@@ -1,4 +1,4 @@
-:github_url: https://github.com/pink-kinematics/pink/tree/main/doc/tasks.rst
+:github_url: https://github.com/pink-kinematics/pinker/tree/main/doc/tasks.rst
 
 .. _Tasks:
 
@@ -6,5 +6,5 @@
 Tasks
 *****
 
-.. automodule:: pink.tasks
+.. automodule:: pinker.tasks
     :members:

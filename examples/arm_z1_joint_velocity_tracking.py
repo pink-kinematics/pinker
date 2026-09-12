@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pin-pink",
+# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pinker",
 # "qpsolvers", "robot_descriptions"]
 # ///
 
@@ -15,10 +15,10 @@ import qpsolvers
 from loop_rate_limiters import RateLimiter
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-import pink
-from pink import solve_ik
-from pink.tasks import JointVelocityTask
-from pink.visualization import start_meshcat_visualizer
+import pinker
+from pinker import solve_ik
+from pinker.tasks import JointVelocityTask
+from pinker.visualization import start_meshcat_visualizer
 
 if __name__ == "__main__":
     print(
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     )
     robot = load_robot_description("z1_description")
     viz = start_meshcat_visualizer(robot)
-    configuration = pink.Configuration(robot.model, robot.data, robot.q0)
+    configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
     viz.display(configuration.q)
 
     # Our only task in this example is a joint-velocity task

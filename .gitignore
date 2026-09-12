@@ -1,11 +1,16 @@
+*.egg-info/
 *.pyc
 *.pyo
+*.so
 .coverage
 .pixi
+.pytest_cache
 .ropeproject
 .tox
+__pycache__/
 _build
+build
 dist
 doc/build
-examples/pink
+examples/pinker
 htmlcov

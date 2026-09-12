@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["clarabel", "loop-rate-limiters", "meshcat", "pin-pink",
+# dependencies = ["clarabel", "loop-rate-limiters", "meshcat", "pinker",
 # "qpsolvers", "robot_descriptions", "xacrodoc"]
 # ///
 
@@ -18,10 +18,10 @@ from loop_rate_limiters import RateLimiter
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import meshcat_shapes
-import pink
-from pink import solve_ik
-from pink.tasks import FrameTask, PostureTask
-from pink.visualization import start_meshcat_visualizer
+import pinker
+from pinker import solve_ik
+from pinker.tasks import FrameTask, PostureTask
+from pinker.visualization import start_meshcat_visualizer
 
 # Target circle parameters
 CENTER = np.array([0.3, 0.0, 0.5])  # m, in the world frame
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     tasks = [end_effector_task, posture_task]
 
     # Initialize configuration
-    configuration = pink.Configuration(robot.model, robot.data, robot.q0)
+    configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
     for task in tasks:
         task.set_target_from_configuration(configuration)
     viz.display(configuration.q)

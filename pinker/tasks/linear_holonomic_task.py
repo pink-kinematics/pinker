@@ -151,7 +151,7 @@ class LinearHolonomicTask(Task):
         The error function :math:`e(q) \in \mathbb{R}^{p}` is the quantity that
         the task aims to drive to zero (:math:`p` is the dimension of the
         task). See the documentation of
-        :func:`pink.tasks.task.Task.compute_error` for details.
+        :func:`pinker.tasks.task.Task.compute_error` for details.
 
         Args:
             configuration: Robot configuration :math:`q`.
@@ -173,8 +173,9 @@ class LinearHolonomicTask(Task):
     def compute_jacobian(self, configuration: Configuration) -> np.ndarray:
         r"""Compute the task Jacobian at a given configuration.
 
-        See the documentation of :func:`pink.tasks.task.Task.compute_jacobian`
-        for details on the task Jacobian.
+        See the documentation of
+        :func:`pinker.tasks.task.Task.compute_jacobian` for details on the
+        task Jacobian.
 
         Args:
             configuration: Robot configuration :math:`q`.

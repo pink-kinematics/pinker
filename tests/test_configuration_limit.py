@@ -11,8 +11,8 @@ import numpy as np
 import pinocchio as pin
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.limits import ConfigurationLimit
+from pinker import Configuration
+from pinker.limits import ConfigurationLimit
 
 
 class TestConfigurationLimit(unittest.TestCase):

@@ -11,9 +11,9 @@ import numpy as np
 import pinocchio as pin
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.limits import FloatingBaseVelocityLimit
-from pink.utils import get_joint_idx
+from pinker import Configuration
+from pinker.limits import FloatingBaseVelocityLimit
+from pinker.utils import get_joint_idx
 
 
 class TestFloatingBaseVelocityLimitPlanar(unittest.TestCase):

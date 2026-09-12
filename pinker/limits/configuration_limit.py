@@ -38,7 +38,7 @@ class ConfigurationLimit(Limit):
     Note:
         This limit assumes the current configuration :math:`q` is within
         bounds. This is why
-        :func:`pink.configuration.Configuration.check_limits` is called with
+        :func:`pinker.configuration.Configuration.check_limits` is called with
         the safety break by default when solving IK. If :math:`q` is out of
         bounds, the configuration limit still works, but it may yield a large
         displacement :math:`\Delta q` incompatible with e.g. a velocity limit.

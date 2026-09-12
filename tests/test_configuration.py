@@ -11,8 +11,8 @@ import numpy as np
 import pinocchio as pin
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.exceptions import FrameNotFound, NotWithinConfigurationLimits
+from pinker import Configuration
+from pinker.exceptions import FrameNotFound, NotWithinConfigurationLimits
 
 
 class TestConfiguration(unittest.TestCase):

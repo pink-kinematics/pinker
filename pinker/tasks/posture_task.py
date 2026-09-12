@@ -89,7 +89,7 @@ class PostureTask(Task):
 
             e(q) = q^* \ominus q
 
-        See :func:`pink.tasks.task.Task.compute_error` for more context.
+        See :func:`pinker.tasks.task.Task.compute_error` for more context.
 
         Args:
             configuration: Robot configuration :math:`q`.
@@ -117,7 +117,7 @@ class PostureTask(Task):
 
             J(q) \Delta q = \Delta q = \alpha (q^* \ominus q)
 
-        See :func:`pink.tasks.task.Task.compute_jacobian` for more context.
+        See :func:`pinker.tasks.task.Task.compute_jacobian` for more context.
 
         Args:
             configuration: Robot configuration :math:`q`.

@@ -12,9 +12,9 @@ import pinocchio as pin
 from qpsolvers import solve_qp
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.exceptions import TargetNotSet, TaskDefinitionError
-from pink.tasks import FrameTask
+from pinker import Configuration
+from pinker.exceptions import TargetNotSet, TaskDefinitionError
+from pinker.tasks import FrameTask
 
 
 class TestFrameTask(unittest.TestCase):

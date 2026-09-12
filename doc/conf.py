@@ -3,6 +3,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+"""Sphinx configuration for the Pinker documentation."""
+
 import re
 import sys
 from os.path import abspath, dirname, join
@@ -48,8 +50,8 @@ source_suffix = {".rst": "restructuredtext"}
 master_doc = "index"
 
 # General information about the project.
-project = "pink"
-copyright = "2022 Stéphane Caron."
+project = "pinker"
+copyright = "2026 CNRS"
 author = "Stéphane Caron"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -63,7 +65,7 @@ version = None  # read from __init__.py
 release = None  # read from __init__.py
 
 # Read version info directly from the module's __init__.py
-init_path = join(dirname(dirname(str(abspath(__file__)))), "pink")
+init_path = join(dirname(dirname(str(abspath(__file__)))), "pinker")
 with open(f"{init_path}/__init__.py", "r") as fh:
     for line in fh:
         match = re.match(
@@ -150,7 +152,7 @@ html_static_path = ["css", "images"]
 html_css_files = ["custom.css"]
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "pinkdoc"
+htmlhelp_basename = "pinkerdoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 

@@ -15,7 +15,7 @@ class OmniwheelTask(RollingTask):
     r"""Roll without slipping on a plane, allowing lateral motion.
 
     The name of this task comes from omniwheels, also known as poly wheels.
-    See the :class:`pink.tasks.rolling_task.RollingTask`.
+    See the :class:`pinker.tasks.rolling_task.RollingTask`.
 
     Attributes:
         hub_frame: Name of a frame attached to the hub of the wheel in the

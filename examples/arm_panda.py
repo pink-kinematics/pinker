@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # /// script
-# dependencies = ["daqp", "loop-rate-limiters", "viser", "pin-pink",
+# dependencies = ["daqp", "loop-rate-limiters", "viser", "pinker",
 # "qpsolvers", "robot_descriptions"]
 # ///
 
@@ -12,11 +12,11 @@ from loop_rate_limiters import RateLimiter
 from robot_descriptions.loaders.pinocchio import load_robot_description
 from scipy.spatial.transform import Rotation
 
-import pink
-from pink import solve_ik
-from pink.tasks import DampingTask, FrameTask, PostureTask
-from pink.utils import custom_configuration_vector
-from pink.visualization import start_viser_visualizer
+import pinker
+from pinker import solve_ik
+from pinker.tasks import DampingTask, FrameTask, PostureTask
+from pinker.utils import custom_configuration_vector
+from pinker.visualization import start_viser_visualizer
 
 if __name__ == "__main__":
     robot = load_robot_description("panda_description", root_joint=None)
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         panda_joint7=0.785398,
     )
 
-    configuration = pink.Configuration(robot.model, robot.data, q_ref)
+    configuration = pinker.Configuration(robot.model, robot.data, q_ref)
 
     configuration.update(q_ref)
 

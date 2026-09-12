@@ -1,17 +1,17 @@
-:github_url: https://github.com/pink-kinematics/pink/tree/main/doc/introduction.rst
+:github_url: https://github.com/pink-kinematics/pinker/tree/main/doc/introduction.rst
 
 ************
 Introduction
 ************
 
-Inverse kinematics (IK) is the problem of computing *motions* (in Pink: velocities) that achieve a given set of *tasks*, such as putting a foot on a surface, moving the center of mass to a target location, etc.
+Inverse kinematics (IK) is the problem of computing *motions* (in Pinker: velocities) that achieve a given set of *tasks*, such as putting a foot on a surface, moving the center of mass to a target location, etc.
 
 This documentation assumes you are already familiar with task-based inverse kinematics. You can check out for instance this `post on inverse kinematics <https://scaron.info/robot-locomotion/inverse-kinematics.html>`__ for a general introduction.
 
 Notations
 =========
 
-In Pink, we adopt the subscript right-to-left convention for transforms, and superscript notation to indicate the frame of a motion or force vector:
+In Pinker, we adopt the subscript right-to-left convention for transforms, and superscript notation to indicate the frame of a motion or force vector:
 
 .. list-table::
     :class: cheatsheet
@@ -50,13 +50,13 @@ See also this `spatial algebra cheat sheet
 Configuration
 =============
 
-.. automodule:: pink.configuration
+.. automodule:: pinker.configuration
     :members:
 
 Task formalism
 ==============
 
-The *task function approach* followed in Pink, and many works before it, was originally formalized by Samson, Espiau and Le Borgne in [Samson1991]_.
+The *task function approach* followed in Pinker, and many works before it, was originally formalized by Samson, Espiau and Le Borgne in [Samson1991]_.
 
-.. automodule:: pink.tasks.task
+.. automodule:: pinker.tasks.task
     :members:

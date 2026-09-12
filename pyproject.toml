@@ -1,24 +1,26 @@
 [build-system]
-requires = ["flit_core >=2,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["setuptools >=77", "numpy >=2.0.0"]
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "pin-pink"
+name = "pinker"
+dynamic = ["version"]
 readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+description = "Python inverse kinematics for embedded robots"
 authors = [
     {name = "Stéphane Caron", email = "stephane.caron@normalesup.org"},
 ]
 maintainers = [
     {name = "Stéphane Caron", email = "stephane.caron@normalesup.org"},
 ]
-dynamic = ['version', 'description']
 requires-python = ">=3.10"
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 3 - Alpha",
     "Framework :: Robot Framework :: Library",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -33,29 +35,34 @@ dependencies = [
     "qpsolvers >=4.3.1",
     "typing-extensions",
 ]
-keywords = ["inverse", "kinematics", "pinocchio"]
+keywords = ["inverse", "kinematics", "pink"]
 
 [project.urls]
-Homepage = "https://stephane-caron.github.io/pink/"
-Documentation = "https://stephane-caron.github.io/pink/"
-Source = "https://github.com/pink-kinematics/pink"
-Tracker = "https://github.com/pink-kinematics/pink/issues"
-Changelog = "https://github.com/pink-kinematics/pink/blob/main/CHANGELOG.md"
+Homepage = "https://pink-kinematics.github.io/pinker/"
+Documentation = "https://pink-kinematics.github.io/pinker/"
+Source = "https://github.com/pink-kinematics/pinker"
+Tracker = "https://github.com/pink-kinematics/pinker/issues"
+Changelog = "https://github.com/pink-kinematics/pinker/blob/main/CHANGELOG.md"
 
-[tool.flit.module]
-name = "pink"
+[tool.setuptools.dynamic]
+version = {attr = "pinker.__version__"}
 
-[tool.flit.sdist]
-exclude = [
-    ".git*",
-    "CITATION.cff",
-    "CONTRIBUTING.md",
-    "doc/",
-    "examples/",
-    "pixi.lock",
-    "tests/",
-    "uv.lock",
+[tool.setuptools]
+packages = [
+    "pinker",
+    "pinker.barriers",
+    "pinker.kinematics",
+    "pinker.limits",
+    "pinker.tasks",
 ]
+
+[tool.mypy]
+ignore_missing_imports = true
+
+# The kinematics backend is not type-checked yet
+[[tool.mypy.overrides]]
+module = "pinker.kinematics.*"
+ignore_errors = true
 
 [tool.pylint]
 disable = [
@@ -99,22 +106,28 @@ platforms = ["linux-64", "linux-aarch64", "osx-arm64"]
 
 [tool.pixi.dependencies]
 python = ">=3.10"
+c-compiler = "*"
 loop-rate-limiters = ">=0.1.0"
 numpy = ">=1.19.0"
 pinocchio = ">=2.6.3"
+pip = "*"
 qpsolvers = ">=4.3.1"
 robot_descriptions = ">=1.9.0"
+setuptools = ">=77"
 
 [tool.pixi.pypi-dependencies]
 xacrodoc = ">=2.0.0"
+
+[tool.pixi.tasks]
+build = "pip install --no-build-isolation --no-deps --force-reinstall -e ."
 
 [tool.pixi.feature.coverage.dependencies]
 coveralls = ">=4.0.0"
 
 [tool.pixi.feature.coverage.tasks]
 coverage-erase = { cmd = "coverage erase" }
-coverage-run = { cmd = "coverage run -m unittest discover --failfast", depends-on = ["coverage-erase"] }
-coverage = { cmd = "coverage report --include=\"pink/*\"", depends-on = ["coverage-run"] }
+coverage-run = { cmd = "coverage run -m unittest discover --failfast", depends-on = ["coverage-erase", "build"] }
+coverage = { cmd = "coverage report --include=\"pinker/*\"", depends-on = ["coverage-run"] }
 coveralls = { cmd = "coveralls --service=github" }
 
 [tool.pixi.feature.docs.dependencies]
@@ -136,10 +149,10 @@ pylint = ">=2.8.2"
 ruff = ">=0.4.3"
 
 [tool.pixi.feature.lint.tasks]
-_lint-mypy = "mypy pink --ignore-missing-imports"
-_lint-pylint = "pylint pink --exit-zero --rcfile=pyproject.toml"
-_lint-ruff = "ruff check pink && ruff format --check pink"
-format = "ruff format pink"
+_lint-mypy = "mypy pinker --ignore-missing-imports"
+_lint-pylint = "pylint pinker --exit-zero --rcfile=pyproject.toml"
+_lint-ruff = "ruff check pinker && ruff format --check pinker"
+format = "ruff format pinker"
 lint = { depends-on = ["_lint-mypy", "_lint-pylint", "_lint-ruff"] }
 
 [tool.pixi.feature.py310.dependencies]
@@ -164,7 +177,8 @@ proxsuite = "*"
 scs = "*"
 
 [tool.pixi.feature.test.tasks]
-test = "python -m unittest discover --failfast"
+test = { cmd = "python -m unittest discover --failfast", depends-on = ["build"] }
+test-kinematics = { cmd = "python -m unittest discover --failfast --start-directory tests/kinematics --top-level-directory .", depends-on = ["build"] }
 
 [tool.pixi.environments]
 coverage = { features = ["py312", "coverage"], solve-group = "py312" }

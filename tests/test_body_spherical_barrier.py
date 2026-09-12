@@ -10,9 +10,9 @@ import unittest
 import numpy as np
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.barriers import BodySphericalBarrier
-from pink.exceptions import NegativeMinimumDistance
+from pinker import Configuration
+from pinker.barriers import BodySphericalBarrier
+from pinker.exceptions import NegativeMinimumDistance
 
 
 class TestBodySphericalBarrier(unittest.TestCase):

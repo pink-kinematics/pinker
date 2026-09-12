@@ -10,7 +10,7 @@ from typing import Tuple
 import numpy as np
 import pinocchio as pin
 
-from .exceptions import ConfigurationError, PinkError
+from .exceptions import ConfigurationError, PinkerError
 
 
 def custom_configuration_vector(robot: pin.Model, **kwargs) -> np.ndarray:
@@ -69,7 +69,7 @@ def get_joint_idx(model: pin.Model, joint_name: str) -> Tuple[int, int]:
         joint_id = model.getJointId(joint_name)
         joint = model.joints[joint_id]
         return joint.idx_q, joint.idx_v
-    raise PinkError(
+    raise PinkerError(
         f"cannot find the joint index corresponding to joint {joint_name}"
     )
 

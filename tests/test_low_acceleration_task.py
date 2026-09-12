@@ -10,8 +10,8 @@ import unittest
 import numpy as np
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.tasks import LowAccelerationTask
+from pinker import Configuration
+from pinker.tasks import LowAccelerationTask
 
 
 class TestLowAccelerationTask(unittest.TestCase):

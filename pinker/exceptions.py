@@ -3,20 +3,20 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Exceptions specific to Pink."""
+"""Exceptions specific to Pinker."""
 
 import qpsolvers
 
 
-class PinkError(Exception):
-    """Base class for Pink exceptions."""
+class PinkerError(Exception):
+    """Base class for Pinker exceptions."""
 
 
-class ConfigurationError(PinkError):
+class ConfigurationError(PinkerError):
     """Exception raised when encountering an invalid configuration vector."""
 
 
-class FrameNotFound(PinkError):
+class FrameNotFound(PinkerError):
     """Exception raised when a frame is not found in the robot model."""
 
     def __init__(self, name: str, frames: list) -> None:
@@ -34,19 +34,19 @@ class FrameNotFound(PinkError):
         super().__init__(self.message)
 
 
-class InvalidCollisionPairs(PinkError):
+class InvalidCollisionPairs(PinkerError):
     """IF the number of collision pairs is invalid."""
 
 
-class NegativeMinimumDistance(PinkError):
+class NegativeMinimumDistance(PinkerError):
     """If the minimum distance in body spherical barrier is negative."""
 
 
-class NoPositionLimitProvided(PinkError):
+class NoPositionLimitProvided(PinkerError):
     """If neither minimum nor maximum position limits are provided."""
 
 
-class NoSolutionFound(PinkError):
+class NoSolutionFound(PinkerError):
     """The QP solver did not find a solution to the differential IK problem."""
 
     def __init__(
@@ -67,7 +67,7 @@ class NoSolutionFound(PinkError):
         self.results = results
 
 
-class NotWithinConfigurationLimits(PinkError):
+class NotWithinConfigurationLimits(PinkerError):
     """Exception thrown when a robot configuration violates its limits.
 
     Attributes:
@@ -108,13 +108,13 @@ class NotWithinConfigurationLimits(PinkError):
         super().__init__(self.message)
 
 
-class TargetNotSet(PinkError):
+class TargetNotSet(PinkerError):
     """Exception raised when attempting to compute with an unset target."""
 
 
-class TaskDefinitionError(PinkError):
+class TaskDefinitionError(PinkerError):
     """Exception raised when a task definition is ill-formed."""
 
 
-class TaskJacobianNotSet(PinkError):
+class TaskJacobianNotSet(PinkerError):
     """Exception raised when attempting to compute without a task Jacobian."""

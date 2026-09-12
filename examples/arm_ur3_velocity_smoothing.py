@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pin-pink",
+# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pinker",
 # "qpsolvers", "robot_descriptions", "xacrodoc"]
 # ///
 
@@ -17,12 +17,12 @@ import qpsolvers
 from loop_rate_limiters import RateLimiter
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-import pink
-from pink import solve_ik
-from pink.limits import AccelerationLimit
-from pink.tasks import DampingTask, FrameTask, PostureTask
-from pink.utils import custom_configuration_vector
-from pink.visualization import start_meshcat_visualizer
+import pinker
+from pinker import solve_ik
+from pinker.limits import AccelerationLimit
+from pinker.tasks import DampingTask, FrameTask, PostureTask
+from pinker.utils import custom_configuration_vector
+from pinker.visualization import start_meshcat_visualizer
 
 NB_STEPS = 3000  # number of steps to run the example for
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
         shoulder_pan_joint=1.0,
         elbow_joint=1.0,
     )
-    configuration = pink.Configuration(robot.model, robot.data, q_ref)
+    configuration = pinker.Configuration(robot.model, robot.data, q_ref)
     end_effector_task.set_target_from_configuration(configuration)
     posture_task.set_target_from_configuration(configuration)
     viz.display(configuration.q)

@@ -5,11 +5,10 @@
 
 """Configuration of a robot model.
 
-Pink uses `Pinocchio <https://github.com/stack-of-tasks/pinocchio>`__ for
-forward kinematics. A :class:`Configuration` holds a Pinocchio model and data
-for this model where forward kinematics have been run. This means that the
-geometric state of the model has been computed, and quantities such as frame
-transforms and frame Jacobians are available.
+A :class:`Configuration` holds a robot model and data for this model where
+forward kinematics have been run. This means that the geometric state of the
+model has been computed, and quantities such as frame transforms and frame
+Jacobians are available.
 """
 
 import logging
@@ -26,9 +25,9 @@ from .utils import VectorSpace, get_root_joint_dim
 class Configuration:
     """Type indicating that configuration-dependent quantities are available.
 
-    In Pink, this type enables access to frame transforms and frame Jacobians.
-    We rely on typing to make sure the proper forward kinematics functions have
-    been called beforehand. In Pinocchio, these functions are:
+    In Pinker, this type enables access to frame transforms and frame
+    Jacobians. We rely on typing to make sure the proper forward kinematics
+    functions have been called beforehand:
 
     .. code:: python
 

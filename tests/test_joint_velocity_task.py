@@ -11,9 +11,9 @@ import numpy as np
 import pinocchio as pin
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.exceptions import TargetNotSet, TaskDefinitionError
-from pink.tasks import JointVelocityTask
+from pinker import Configuration
+from pinker.exceptions import TargetNotSet, TaskDefinitionError
+from pinker.tasks import JointVelocityTask
 
 
 class TestJointVelocityTask(unittest.TestCase):

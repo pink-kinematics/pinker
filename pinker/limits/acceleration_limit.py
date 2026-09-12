@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, List, Optional, Tuple
 import numpy as np
 import pinocchio as pin
 
-from ..exceptions import PinkError
+from ..exceptions import PinkerError
 from .limit import Limit
 
 if TYPE_CHECKING:
@@ -55,7 +55,7 @@ class AccelerationLimit(Limit):
         """
         acceleration_limit = acceleration_limit.flatten()
         if model.nv > 0 and acceleration_limit.shape[0] != model.nv:
-            raise PinkError(f"{acceleration_limit.shape=} but {model.nv=}")
+            raise PinkerError(f"{acceleration_limit.shape=} but {model.nv=}")
 
         has_acceleration_limit = np.logical_and(
             acceleration_limit < 1e20,

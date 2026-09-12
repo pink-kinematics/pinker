@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""In Pink, all kinematic tasks derive from the :class:`Task` base class.
+"""In Pinker, all kinematic tasks derive from the :class:`Task` base class.
 
 The formalism used in the library is written down in `this note on task-based
 inverse kinematics

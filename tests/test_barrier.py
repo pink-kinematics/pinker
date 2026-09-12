@@ -11,8 +11,8 @@ import numpy as np
 import pinocchio as pin
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.barriers import PositionBarrier
+from pinker import Configuration
+from pinker.barriers import PositionBarrier
 
 
 class TestBarrier(unittest.TestCase):

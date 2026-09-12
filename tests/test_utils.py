@@ -13,8 +13,8 @@ import pinocchio as pin
 from robot_descriptions.iiwa14_description import PACKAGE_PATH, REPOSITORY_PATH
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink.exceptions import ConfigurationError
-from pink.utils import (
+from pinker.exceptions import ConfigurationError
+from pinker.utils import (
     VectorSpace,
     custom_configuration_vector,
     process_collision_pairs,

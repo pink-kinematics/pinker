@@ -3,10 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Inverse kinematics for articulated robot models, based on Pinocchio."""
+"""Inverse kinematics for articulated robot models."""
 
 from .configuration import Configuration
-from .exceptions import PinkError
+from .exceptions import PinkerError
 from .solve_ik import build_ik, solve_ik
 from .tasks import (
     FrameTask,
@@ -18,7 +18,7 @@ from .tasks import (
 )
 from .utils import custom_configuration_vector
 
-__version__ = "4.4.0"
+__version__ = "0.1.0"
 
 __all__ = [
     "Configuration",
@@ -26,7 +26,7 @@ __all__ = [
     "JointCouplingTask",
     "JointVelocityTask",
     "LinearHolonomicTask",
-    "PinkError",
+    "PinkerError",
     "PostureTask",
     "Task",
     "build_ik",

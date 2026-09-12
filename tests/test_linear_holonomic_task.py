@@ -11,10 +11,10 @@ import numpy as np
 import pinocchio as pin
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.exceptions import TaskDefinitionError, TaskJacobianNotSet
-from pink.tasks import LinearHolonomicTask
-from pink.utils import get_joint_idx
+from pinker import Configuration
+from pinker.exceptions import TaskDefinitionError, TaskJacobianNotSet
+from pinker.tasks import LinearHolonomicTask
+from pinker.utils import get_joint_idx
 
 
 class TestLinearHolonomicTask(unittest.TestCase):

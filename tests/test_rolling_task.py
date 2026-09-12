@@ -10,8 +10,8 @@ import unittest
 import numpy as np
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration
-from pink.tasks import RollingTask
+from pinker import Configuration
+from pinker.tasks import RollingTask
 
 
 class TestRollingTask(unittest.TestCase):

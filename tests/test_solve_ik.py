@@ -13,10 +13,10 @@ import qpsolvers
 from numpy.linalg import norm
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration, build_ik, solve_ik
-from pink.barriers import PositionBarrier
-from pink.exceptions import NotWithinConfigurationLimits
-from pink.tasks import ComTask, FrameTask
+from pinker import Configuration, build_ik, solve_ik
+from pinker.barriers import PositionBarrier
+from pinker.exceptions import NotWithinConfigurationLimits
+from pinker.tasks import ComTask, FrameTask
 
 
 def _numpy_supports_copy_keyword() -> bool:

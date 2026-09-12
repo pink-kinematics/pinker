@@ -11,9 +11,9 @@ import numpy as np
 import pinocchio as pin
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from pink import Configuration, solve_ik
-from pink.limits import AccelerationLimit
-from pink.tasks import FrameTask
+from pinker import Configuration, solve_ik
+from pinker.limits import AccelerationLimit
+from pinker.tasks import FrameTask
 
 # UR3 max acceleration taken as 800 deg/s² ≈ 14 rad/s² in these tests
 # https://forum.universal-robots.com/t/maximum-axis-speed-acceleration/13338/2
