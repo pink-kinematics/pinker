@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Lie-algebra operations: internal consistency and Pinocchio equivalence."""
@@ -10,13 +7,13 @@ import unittest
 import numpy as np
 import pinocchio as pin
 
-from pinker import kinematics as mq
+from pinker import kinematics as kin
 
 
-def random_se3(rng: np.random.Generator) -> mq.SE3:
+def random_se3(rng: np.random.Generator) -> kin.SE3:
     """Random rigid transform."""
     w = rng.standard_normal(3)
-    return mq.SE3(mq.exp3(w), rng.standard_normal(3))
+    return kin.SE3(kin.exp3(w), rng.standard_normal(3))
 
 
 class TestLie(unittest.TestCase):
@@ -31,8 +28,8 @@ class TestLie(unittest.TestCase):
             angle = np.linalg.norm(nu[3:])
             if angle >= np.pi:
                 nu[3:] *= 0.9 * np.pi / angle
-            M = mq.exp6(nu)
-            self.assertTrue(np.allclose(mq.log(M).vector, nu, atol=1e-10))
+            M = kin.exp6(nu)
+            self.assertTrue(np.allclose(kin.log(M).vector, nu, atol=1e-10))
 
     def test_log_matches_pinocchio(self):
         """log6 and Jlog6 match Pinocchio, including near-pi rotations."""
@@ -42,24 +39,24 @@ class TestLie(unittest.TestCase):
             M_pin = pin.SE3(M.rotation, M.translation)
             self.assertTrue(
                 np.allclose(
-                    mq.log(M).vector, pin.log(M_pin).vector, atol=1e-10
+                    kin.log(M).vector, pin.log(M_pin).vector, atol=1e-10
                 )
             )
             self.assertTrue(
-                np.allclose(mq.Jlog6(M), pin.Jlog6(M_pin), atol=1e-10)
+                np.allclose(kin.Jlog6(M), pin.Jlog6(M_pin), atol=1e-10)
             )
         for _ in range(100):
             axis = rng.standard_normal(3)
             axis /= np.linalg.norm(axis)
             for theta in (np.pi, np.pi - 1e-7, np.pi - 1e-3, -np.pi + 1e-5):
                 with self.subTest(theta=theta):
-                    R = mq.exp3(axis * theta)
+                    R = kin.exp3(axis * theta)
                     p = rng.standard_normal(3)
-                    M = mq.SE3(R, p)
+                    M = kin.SE3(R, p)
                     M_pin = pin.SE3(R, p)
                     self.assertTrue(
                         np.allclose(
-                            mq.log(M).vector,
+                            kin.log(M).vector,
                             pin.log(M_pin).vector,
                             atol=1e-6,
                         )
@@ -75,14 +72,14 @@ class TestLie(unittest.TestCase):
         eps = 1e-7
         for _ in range(20):
             M = random_se3(rng)
-            J = mq.Jlog6(M)
+            J = kin.Jlog6(M)
             J_fd = np.empty((6, 6))
-            log_M = mq.log(M).vector
+            log_M = kin.log(M).vector
             for k in range(6):
                 delta = np.zeros(6)
                 delta[k] = eps
-                M_pert = M * mq.exp6(delta)
-                J_fd[:, k] = (mq.log(M_pert).vector - log_M) / eps
+                M_pert = M * kin.exp6(delta)
+                J_fd[:, k] = (kin.log(M_pert).vector - log_M) / eps
             self.assertTrue(np.allclose(J, J_fd, atol=1e-5))
 
     def test_se3_actions(self):
@@ -131,5 +128,5 @@ class TestLie(unittest.TestCase):
         for _ in range(10):
             v, w = rng.standard_normal(3), rng.standard_normal(3)
             self.assertTrue(
-                np.allclose(mq.skew(v) @ w, np.cross(v, w), atol=1e-12)
+                np.allclose(kin.skew(v) @ w, np.cross(v, w), atol=1e-12)
             )

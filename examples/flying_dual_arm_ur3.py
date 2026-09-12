@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
@@ -72,6 +69,13 @@ def create_floating_base(
 def prefix_frames(
     model: pin.Model, visual_model: pin.GeometryModel, prefix: str
 ) -> None:
+    """Add a prefix to frame names in a model.
+
+    Args:
+        model: Robot model.
+        visual_model: Visual model for the robot.
+        prefix: Prefix to prepend to frame names.
+    """
     for frame in model.frames:
         frame.name = f"{prefix}_{frame.name}"
     for i, name in enumerate(model.names):

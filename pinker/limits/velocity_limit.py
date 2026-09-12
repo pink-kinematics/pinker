@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Subset of velocity-limited joints in a robot model."""

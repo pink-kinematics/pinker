@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Cross-validate pinker.kinematics against Pinocchio.
@@ -15,15 +12,14 @@ import unittest
 
 import numpy as np
 import pinocchio as pin
-
-from pinker import kinematics as mq
-
 from compare import (
     assert_kinematics_equal,
     assert_liegroup_equal,
     assert_models_equal,
     random_configuration,
 )
+
+from pinker import kinematics as mq
 
 HERE = os.path.dirname(__file__)
 # Extra URDFs from a Pinocchio checkout next to the pinker workspace, when
@@ -90,7 +86,9 @@ class TestVersusPinocchio(unittest.TestCase):
         mp = pin.Model()
         mm = mq.Model()
         placement_1 = pin.SE3.Random()
-        j1p = mp.addJoint(0, pin.JointModelSpherical(), placement_1, "shoulder")
+        j1p = mp.addJoint(
+            0, pin.JointModelSpherical(), placement_1, "shoulder"
+        )
         j1m = mm.addJoint(
             0,
             mq.JointModelSpherical(),

@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# SPDX-License-Identifier: Apache-2.0
 #
 # /// script
 # dependencies = ["daqp", "loop-rate-limiters", "viser", "pinker",
@@ -39,7 +38,12 @@ from scipy.spatial.transform import Rotation, Slerp
 
 import pinker
 from pinker import solve_ik
-from pinker.tasks import DampingTask, FrameTask, ManipulabilityTask, PostureTask
+from pinker.tasks import (
+    DampingTask,
+    FrameTask,
+    ManipulabilityTask,
+    PostureTask,
+)
 from pinker.utils import custom_configuration_vector
 from pinker.visualization import start_viser_visualizer
 
@@ -86,7 +90,7 @@ TARGET_POSES = [
 
 
 def interpolate_poses(pose_1: pin.SE3, pose_2: pin.SE3, t: float):
-    """Interpolate between two SE3 poses using linear translation and SLERP rotation.
+    """Interpolate between poses using linear translation and SLERP rotation.
 
     Args:
         pose_1: Starting pose at t=0.
@@ -598,7 +602,8 @@ if __name__ == "__main__":
     print("Starting manipulability comparison...")
     print("Drag the transform handle to move the end-effector target.")
     print(
-        "Watch how the two robots diverge due to manipulability optimization.\n"
+        "Watch how the two robots diverge "
+        "due to manipulability optimization.\n"
     )
 
     while True:

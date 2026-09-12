@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Tests for appendModel, buildReducedModel and the visuals parser."""
@@ -11,15 +8,14 @@ import unittest
 
 import numpy as np
 import pinocchio as pin
-
-from pinker import kinematics as mq
-
 from compare import (
     assert_kinematics_equal,
     assert_liegroup_equal,
     assert_models_equal,
     random_configuration,
 )
+
+from pinker import kinematics as mq
 
 HERE = os.path.dirname(__file__)
 WHEELED_URDF = os.path.join(HERE, "wheeled.urdf")
@@ -148,9 +144,7 @@ class TestAppendReduce(unittest.TestCase):
     def test_reduced_robot_wrapper(self):
         """RobotWrapper.buildReducedRobot locks joints by name."""
         robot = mq.RobotWrapper.BuildFromURDF(WHEELED_URDF)
-        reduced = robot.buildReducedRobot(
-            ["left_wheel_joint", "slider_joint"]
-        )
+        reduced = robot.buildReducedRobot(["left_wheel_joint", "slider_joint"])
         # continuous joint has nq=2
         self.assertEqual(reduced.model.nq, robot.model.nq - 3)
         self.assertEqual(reduced.model.nv, robot.model.nv - 2)

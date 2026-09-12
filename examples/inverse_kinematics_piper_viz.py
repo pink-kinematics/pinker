@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
@@ -19,7 +16,6 @@ import sys
 
 import meshcat_shapes
 import numpy as np
-import pinocchio
 import pinocchio as pin
 import qpsolvers
 from robot_descriptions.loaders.pinocchio import load_robot_description

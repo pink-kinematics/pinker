@@ -41,10 +41,6 @@ templates_path = []
 # source_suffix = ['.rst', '.md']
 source_suffix = {".rst": "restructuredtext"}
 
-# The encoding of source files.
-#
-# source_encoding = 'utf-8-sig'
-
 # The master toctree document.
 master_doc = "index"
 

@@ -1,12 +1,11 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
 # dependencies = ["clarabel", "loop-rate-limiters", "meshcat", "pinker",
 # "qpsolvers", "robot_descriptions"]
 # ///
+
+"""Upkie wheeled biped rolling around."""
 
 import meshcat_shapes
 import numpy as np

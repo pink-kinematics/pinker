@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
@@ -61,7 +58,9 @@ def main() -> None:
     root_joint = robot.model.joints[robot.model.getJointId("root_joint")]
 
     for step in range(10):
-        velocity = pinker.solve_ik(configuration, [base_task], dt, solver=solver)
+        velocity = pinker.solve_ik(
+            configuration, [base_task], dt, solver=solver
+        )
         base_velocity = velocity[root_joint.idx_v : root_joint.idx_v + 6]
         angular = base_velocity[3:]
         linear = base_velocity[:3]
