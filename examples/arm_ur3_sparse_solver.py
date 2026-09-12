@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -12,12 +11,12 @@
 
 import warnings
 
+import meshcat_shapes
 import numpy as np
 import qpsolvers
 from loop_rate_limiters import RateLimiter
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-import meshcat_shapes
 import pinker
 from pinker import solve_ik
 from pinker.tasks import FrameTask, PostureTask

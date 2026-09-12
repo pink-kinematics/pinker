@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pin-pink",
+# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pinker",
 # "qpsolvers", "robot_descriptions"]
 # ///
 
@@ -17,10 +17,10 @@ import qpsolvers
 from loop_rate_limiters import RateLimiter
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-import pink
-from pink import solve_ik
-from pink.tasks import FrameTask, JointCouplingTask, PostureTask
-from pink.visualization import start_meshcat_visualizer
+import pinker
+from pinker import solve_ik
+from pinker.tasks import FrameTask, JointCouplingTask, PostureTask
+from pinker.visualization import start_meshcat_visualizer
 
 
 class WavingPose:
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     meshcat_shapes.frame(wrist_frame)
 
     # Set initial robot configuration
-    configuration = pink.Configuration(robot.model, robot.data, robot.q0)
+    configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
     viz.display(configuration.q)
 
     # Tasks initialization for IK

@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["daqp", "pin-pink", "qpsolvers", "robot_descriptions"]
+# dependencies = ["daqp", "pinker", "qpsolvers", "robot_descriptions"]
 # ///
 
 """Clamp floating-base velocities with FloatingBaseVelocityLimit."""
@@ -15,9 +15,9 @@ import numpy as np
 import pinocchio as pin
 import qpsolvers
 
-import pink
-from pink.limits import FloatingBaseVelocityLimit
-from pink.tasks import FrameTask
+import pinker
+from pinker.limits import FloatingBaseVelocityLimit
+from pinker.tasks import FrameTask
 
 try:
     from robot_descriptions.loaders.pinocchio import load_robot_description
@@ -33,7 +33,7 @@ def main() -> None:
     robot = load_robot_description(
         "upkie_description", root_joint=pin.JointModelFreeFlyer()
     )
-    configuration = pink.Configuration(robot.model, robot.data, robot.q0)
+    configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
 
     floating_limit = FloatingBaseVelocityLimit(
         model=robot.model,
@@ -61,7 +61,7 @@ def main() -> None:
     root_joint = robot.model.joints[robot.model.getJointId("root_joint")]
 
     for step in range(10):
-        velocity = pink.solve_ik(configuration, [base_task], dt, solver=solver)
+        velocity = pinker.solve_ik(configuration, [base_task], dt, solver=solver)
         base_velocity = velocity[root_joint.idx_v : root_joint.idx_v + 6]
         angular = base_velocity[3:]
         linear = base_velocity[:3]

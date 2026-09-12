@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["clarabel", "loop-rate-limiters", "meshcat", "pin-pink",
+# dependencies = ["clarabel", "loop-rate-limiters", "meshcat", "pinker",
 # "qpsolvers", "robot_descriptions", "typing-extensions"]
 # ///
 
@@ -17,10 +17,10 @@ import qpsolvers
 from loop_rate_limiters import RateLimiter
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-import pink
-from pink import solve_ik
-from pink.tasks import FrameTask
-from pink.visualization import start_meshcat_visualizer
+import pinker
+from pinker import solve_ik
+from pinker.tasks import FrameTask
+from pinker.visualization import start_meshcat_visualizer
 
 
 class WavingPose:
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     meshcat_shapes.frame(viewer["pelvis_pose"])
     meshcat_shapes.frame(wrist_frame)
 
-    configuration = pink.Configuration(robot.model, robot.data, robot.q0)
+    configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
     viz.display(configuration.q)
 
     left_foot_task = FrameTask(

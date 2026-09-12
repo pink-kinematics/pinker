@@ -11,7 +11,11 @@ The following examples include *tasks* and *limits*:
 - [Mobile: Stretch](#mobile-stretch)
 - [Wheeled biped: Upkie](#wheeled-biped-upkie)
 
-Check out the [barriers](barriers/) sub-directory for more examples including *control barrier functions*.
+The following ones include *control barrier functions*, see [this
+note](https://web.archive.org/web/20241125170734/https://simeon-ned.com/blog/2024/cbf/) for an introduction:
+
+- [Barrier: Arm UR5](#barrier-arm-ur5)
+- [Barrier: Quadruped Go2](#barrier-quadruped-go2)
 
 ## Arm: UR5
 
@@ -102,3 +106,35 @@ https://github.com/user-attachments/assets/18ae0b68-21a2-44ec-af48-1d8ab4a7e658
 | Right wheel rolling | $10$ | - |
 | Left wheel position | $1$ | $0$ |
 | Right wheel position | $1$ | $0$ |
+
+## Barrier: Arm UR5
+
+A UR5 arm tracking a moving target while stopping in front of a virtual wall:
+
+https://github.com/domrachev03/pink/assets/28687492/f30ba7a1-98a3-44cb-ab52-23f99e42714c
+
+| Task | Cost |
+|------|------|
+| End-effector | (10, 1) |
+| Posture | $10^{-3}$ |
+
+| Barrier | Gain |
+|---------|------|
+| End-effector position | $10^{2}$ |
+
+## Barrier: Quadruped Go2
+
+A Go2 quadruped squatting, with its base position constrained along the y- and
+z-axes:
+
+https://github.com/domrachev03/pink/assets/28687492/78281f44-3676-4d4d-9619-768b951a15a2
+
+| Task | Cost |
+|------|------|
+| Base | (50, 1) |
+| Feet | (200, 0) |
+| Posture | $10^{-5}$ |
+
+| Barrier | Gain |
+|---------|------|
+| Base position | $10^{2}$ |

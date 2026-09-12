@@ -7,7 +7,7 @@
 # dependencies = [
 #     "daqp",
 #     "meshcat",
-#     "pin-pink",
+#     "pinker",
 #     "qpsolvers",
 #     "robot_descriptions",
 # ]
@@ -25,9 +25,9 @@ import qpsolvers
 from robot_descriptions.loaders.pinocchio import load_robot_description
 from scipy.spatial.transform import Rotation
 
-import pink
-from pink.tasks import FrameTask
-from pink.visualization import start_meshcat_visualizer
+import pinker
+from pinker.tasks import FrameTask
+from pinker.visualization import start_meshcat_visualizer
 
 # IK parameters
 dt = 1e-2
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     viewer["end_effector_target"].set_transform(target.np)
     ee_task.set_target(target)
 
-    configuration = pink.Configuration(model, data, q_init)
+    configuration = pinker.Configuration(model, data, q_init)
     viz.display(configuration.q)
     error_norm = np.linalg.norm(ee_task.compute_error(configuration))
     print(f"Starting from {error_norm = :.2}")
@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     nb_steps = 0
     while error_norm > stop_thres:
-        dv = pink.solve_ik(
+        dv = pinker.solve_ik(
             configuration,
             tasks=[ee_task],
             dt=dt,
@@ -94,7 +94,7 @@ if __name__ == "__main__":
         )
         q_out = pin.integrate(model, configuration.q, dv * dt)
         q_out = np.clip(q_out, low, high)
-        configuration = pink.Configuration(model, data, q_out)
+        configuration = pinker.Configuration(model, data, q_out)
         pin.updateFramePlacements(model, data)
         viewer["end_effector"].set_transform(
             configuration.get_transform_frame_to_world(ee_task.frame).np

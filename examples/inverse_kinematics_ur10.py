@@ -6,7 +6,7 @@
 # /// script
 # dependencies = [
 #     "daqp",
-#     "pin-pink",
+#     "pinker",
 #     "qpsolvers",
 #     "robot_descriptions",
 #     "xacrodoc",
@@ -21,8 +21,8 @@ import pinocchio as pin
 import qpsolvers
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-import pink
-from pink.tasks import FrameTask
+import pinker
+from pinker.tasks import FrameTask
 
 # IK parameters
 dt = 1e-2
@@ -66,14 +66,14 @@ if __name__ == "__main__":
     ee_task = FrameTask(FRAME_NAME, [1.0, 1.0, 1.0], [1.0, 1.0, 1.0])
     ee_task.set_target(target_pose)
 
-    configuration = pink.Configuration(model, robot.data, q_init)
+    configuration = pinker.Configuration(model, robot.data, q_init)
     error_norm = np.linalg.norm(ee_task.compute_error(configuration))
     print(f"Starting from {error_norm = :.2}")
     print(f"Desired precision is error_norm < {stop_thres}")
 
     nb_steps = 0
     while error_norm > stop_thres:
-        dv = pink.solve_ik(
+        dv = pinker.solve_ik(
             configuration,
             tasks=[ee_task],
             dt=dt,
@@ -85,7 +85,7 @@ if __name__ == "__main__":
             ),
         )
         q_out = pin.integrate(model, configuration.q, dv * dt)
-        configuration = pink.Configuration(model, robot.data, q_out)
+        configuration = pinker.Configuration(model, robot.data, q_out)
         pin.updateFramePlacements(model, robot.data)
         error_norm = np.linalg.norm(ee_task.compute_error(configuration))
         nb_steps += 1

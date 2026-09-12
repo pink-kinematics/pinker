@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["clarabel", "loop-rate-limiters", "meshcat", "pin-pink",
+# dependencies = ["clarabel", "loop-rate-limiters", "meshcat", "pinker",
 # "qpsolvers", "robot_descriptions"]
 # ///
 
@@ -15,10 +15,10 @@ import qpsolvers
 from loop_rate_limiters import RateLimiter
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-import pink
-from pink import solve_ik
-from pink.tasks import FrameTask, RollingTask
-from pink.visualization import start_meshcat_visualizer
+import pinker
+from pinker import solve_ik
+from pinker.tasks import FrameTask, RollingTask
+from pinker.visualization import start_meshcat_visualizer
 
 if __name__ == "__main__":
     robot = load_robot_description(
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     q_init = robot.q0.copy()
     q_init[0] = init_x  # world x-axis
     q_init[2] = 0.56  # world z-axis
-    configuration = pink.Configuration(robot.model, robot.data, q_init)
+    configuration = pinker.Configuration(robot.model, robot.data, q_init)
     base_task.set_target_from_configuration(configuration)
     left_wheel_position.set_target_from_configuration(configuration)
     right_wheel_position.set_target_from_configuration(configuration)

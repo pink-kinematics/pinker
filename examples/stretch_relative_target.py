@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["clarabel", "loop-rate-limiters", "meshcat", "pin-pink",
+# dependencies = ["clarabel", "loop-rate-limiters", "meshcat", "pinker",
 # "qpsolvers", "robot_descriptions"]
 # ///
 
@@ -17,10 +17,10 @@ import qpsolvers
 from loop_rate_limiters import RateLimiter
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-import pink
-from pink import PinkError, solve_ik
-from pink.tasks import FrameTask, RelativeFrameTask
-from pink.visualization import start_meshcat_visualizer
+import pinker
+from pinker import PinkerError, solve_ik
+from pinker.tasks import FrameTask, RelativeFrameTask
+from pinker.visualization import start_meshcat_visualizer
 
 # Trajectory parameters to play with ;)
 CIRCLE_RADIUS = 0.5  # [m]
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     tasks = [base_task, fingertip_task]
 
     # Initialize tasks from the initial configuration
-    configuration = pink.Configuration(robot.model, robot.data, robot.q0)
+    configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
     base_task.set_target_from_configuration(configuration)
     transform_fingertip_target_to_base = pin.SE3(
         rotation=np.eye(3),
@@ -105,9 +105,9 @@ if __name__ == "__main__":
         # Compute velocity and integrate it into next configuration
         try:
             velocity = solve_ik(configuration, tasks, dt, solver=solver)
-        except PinkError as exn:
+        except PinkerError as exn:
             if solver != "quadprog":
-                raise PinkError(
+                raise PinkerError(
                     "IK failed as detailed in the traceback above. "
                     f"Note that `solve_ik` was called with {solver=}, "
                     "but this example works better with solver='quadprog'."

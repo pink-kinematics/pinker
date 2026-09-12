@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pin-pink",
+# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pinker",
 # "qpsolvers", "robot_descriptions"]
 # ///
 
@@ -16,11 +16,11 @@ import qpsolvers
 from loop_rate_limiters import RateLimiter
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-import pink
-from pink import solve_ik
-from pink.tasks import FrameTask, PostureTask
-from pink.utils import custom_configuration_vector
-from pink.visualization import start_meshcat_visualizer
+import pinker
+from pinker import solve_ik
+from pinker.tasks import FrameTask, PostureTask
+from pinker.utils import custom_configuration_vector
+from pinker.visualization import start_meshcat_visualizer
 
 if __name__ == "__main__":
     full_robot = load_robot_description("upkie_description", root_joint=None)
@@ -55,7 +55,7 @@ if __name__ == "__main__":
     q_ref = custom_configuration_vector(
         robot, left_hip=-0.2, left_knee=0.4, right_hip=0.2, right_knee=-0.4
     )
-    configuration = pink.Configuration(robot.model, robot.data, q_ref)
+    configuration = pinker.Configuration(robot.model, robot.data, q_ref)
     for body, task in tasks.items():
         if type(task) is FrameTask:
             task.set_target_from_configuration(configuration)

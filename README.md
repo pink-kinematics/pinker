@@ -1,33 +1,30 @@
-# Pink
+# Pinker
 
-[![Build](https://img.shields.io/github/actions/workflow/status/pink-kinematics/pink/ci.yml?branch=main)](https://github.com/pink-kinematics/pink/actions)
-[![Documentation](https://img.shields.io/github/actions/workflow/status/pink-kinematics/pink/docs.yml?branch=main&label=docs)](https://pink-kinematics.github.io/pink/)
-[![Coverage](https://coveralls.io/repos/github/pink-kinematics/pink/badge.svg?branch=main)](https://coveralls.io/github/pink-kinematics/pink?branch=main)
-[![Conda version](https://anaconda.org/conda-forge/pink/badges/version.svg)](https://anaconda.org/conda-forge/pink)
-[![PyPI version](https://img.shields.io/pypi/v/pin-pink)](https://pypi.org/project/pin-pink/)
-[![PyPI downloads](https://img.shields.io/pypi/dm/pin-pink?color=blue)](https://pypistats.org/packages/pin-pink)
+[![Build](https://img.shields.io/github/actions/workflow/status/pink-kinematics/pinker/ci.yml?branch=main)](https://github.com/pink-kinematics/pinker/actions)
+[![Documentation](https://img.shields.io/github/actions/workflow/status/pink-kinematics/pinker/docs.yml?branch=main&label=docs)](https://pink-kinematics.github.io/pinker/)
 
-**P**ython **in**verse **k**inematics for articulated robot models, based on [Pinocchio](https://github.com/stack-of-tasks/pinocchio).
+**P**ython **in**verse **k**inematics for **e**mbedded **r**obots.
 
-![Banner for Pink v0.5.0](https://user-images.githubusercontent.com/1189580/192318997-ed7574c3-8238-451d-9548-a769d46ec03b.png)
+Pinker is a leaner version of [Pink](https://github.com/pink-kinematics/pink/) for single-board computers. Two dependencies, one C file, and it takes 5 seconds to build from source on a Raspberry Pi 4. But it doesn't implement collision avoidance.
 
 ## Installation
 
-For best performance we recommended installing Pink from Conda:
+You can install the library from PyPI:
 
 ```console
-conda install -c conda-forge pink
+pip install pinker
 ```
 
-You can also install it from PyPI:
+You can also clone the repository and run it locally:
 
-```console
-pip install pin-pink
+```bash
+git clone https://github.com/pink-kinematics/pinker.git && cd pinker
+uv run examples/humanoid_g1_com.py
 ```
 
 ## Usage
 
-Pink solves differential inverse kinematics by [weighted tasks](https://scaron.info/robot-locomotion/inverse-kinematics.html). A task is defined by a *residual* function $e(q)$ of the robot configuration $q \in \mathcal{C}$ to be driven to zero. For instance, putting a foot position $p_{foot}(q)$ at a given target $p_{foot}^{\star}$ can be described by the position residual:
+Pinker solves differential inverse kinematics by [weighted tasks](https://scaron.info/robot-locomotion/inverse-kinematics.html). A task is defined by a *residual* function $e(q)$ of the robot configuration $q \in \mathcal{C}$ to be driven to zero. For instance, putting a foot position $p_{foot}(q)$ at a given target $p_{foot}^{\star}$ can be described by the position residual:
 
 $$
 e(q) = p_{foot}^{\star} - p_{foot}(q)
@@ -48,14 +45,14 @@ $$
 \end{align}
 $$
 
-Pink provides an API to describe the problem as tasks with targets, and automatically build and solve the underlying quadratic program.
+Pinker provides an API to describe the problem as tasks with targets, and automatically build and solve the underlying quadratic program.
 
 ### Task costs
 
 Here is the example of a biped robot that controls the position and orientation of its base, left and right contact frames. A fourth "posture" task, giving a preferred angle for each joint, is added for regularization:
 
 ```python
-from pink.tasks import FrameTask, PostureTask
+from pinker.tasks import FrameTask, PostureTask
 
 tasks = {
     "base": FrameTask(
@@ -110,7 +107,7 @@ A task can be added to the inverse kinematics once both its cost and target (if 
 
 ### Differential inverse kinematics
 
-Pink solves differential inverse kinematics, meaning it outputs a velocity that steers the robot towards achieving all tasks at best. If we keep integrating that velocity, and task targets don't change over time, we will converge to a stationary configuration:
+Pinker solves differential inverse kinematics, meaning it outputs a velocity that steers the robot towards achieving all tasks at best. If we keep integrating that velocity, and task targets don't change over time, we will converge to a stationary configuration:
 
 ```python
 dt = 6e-3  # [s]
@@ -122,9 +119,9 @@ for t in np.arange(0.0, 42.0, dt):
 
 If task targets are continuously updated, there will be no stationary solution to converge to, but the model will keep on tracking each target at best. Note that [`solve_ik`](https://pink-kinematics.github.io/pink/inverse-kinematics.html#pink.solve_ik.solve_ik) will take care of both configuration and velocity limits read from the robot model.
 
-### Floating-base velocity limits
+## Compatibility
 
-Robots with planar or free flyer bases can clamp their commanded twists by attaching a `FloatingBaseVelocityLimit` to the configuration's model:
+Pinker is API-compatible with **Pink 4.4.0**.
 
 ```python
 from pink.limits import FloatingBaseVelocityLimit

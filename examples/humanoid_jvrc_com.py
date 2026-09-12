@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["daqp", "loop-rate-limiters", "viser", "pin-pink",
+# dependencies = ["daqp", "loop-rate-limiters", "viser", "pinker",
 # "qpsolvers", "robot_descriptions", "trimesh"]
 # ///
 
@@ -18,10 +18,10 @@ import viser
 from loop_rate_limiters import RateLimiter
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-import pink
-from pink import solve_ik
-from pink.tasks import ComTask, FrameTask
-from pink.visualization import start_viser_visualizer
+import pinker
+from pinker import solve_ik
+from pinker.tasks import ComTask, FrameTask
+from pinker.visualization import start_viser_visualizer
 
 if __name__ == "__main__":
     robot = load_robot_description(
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     viz = start_viser_visualizer(robot)
     viewer = viz.viewer
 
-    configuration = pink.Configuration(robot.model, robot.data, robot.q0)
+    configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
     viz.display(configuration.q)
 
     # Initialize IK tasks
