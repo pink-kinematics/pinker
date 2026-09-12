@@ -145,17 +145,17 @@ sphinx-mathjax-offline = "*"
 docs-build = { cmd = "sphinx-build doc/ _build -W" }
 docs-open = { cmd = "xdg-open _build/index.html", depends-on = "docs-build" }
 
-[tool.pixi.feature.lint.dependencies]
+[tool.pixi.feature.dev.dependencies]
 mypy = ">=0.812"
 pylint = ">=2.8.2"
 ruff = ">=0.4.3"
 
-[tool.pixi.feature.lint.tasks]
-_lint-mypy = "mypy pinker --ignore-missing-imports"
-_lint-pylint = "pylint pinker --exit-zero --rcfile=pyproject.toml"
-_lint-ruff = "ruff check pinker && ruff format --check pinker"
-format = "ruff format pinker"
-lint = { depends-on = ["_lint-mypy", "_lint-pylint", "_lint-ruff"] }
+[tool.pixi.feature.dev.tasks]
+_dev-lint-mypy = "mypy pinker --ignore-missing-imports"
+_dev-lint-pylint = "pylint pinker --exit-zero --rcfile=pyproject.toml"
+_dev-lint-ruff = "ruff check pinker && ruff format --check pinker"
+dev-format = "ruff format pinker"
+dev-lint = { depends-on = ["_dev-lint-mypy", "_dev-lint-pylint", "_dev-lint-ruff"] }
 
 [tool.pixi.feature.py310.dependencies]
 python = "3.10.*"
@@ -185,8 +185,8 @@ test = { depends-on = ["_test-python", "_test-kinematics"] }
 
 [tool.pixi.environments]
 coverage = { features = ["py312", "coverage"], solve-group = "py312" }
+dev = { features = ["py312", "dev"], solve-group = "py312" }
 docs = { features = ["py312", "docs"], solve-group = "py312" }
-lint = { features = ["py312", "lint"], solve-group = "py312" }
 test-py310 = { features = ["py310", "test"], solve-group = "py310" }
 test-py311 = { features = ["py311", "test"], solve-group = "py311" }
 test-py312 = { features = ["py312", "test"], solve-group = "py312" }
