@@ -197,8 +197,9 @@ Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you co
 
 Software:
 
-- [mink](https://github.com/kevinzakka/mink): differential inverse kinematics in Python, based on the MuJoCo physics engine.
 - [Jink.jl](https://github.com/adubredu/Jink.jl): Julia package for differential multi-task inverse kinematics.
+- [mink](https://github.com/kevinzakka/mink): differential inverse kinematics in Python, based on the MuJoCo physics engine.
+- [Pinocchio](https://github.com/stack-of-tasks/pinocchio): C++ rigid body dynamics algorithms library, used as reference in the C kinematics backend of Pinker.
 - [PlaCo](https://github.com/rhoban/placo): C++ inverse kinematics based on Pinocchio.
 - [pymanoid](https://github.com/stephane-caron/pymanoid): precursor to Pink based on OpenRAVE.
 - [TSID](https://github.com/stack-of-tasks/tsid): C++ inverse kinematics based on Pinocchio.

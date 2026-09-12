@@ -32,7 +32,7 @@ class TestLie(unittest.TestCase):
             self.assertTrue(np.allclose(kin.log(M).vector, nu, atol=1e-10))
 
     def test_log_matches_pinocchio(self):
-        """log6 and jlog6 match Pinocchio, including near-pi rotations."""
+        """log6 and Jlog6 match Pinocchio, including near-pi rotations."""
         rng = np.random.default_rng(1)
         for _ in range(100):
             M = random_se3(rng)
@@ -43,7 +43,7 @@ class TestLie(unittest.TestCase):
                 )
             )
             self.assertTrue(
-                np.allclose(kin.jlog6(M), pin.Jlog6(M_pin), atol=1e-10)
+                np.allclose(kin.Jlog6(M), pin.Jlog6(M_pin), atol=1e-10)
             )
         for _ in range(100):
             axis = rng.standard_normal(3)
@@ -63,16 +63,16 @@ class TestLie(unittest.TestCase):
                     )
 
     def test_jlog6_finite_difference(self):
-        """jlog6 matches a finite-difference approximation.
+        """Jlog6 matches a finite-difference approximation.
 
         Pinocchio's Jlog6 is the right Jacobian: for a perturbation delta of
-        M in its local frame, log(M exp(delta)) = log(M) + jlog6(M) delta.
+        M in its local frame, log(M exp(delta)) = log(M) + Jlog6(M) delta.
         """
         rng = np.random.default_rng(2)
         eps = 1e-7
         for _ in range(20):
             M = random_se3(rng)
-            J = kin.jlog6(M)
+            J = kin.Jlog6(M)
             J_fd = np.empty((6, 6))
             log_M = kin.log(M).vector
             for k in range(6):
