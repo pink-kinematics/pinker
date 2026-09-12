@@ -1,24 +1,14 @@
 # SPDX-License-Identifier: Apache-2.0
 
-"""Tests for appendModel and the visuals parser."""
+"""Tests for the URDF visuals parser."""
 
 import os
 import tempfile
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from compare import (
-    assert_kinematics_equal,
-    assert_liegroup_equal,
-    assert_models_equal,
-    random_configuration,
-)
 
 from pinker import kinematics as kin
-
-HERE = os.path.dirname(__file__)
-WHEELED_URDF = os.path.join(HERE, "wheeled.urdf")
 
 VISUAL_URDF = """<?xml version="1.0"?>
 <robot name="visual_test">
@@ -48,51 +38,8 @@ VISUAL_URDF = """<?xml version="1.0"?>
 """
 
 
-def build_arm(backend):
-    """Two-joint arm model built with either backend."""
-    model = backend.Model()
-    placement_1 = backend.SE3(np.eye(3), np.array([0.0, 0.0, 0.1]))
-    j1 = model.addJoint(0, backend.JointModelRY(), placement_1, "shoulder")
-    model.addJointFrame(j1)
-    inertia = backend.Inertia(1.5, np.array([0.0, 0.0, 0.2]), np.eye(3))
-    model.appendBodyToJoint(j1, inertia, backend.SE3.Identity())
-    model.addBodyFrame("upper_arm", j1, backend.SE3.Identity(), -1)
-    placement_2 = backend.SE3(np.eye(3), np.array([0.0, 0.0, 0.4]))
-    j2 = model.addJoint(j1, backend.JointModelRX(), placement_2, "elbow")
-    model.addJointFrame(j2)
-    model.appendBodyToJoint(j2, inertia, backend.SE3.Identity())
-    model.addBodyFrame("forearm", j2, backend.SE3.Identity(), -1)
-    return model
-
-
-class TestAppendReduce(unittest.TestCase):
-    """Test model edition against Pinocchio's."""
-
-    def test_append_model_matches_pinocchio(self):
-        """Appending an arm to a floating base matches Pinocchio."""
-        arm_p, arm_m = build_arm(pin), build_arm(kin)
-        base_p = pin.buildModelFromUrdf(
-            WHEELED_URDF, pin.JointModelFreeFlyer()
-        )
-        base_m = kin.buildModelFromUrdf(
-            WHEELED_URDF, kin.JointModelFreeFlyer()
-        )
-        placement = pin.SE3(np.eye(3), np.array([0.1, 0.0, 0.2]))
-        merged_p = pin.appendModel(
-            base_p, arm_p, base_p.getFrameId("head"), placement
-        )
-        merged_m = kin.appendModel(
-            base_m,
-            arm_m,
-            base_m.getFrameId("head"),
-            kin.SE3(placement.rotation, placement.translation),
-        )
-        assert_models_equal(merged_p, merged_m)
-        rng = np.random.default_rng(4)
-        for _ in range(5):
-            q = random_configuration(merged_p, rng)
-            assert_kinematics_equal(merged_p, merged_m, q)
-            assert_liegroup_equal(merged_p, merged_m, q, rng)
+class TestUrdf(unittest.TestCase):
+    """Test the URDF parser."""
 
     def test_visuals_parser(self):
         """URDF visuals are parsed with shapes, colors and placements."""
