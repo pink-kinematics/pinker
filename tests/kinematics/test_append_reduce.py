@@ -15,7 +15,7 @@ from compare import (
     random_configuration,
 )
 
-from pinker import kinematics as mq
+from pinker import kinematics as kin
 
 HERE = os.path.dirname(__file__)
 WHEELED_URDF = os.path.join(HERE, "wheeled.urdf")
@@ -81,15 +81,15 @@ class TestAppendReduce(unittest.TestCase):
                 mp = pin.buildModelFromUrdf(
                     WHEELED_URDF, pin.JointModelFreeFlyer()
                 )
-                mm = mq.buildModelFromUrdf(
-                    WHEELED_URDF, mq.JointModelFreeFlyer()
+                mm = kin.buildModelFromUrdf(
+                    WHEELED_URDF, kin.JointModelFreeFlyer()
                 )
                 rng = np.random.default_rng(3)
                 q_ref = random_configuration(mp, rng)
                 ids_p = [mp.getJointId(name) for name in lock_names]
                 ids_m = [mm.getJointId(name) for name in lock_names]
                 reduced_p = pin.buildReducedModel(mp, ids_p, q_ref)
-                reduced_m = mq.buildReducedModel(mm, ids_m, q_ref)
+                reduced_m = kin.buildReducedModel(mm, ids_m, q_ref)
                 assert_models_equal(reduced_p, reduced_m)
                 for _ in range(5):
                     q = random_configuration(reduced_p, rng)
@@ -98,20 +98,22 @@ class TestAppendReduce(unittest.TestCase):
 
     def test_append_model_matches_pinocchio(self):
         """Appending an arm to a floating base matches Pinocchio."""
-        arm_p, arm_m = build_arm(pin), build_arm(mq)
+        arm_p, arm_m = build_arm(pin), build_arm(kin)
         base_p = pin.buildModelFromUrdf(
             WHEELED_URDF, pin.JointModelFreeFlyer()
         )
-        base_m = mq.buildModelFromUrdf(WHEELED_URDF, mq.JointModelFreeFlyer())
+        base_m = kin.buildModelFromUrdf(
+            WHEELED_URDF, kin.JointModelFreeFlyer()
+        )
         placement = pin.SE3(np.eye(3), np.array([0.1, 0.0, 0.2]))
         merged_p = pin.appendModel(
             base_p, arm_p, base_p.getFrameId("head"), placement
         )
-        merged_m = mq.appendModel(
+        merged_m = kin.appendModel(
             base_m,
             arm_m,
             base_m.getFrameId("head"),
-            mq.SE3(placement.rotation, placement.translation),
+            kin.SE3(placement.rotation, placement.translation),
         )
         assert_models_equal(merged_p, merged_m)
         rng = np.random.default_rng(4)
@@ -126,8 +128,8 @@ class TestAppendReduce(unittest.TestCase):
             urdf_path = os.path.join(tmp_dir, "visual_test.urdf")
             with open(urdf_path, "w", encoding="utf-8") as urdf_file:
                 urdf_file.write(VISUAL_URDF)
-            model = mq.buildModelFromUrdf(urdf_path)
-            geometry = mq.buildGeomFromUrdf(model, urdf_path)
+            model = kin.buildModelFromUrdf(urdf_path)
+            geometry = kin.buildGeomFromUrdf(model, urdf_path)
         self.assertEqual(geometry.ngeoms, 3)
         box, sphere, cylinder = geometry.geometryObjects
         self.assertEqual(box.shape, "box")
@@ -143,7 +145,7 @@ class TestAppendReduce(unittest.TestCase):
 
     def test_reduced_robot_wrapper(self):
         """RobotWrapper.buildReducedRobot locks joints by name."""
-        robot = mq.RobotWrapper.BuildFromURDF(WHEELED_URDF)
+        robot = kin.RobotWrapper.BuildFromURDF(WHEELED_URDF)
         reduced = robot.buildReducedRobot(["left_wheel_joint", "slider_joint"])
         # continuous joint has nq=2
         self.assertEqual(reduced.model.nq, robot.model.nq - 3)
