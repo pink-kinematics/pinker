@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Barrier: `SelfCollisionBarrier`, which required collision detection
+- utils: `process_collision_pairs`, which required collision detection
 - Clean up unnecessary shebangs from source file headers
 - Clean up unnecessary source encoding lines from source file headers
 - examples: Iiwa whole-body self-collision avoidance

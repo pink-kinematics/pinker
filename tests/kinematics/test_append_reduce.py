@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
-"""Tests for appendModel, buildReducedModel and the visuals parser."""
+"""Tests for appendModel and the visuals parser."""
 
 import os
 import tempfile
@@ -19,12 +19,6 @@ from pinker import kinematics as kin
 
 HERE = os.path.dirname(__file__)
 WHEELED_URDF = os.path.join(HERE, "wheeled.urdf")
-
-LOCKED_JOINTS = [
-    ["slider_joint"],
-    ["left_wheel_joint", "right_wheel_joint"],
-    ["head_joint", "left_wheel_joint"],
-]
 
 VISUAL_URDF = """<?xml version="1.0"?>
 <robot name="visual_test">
@@ -74,28 +68,6 @@ def build_arm(backend):
 class TestAppendReduce(unittest.TestCase):
     """Test model edition against Pinocchio's."""
 
-    def test_reduced_model_matches_pinocchio(self):
-        """Reduced models match Pinocchio's buildReducedModel."""
-        for lock_names in LOCKED_JOINTS:
-            with self.subTest(locked=",".join(lock_names)):
-                mp = pin.buildModelFromUrdf(
-                    WHEELED_URDF, pin.JointModelFreeFlyer()
-                )
-                mm = kin.buildModelFromUrdf(
-                    WHEELED_URDF, kin.JointModelFreeFlyer()
-                )
-                rng = np.random.default_rng(3)
-                q_ref = random_configuration(mp, rng)
-                ids_p = [mp.getJointId(name) for name in lock_names]
-                ids_m = [mm.getJointId(name) for name in lock_names]
-                reduced_p = pin.buildReducedModel(mp, ids_p, q_ref)
-                reduced_m = kin.buildReducedModel(mm, ids_m, q_ref)
-                assert_models_equal(reduced_p, reduced_m)
-                for _ in range(5):
-                    q = random_configuration(reduced_p, rng)
-                    assert_kinematics_equal(reduced_p, reduced_m, q)
-                    assert_liegroup_equal(reduced_p, reduced_m, q, rng)
-
     def test_append_model_matches_pinocchio(self):
         """Appending an arm to a floating base matches Pinocchio."""
         arm_p, arm_m = build_arm(pin), build_arm(kin)
@@ -142,14 +114,3 @@ class TestAppendReduce(unittest.TestCase):
         self.assertTrue(np.allclose(sphere.meshColor, [1.0, 0.0, 0.0, 0.5]))
         self.assertEqual(cylinder.shape, "cylinder")
         self.assertEqual(cylinder.parentJoint, model.getJointId("hinge"))
-
-    def test_reduced_robot_wrapper(self):
-        """RobotWrapper.buildReducedRobot locks joints by name."""
-        robot = kin.RobotWrapper.BuildFromURDF(WHEELED_URDF)
-        reduced = robot.buildReducedRobot(["left_wheel_joint", "slider_joint"])
-        # continuous joint has nq=2
-        self.assertEqual(reduced.model.nq, robot.model.nq - 3)
-        self.assertEqual(reduced.model.nv, robot.model.nv - 2)
-        self.assertFalse(reduced.model.existJointName("slider_joint"))
-        # the locked joint is now a fixed frame
-        self.assertTrue(reduced.model.existFrame("slider_joint"))

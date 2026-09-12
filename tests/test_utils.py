@@ -2,20 +2,14 @@
 
 """Test fixture for other library features."""
 
-import os
 import unittest
 
 import numpy as np
 import pinocchio as pin
-from robot_descriptions.iiwa14_description import PACKAGE_PATH, REPOSITORY_PATH
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker.exceptions import ConfigurationError
-from pinker.utils import (
-    VectorSpace,
-    custom_configuration_vector,
-    process_collision_pairs,
-)
+from pinker.utils import VectorSpace, custom_configuration_vector
 
 
 class TestUtils(unittest.TestCase):
@@ -55,34 +49,3 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(tangent.eye.shape, (nv, nv))
         self.assertEqual(tangent.ones.shape, (nv,))
         self.assertEqual(tangent.zeros.shape, (nv,))
-
-    def test_process_collision_pairs(self):
-        urdf_path = os.path.join(
-            PACKAGE_PATH, "urdf", "iiwa14_spheres_collision.urdf"
-        )
-        robot = pin.RobotWrapper.BuildFromURDF(
-            urdf_path, package_dirs=[os.path.dirname(REPOSITORY_PATH)]
-        )
-
-        robot.collision_data = process_collision_pairs(
-            robot.model, robot.collision_model
-        )
-
-        # The contacts are enabled
-        self.assertTrue(robot.collision_data.enable_contact)
-        # The amount of total collision pairs is 72
-        self.assertEqual(len(robot.collision_data.distanceResults), 72)
-
-        # If sample srdf file is taken, the number of collision pairs should
-        # reduce
-        robot = pin.RobotWrapper.BuildFromURDF(
-            urdf_path, package_dirs=[os.path.dirname(REPOSITORY_PATH)]
-        )
-        srdf_path = (
-            os.path.dirname(os.path.realpath(__file__))
-            + "/iiwa_exclude_pairs.srdf"
-        )
-        robot.collision_data = process_collision_pairs(
-            robot.model, robot.collision_model, srdf_path=srdf_path
-        )
-        self.assertTrue(len(robot.collision_data.distanceResults) < 72)
