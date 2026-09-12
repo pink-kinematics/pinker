@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Tests for floating base velocity limits."""
@@ -47,7 +44,9 @@ class TestFloatingBaseVelocityLimitPlanar(unittest.TestCase):
 
     def test_constraints_clip_base_twist(self):
         """Constraints keep twists inside bounds."""
-        result = self.limit.compute_qp_inequalities(self.configuration, self.dt)
+        result = self.limit.compute_qp_inequalities(
+            self.configuration, self.dt
+        )
         self.assertIsNotNone(result)
         G, h = result
 
@@ -70,15 +69,15 @@ class TestFloatingBaseVelocityLimitPlanar(unittest.TestCase):
 
     def test_velocity_projection_indices(self):
         """Bounded tangent directions should come from the root joint."""
-        result = self.limit.compute_qp_inequalities(self.configuration, self.dt)
+        result = self.limit.compute_qp_inequalities(
+            self.configuration, self.dt
+        )
         self.assertIsNotNone(result)
         G, _ = result
         _, idx_v = get_joint_idx(self.model, "root_joint")
         root_nv = self.model.joints[self.model.getJointId("root_joint")].nv
         root_columns = G[:, idx_v : idx_v + root_nv]
-        non_root_columns = np.delete(
-            G, np.s_[idx_v : idx_v + root_nv], axis=1
-        )
+        non_root_columns = np.delete(G, np.s_[idx_v : idx_v + root_nv], axis=1)
         self.assertGreater(np.linalg.norm(root_columns), 0.0)
         self.assertTrue(np.allclose(non_root_columns, 0.0))
 
@@ -104,7 +103,9 @@ class TestFloatingBaseVelocityLimitFreeFlyer(unittest.TestCase):
                 base_frame = frame.name
                 break
         if base_frame is None:
-            self.fail("Free-flyer robot has no frame attached to the root joint")
+            self.fail(
+                "Free-flyer robot has no frame attached to the root joint"
+            )
         self.limit = FloatingBaseVelocityLimit(
             model=self.model,
             base_frame=base_frame,
@@ -114,19 +115,24 @@ class TestFloatingBaseVelocityLimitFreeFlyer(unittest.TestCase):
 
     def test_expected_number_of_constraints(self):
         """Every finite bound contributes two inequality rows."""
-        result = self.limit.compute_qp_inequalities(self.configuration, self.dt)
+        result = self.limit.compute_qp_inequalities(
+            self.configuration, self.dt
+        )
         self.assertIsNotNone(result)
         G, h = result
-        finite_bounds = np.isfinite(self.linear_max).sum() + np.isfinite(
-            self.angular_max
-        ).sum()
+        finite_bounds = (
+            np.isfinite(self.linear_max).sum()
+            + np.isfinite(self.angular_max).sum()
+        )
         expected_rows = 2 * finite_bounds
         self.assertEqual(G.shape, (expected_rows, self.model.nv))
         self.assertEqual(h.shape[0], expected_rows)
 
     def test_velocity_within_limits_satisfies_constraints(self):
         """A displacement matching the limit should satisfy the inequalities."""
-        result = self.limit.compute_qp_inequalities(self.configuration, self.dt)
+        result = self.limit.compute_qp_inequalities(
+            self.configuration, self.dt
+        )
         self.assertIsNotNone(result)
         G, h = result
 

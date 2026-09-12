@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Test fixture for the low-acceleration task."""
@@ -32,6 +29,7 @@ class TestLowAccelerationTask(unittest.TestCase):
         self.assertFalse("lm_damping=" in repr(task))
 
     def test_qp_objective(self):
+        """Check the matrix and vector of the task's objective."""
         task = LowAccelerationTask(cost=1.0)
         nv = self.configuration.model.nv
         v_prev = np.array([1.0, 2.0, 3.0, 4.0, -3.0, -2.0])

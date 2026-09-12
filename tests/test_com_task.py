@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Test fixture for the com task."""
@@ -112,7 +109,8 @@ class TestComTask(unittest.TestCase):
 
     def test_cost_raises_exception(self):
         """The task raises an exception when its cost is
-        negative and allows float, list and np.ndarray as input."""
+        negative and allows float, list and np.ndarray as input.
+        """
         with self.assertRaises(AssertionError):
             task = ComTask(cost=-1.0)
         with self.assertRaises(AssertionError):
@@ -126,8 +124,8 @@ class TestComTask(unittest.TestCase):
 
     def test_jac_without_target(self):
         """The jacobian call should raise an exception
-        when the target is not set"""
-
+        when the target is not set
+        """
         task = ComTask(cost=1.0)
         with self.assertRaises(TargetNotSet):
             task.compute_jacobian(self.configuration)

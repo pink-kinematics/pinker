@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Tests for position barrier limit."""
@@ -68,7 +65,6 @@ class TestBodySphericalBarrier(unittest.TestCase):
 
     def test_jacobians(self):
         """Test that shapes of jacobians in all barriers are correct."""
-
         barrier = BodySphericalBarrier(self.ees, d_min=0.2)
         J = barrier.compute_jacobian(self.configuration)
         self.assertEqual(J.ndim, 1)
@@ -76,14 +72,12 @@ class TestBodySphericalBarrier(unittest.TestCase):
 
     def test_positive_when_in_safety_zone(self):
         """Check that the barrier is positive when in the safety zone."""
-
         barrier = BodySphericalBarrier(self.ees, d_min=0.2)
         h = barrier.compute_barrier(self.configuration)
         self.assertTrue(h[0] > 0)
 
     def test_negative_when_out_of_safety_zone(self):
         """Test that the barrier is negative when out of the safety zone."""
-
         barrier = BodySphericalBarrier(self.ees, d_min=0.3)
         h = barrier.compute_barrier(self.configuration)
         self.assertTrue(h[0] < 0)

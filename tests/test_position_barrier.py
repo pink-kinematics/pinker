@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Tests for position barrier limit."""
@@ -77,14 +74,12 @@ class TestPositionBarrier(unittest.TestCase):
 
     def test_positive_when_in_safety_zone(self):
         """Check that the barrier is positive when in the safety zone."""
-
         barrier = PositionBarrier("tool0", p_min=np.zeros(3))
         h = barrier.compute_barrier(self.configuration)
         self.assertTrue(np.all(h > 0))
 
     def test_negative_when_out_of_safety_zone(self):
         """Test that the barrier is negative when out of the safety zone."""
-
         for violated_idx in range(3):
             p_min = np.zeros(3)
             p_min[violated_idx] = 1.0

@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Tests that should pass for all barriers."""
@@ -20,7 +17,6 @@ class TestBarrier(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures."""
-
         self.robot = load_robot_description(
             "upkie_description", root_joint=pin.JointModelFreeFlyer()
         )
@@ -46,7 +42,6 @@ class TestBarrier(unittest.TestCase):
 
     def test_barrier_value_dimension(self):
         """Test tha shape of value in all barriers is correct."""
-
         for barrier in [
             PositionBarrier("left_hip", p_min=np.zeros(3), p_max=np.zeros(3))
         ]:
@@ -55,7 +50,6 @@ class TestBarrier(unittest.TestCase):
 
     def test_barrier_jacobians_dimension(self):
         """Test that shapes of jacobians in all barriers are correct."""
-
         for barrier in [
             PositionBarrier("left_hip", p_min=np.zeros(3), p_max=np.zeros(3))
         ]:
@@ -101,7 +95,6 @@ class TestBarrier(unittest.TestCase):
 
     def test_cached(self):
         """Test that cached results are reused."""
-
         barrier = PositionBarrier(
             "left_hip", p_min=np.zeros(3), p_max=np.zeros(3)
         )
