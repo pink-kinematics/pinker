@@ -47,8 +47,8 @@ class TestUrdf(unittest.TestCase):
             urdf_path = os.path.join(tmp_dir, "visual_test.urdf")
             with open(urdf_path, "w", encoding="utf-8") as urdf_file:
                 urdf_file.write(VISUAL_URDF)
-            model = kin.buildModelFromUrdf(urdf_path)
-            geometry = kin.buildGeomFromUrdf(model, urdf_path)
+            model = kin.build_model_from_urdf(urdf_path)
+            geometry = kin.build_geom_from_urdf(model, urdf_path)
         self.assertEqual(geometry.ngeoms, 3)
         box, sphere, cylinder = geometry.geometryObjects
         self.assertEqual(box.shape, "box")
@@ -60,4 +60,4 @@ class TestUrdf(unittest.TestCase):
         self.assertEqual(sphere.shape, "sphere")
         self.assertTrue(np.allclose(sphere.meshColor, [1.0, 0.0, 0.0, 0.5]))
         self.assertEqual(cylinder.shape, "cylinder")
-        self.assertEqual(cylinder.parentJoint, model.getJointId("hinge"))
+        self.assertEqual(cylinder.parentJoint, model.get_joint_id("hinge"))

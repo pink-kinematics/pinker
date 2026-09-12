@@ -68,7 +68,7 @@ def assert_models_equal(pin_model: pin.Model, kin_model: kin.Model) -> None:
     )
     assert np.allclose(pin_model.velocityLimit, kin_model.velocityLimit)
     assert list(pin_model.hasConfigurationLimit()) == list(
-        kin_model.hasConfigurationLimit()
+        kin_model.has_configuration_limit()
     )
     for ip, im in zip(pin_model.inertias, kin_model.inertias):
         assert np.isclose(ip.mass, im.mass)
@@ -81,38 +81,38 @@ def assert_kinematics_equal(
     pin_model: pin.Model, kin_model: kin.Model, q: np.ndarray
 ) -> None:
     """Check kinematics quantities on one configuration."""
-    dp, dm = pin_model.createData(), kin_model.createData()
-    pin.computeJointJacobians(pin_model, dp, q)
-    pin.updateFramePlacements(pin_model, dp)
-    kin.computeJointJacobians(kin_model, dm, q)
-    kin.updateFramePlacements(kin_model, dm)
+    pin_data, kin_data = pin_model.createData(), kin_model.create_data()
+    pin.computeJointJacobians(pin_model, pin_data, q)
+    pin.updateFramePlacements(pin_model, pin_data)
+    kin.compute_joint_jacobians(kin_model, kin_data, q)
+    kin.update_frame_placements(kin_model, kin_data)
     for j in range(pin_model.njoints):
         assert np.allclose(
-            dp.oMi[j].homogeneous, dm.oMi[j].homogeneous, atol=TOL
+            pin_data.oMi[j].homogeneous, kin_data.oMi[j].homogeneous, atol=TOL
         )
     for f in range(pin_model.nframes):
         assert np.allclose(
-            dp.oMf[f].homogeneous, dm.oMf[f].homogeneous, atol=TOL
+            pin_data.oMf[f].homogeneous, kin_data.oMf[f].homogeneous, atol=TOL
         )
-    assert np.allclose(dp.J, dm.J, atol=TOL)
+    assert np.allclose(pin_data.J, kin_data.J, atol=TOL)
     for f in range(pin_model.nframes):
         for rf_pin, rf_kin in REFERENCE_FRAMES:
-            Jp = pin.getFrameJacobian(pin_model, dp, f, rf_pin)
-            Jm = kin.getFrameJacobian(kin_model, dm, f, rf_kin)
+            Jp = pin.getFrameJacobian(pin_model, pin_data, f, rf_pin)
+            Jm = kin.get_frame_jacobian(kin_model, kin_data, f, rf_kin)
             assert np.allclose(Jp, Jm, atol=TOL), (f, rf_pin)
     for j in range(1, pin_model.njoints):
         for rf_pin, rf_kin in REFERENCE_FRAMES:
-            Jp = pin.getJointJacobian(pin_model, dp, j, rf_pin)
-            Jm = kin.getJointJacobian(kin_model, dm, j, rf_kin)
+            Jp = pin.getJointJacobian(pin_model, pin_data, j, rf_pin)
+            Jm = kin.get_joint_jacobian(kin_model, kin_data, j, rf_kin)
             assert np.allclose(Jp, Jm, atol=TOL), (j, rf_pin)
     assert np.allclose(
-        pin.centerOfMass(pin_model, dp, q),
-        kin.centerOfMass(kin_model, dm, q),
+        pin.centerOfMass(pin_model, pin_data, q),
+        kin.center_of_mass(kin_model, kin_data, q),
         atol=TOL,
     )
     assert np.allclose(
-        pin.jacobianCenterOfMass(pin_model, dp, q),
-        kin.jacobianCenterOfMass(kin_model, dm, q),
+        pin.jacobianCenterOfMass(pin_model, pin_data, q),
+        kin.jacobian_center_of_mass(kin_model, kin_data, q),
         atol=TOL,
     )
 
@@ -136,12 +136,12 @@ def assert_liegroup_equal(
     )
     assert np.allclose(
         pin.dDifference(pin_model, q, q2, pin.ARG0),
-        kin.dDifference(kin_model, q, q2, kin.ARG0),
+        kin.d_difference(kin_model, q, q2, kin.ARG0),
         atol=TOL,
     )
     assert np.allclose(
         pin.dDifference(pin_model, q, q2, pin.ARG1),
-        kin.dDifference(kin_model, q, q2, kin.ARG1),
+        kin.d_difference(kin_model, q, q2, kin.ARG1),
         atol=TOL,
     )
 
