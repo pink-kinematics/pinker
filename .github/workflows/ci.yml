@@ -25,13 +25,7 @@ jobs:
 
             - name: "Run coverage tests"
               run: |
-                  pixi run coverage
-
-            - name: "Upload coverage results"
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: |
-                  pixi run coveralls
+                  pixi run -e coverage coverage-run
 
     lint:
         name: "Code style"
