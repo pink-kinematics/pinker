@@ -5,8 +5,8 @@
 from typing import TYPE_CHECKING, Optional, Sequence, Tuple, Union
 
 import numpy as np
-import pinocchio as pin
 
+from .. import kinematics as kin
 from .limit import Limit
 
 if TYPE_CHECKING:
@@ -30,7 +30,7 @@ def _as_velocity_vector(
 
 
 def _find_base_frame(
-    model: pin.Model, base_frame: Optional[str]
+    model: kin.Model, base_frame: Optional[str]
 ) -> Tuple[str, int]:
     """Return the name and id of the frame attached to the root joint.
 
@@ -39,17 +39,17 @@ def _find_base_frame(
     does not exist or if no frame is attached to the root joint.
     """
     if base_frame is not None:
-        if not model.existFrame(base_frame):
+        if not model.exist_frame(base_frame):
             raise ValueError(
                 f"Frame '{base_frame}' does not exist in the model."
             )
-        frame_id = model.getFrameId(base_frame)
+        frame_id = model.get_frame_id(base_frame)
         return base_frame, frame_id
 
-    root_joint_id = model.getJointId("root_joint")
+    root_joint_id = model.get_joint_id("root_joint")
     for frame in model.frames:
         if frame.parentJoint == root_joint_id:
-            return frame.name, model.getFrameId(frame.name)
+            return frame.name, model.get_frame_id(frame.name)
 
     raise ValueError("Model does not expose a frame attached to 'root_joint'.")
 
@@ -62,14 +62,14 @@ class FloatingBaseVelocityLimit(Limit):
     linear_max: np.ndarray
     angular_max: np.ndarray
     twist_max: np.ndarray
-    model: pin.Model
+    model: kin.Model
     root_joint_id: int
     root_idx_v: int
     root_nv: int
 
     def __init__(
         self,
-        model: pin.Model,
+        model: kin.Model,
         base_frame: Optional[str],
         max_linear_velocity: Union[Sequence[float], float],
         max_angular_velocity: Union[Sequence[float], float],
@@ -94,13 +94,13 @@ class FloatingBaseVelocityLimit(Limit):
             max_angular_velocity, "max_angular_velocity"
         )
         self.twist_max = np.hstack([self.linear_max, self.angular_max])
-        if not model.existJointName("root_joint"):
+        if not model.exist_joint_name("root_joint"):
             raise ValueError(
                 "FloatingBaseVelocityLimit requires a floating-base root "
                 "joint."
             )
 
-        self.root_joint_id = model.getJointId("root_joint")
+        self.root_joint_id = model.get_joint_id("root_joint")
         root_joint = model.joints[self.root_joint_id]
         self.root_idx_v = root_joint.idx_v
         self.root_nv = root_joint.nv
@@ -123,11 +123,11 @@ class FloatingBaseVelocityLimit(Limit):
         if not finite_mask.any():
             return None
 
-        jacobian = pin.getFrameJacobian(
+        jacobian = kin.get_frame_jacobian(
             self.model,
             configuration.data,
             self.frame_id,
-            pin.ReferenceFrame.LOCAL,
+            kin.ReferenceFrame.LOCAL,
         )
 
         # Keep only columns belonging to the root joint twist.
