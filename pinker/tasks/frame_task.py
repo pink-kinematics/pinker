@@ -5,8 +5,8 @@
 from typing import Optional, Sequence, Union
 
 import numpy as np
-import pinocchio as pin
 
+from .. import kinematics as kin
 from ..configuration import Configuration
 from ..exceptions import TargetNotSet, TaskDefinitionError
 from .task import Task
@@ -36,7 +36,7 @@ class FrameTask(Task):
     """
 
     frame: str
-    transform_target_to_world: Optional[pin.SE3]
+    transform_target_to_world: Optional[kin.SE3]
 
     def __init__(
         self,
@@ -123,7 +123,7 @@ class FrameTask(Task):
                 f"currently cost={self.cost}"
             )
 
-    def set_target(self, transform_target_to_world: pin.SE3) -> None:
+    def set_target(self, transform_target_to_world: kin.SE3) -> None:
         """Set task target pose in the world frame.
 
         Args:
@@ -175,7 +175,7 @@ class FrameTask(Task):
         transform_frame_to_world = configuration.get_transform_frame_to_world(
             self.frame
         )
-        transform_target_to_frame = transform_frame_to_world.actInv(
+        transform_target_to_frame = transform_frame_to_world.act_inv(
             self.transform_target_to_world
         )
         # Reminder: log(transform_bar_to_foo) is always a twist in frame "foo".
@@ -186,7 +186,7 @@ class FrameTask(Task):
         #         = transform_frame_to_world * transform_target_to_frame
         #         = transform_target_to_frame
         #
-        error_in_frame: np.ndarray = pin.log(transform_target_to_frame).vector
+        error_in_frame: np.ndarray = kin.log(transform_target_to_frame).vector
         return error_in_frame
 
     def compute_jacobian(self, configuration: Configuration) -> np.ndarray:
@@ -216,11 +216,11 @@ class FrameTask(Task):
         transform_frame_to_world = configuration.get_transform_frame_to_world(
             self.frame
         )
-        transform_frame_to_target = self.transform_target_to_world.actInv(
+        transform_frame_to_target = self.transform_target_to_world.act_inv(
             transform_frame_to_world
         )
         jacobian_in_frame = configuration.get_frame_jacobian(self.frame)
-        J = -pin.Jlog6(transform_frame_to_target) @ jacobian_in_frame
+        J = -kin.Jlog6(transform_frame_to_target) @ jacobian_in_frame
         return J
 
     @property
