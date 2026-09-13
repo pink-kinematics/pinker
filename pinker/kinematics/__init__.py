@@ -59,12 +59,12 @@ from .joints import (
 )
 from .model import Data, Frame, FrameType, Model, ReferenceFrame
 from .robot_wrapper import RobotWrapper
+from .rotations import quaternion_wxyz, rpy_to_matrix
 from .se3 import SE3, Inertia, Motion, skew
 from .urdf import (
     build_geom_from_urdf,
     build_model_from_urdf,
     build_model_from_xml,
-    rpy_to_matrix,
 )
 
 __all__ = [
@@ -113,6 +113,7 @@ __all__ = [
     "log3",
     "log6",
     "neutral",
+    "quaternion_wxyz",
     "rpy_to_matrix",
     "skew",
     "update_frame_placements",

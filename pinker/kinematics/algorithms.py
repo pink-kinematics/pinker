@@ -2,11 +2,10 @@
 
 """Kinematics algorithms.
 
-Heavy computations are delegated to the C extension. Configuration vectors are
-laid out per joint as described in :mod:`pinker.kinematics.joints`.
-
-Functions take configuration and tangent vectors as array-likes, which they
-copy into contiguous float64 arrays, and return NumPy arrays.
+Configuration vectors are laid out per joint as described in
+:mod:`pinker.kinematics.joints`. Functions take configuration and tangent
+vectors as array-likes (which they copy into contiguous float64 arrays) and
+return NumPy arrays.
 """
 
 from __future__ import annotations

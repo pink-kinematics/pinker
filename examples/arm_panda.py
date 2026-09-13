@@ -1,10 +1,11 @@
-#!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+#
 # /// script
 # dependencies = ["daqp", "loop-rate-limiters", "viser", "pinker",
 # "qpsolvers", "robot_descriptions"]
 # ///
 
-"""Example of a 7-dof robot manipulator and viser visualizer to tune the different task costs."""
+"""A 7-dof robot manipulator with visualization to tune its task costs."""
 
 import qpsolvers
 import viser
@@ -14,8 +15,8 @@ from scipy.spatial.transform import Rotation
 
 import pinker
 from pinker import solve_ik
-from pinker.tasks import DampingTask, FrameTask, PostureTask
 from pinker.kinematics import custom_configuration
+from pinker.tasks import DampingTask, FrameTask, PostureTask
 from pinker.visualization import start_viser_visualizer
 
 if __name__ == "__main__":

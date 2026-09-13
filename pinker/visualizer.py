@@ -12,60 +12,10 @@ import numpy as np
 from . import kinematics as kin
 from .kinematics import GeometryModel, GeometryObject
 from .kinematics.model import Data, Model
+from .kinematics.rotations import quaternion_wxyz
 
 if TYPE_CHECKING:  # viser is imported lazily, when starting the viewer
     import viser
-
-
-def quaternion_wxyz(R: np.ndarray) -> np.ndarray:
-    """Quaternion (w, x, y, z) of a rotation matrix, by Shepperd's method.
-
-    Args:
-        R: Rotation matrix.
-
-    Returns:
-        Corresponding unit quaternion, as (w, x, y, z).
-    """
-    trace = R[0, 0] + R[1, 1] + R[2, 2]
-    if trace > 0.0:
-        s = 2.0 * np.sqrt(trace + 1.0)
-        return np.array(
-            [
-                0.25 * s,
-                (R[2, 1] - R[1, 2]) / s,
-                (R[0, 2] - R[2, 0]) / s,
-                (R[1, 0] - R[0, 1]) / s,
-            ]
-        )
-    if R[0, 0] > R[1, 1] and R[0, 0] > R[2, 2]:
-        s = 2.0 * np.sqrt(1.0 + R[0, 0] - R[1, 1] - R[2, 2])
-        return np.array(
-            [
-                (R[2, 1] - R[1, 2]) / s,
-                0.25 * s,
-                (R[0, 1] + R[1, 0]) / s,
-                (R[0, 2] + R[2, 0]) / s,
-            ]
-        )
-    if R[1, 1] > R[2, 2]:
-        s = 2.0 * np.sqrt(1.0 + R[1, 1] - R[0, 0] - R[2, 2])
-        return np.array(
-            [
-                (R[0, 2] - R[2, 0]) / s,
-                (R[0, 1] + R[1, 0]) / s,
-                0.25 * s,
-                (R[1, 2] + R[2, 1]) / s,
-            ]
-        )
-    s = 2.0 * np.sqrt(1.0 + R[2, 2] - R[0, 0] - R[1, 1])
-    return np.array(
-        [
-            (R[1, 0] - R[0, 1]) / s,
-            (R[0, 2] + R[2, 0]) / s,
-            (R[1, 2] + R[2, 1]) / s,
-            0.25 * s,
-        ]
-    )
 
 
 class ViserVisualizer:
@@ -340,7 +290,6 @@ def start_viser_visualizer(
         Viser visualizer.
     """
     visualizer = ViserVisualizer(robot.model, visual_model=robot.visual_model)
-    robot.set_visualizer(visualizer, init=False)
     visualizer.init_viewer(open=open)
     visualizer.load_viewer_model()
     return visualizer
