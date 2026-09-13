@@ -153,9 +153,9 @@ Check out the [examples](https://github.com/pink-kinematics/pinker/tree/main/exa
 
 ## Limitations
 
-- No collision support: Pink's `SelfCollisionBarrier` and the collision
-  arguments of `Configuration` are not available. Use Pink if you need
-  collision-avoidance tasks.
+- No collision support: Pink's `SelfCollisionBarrier` is not available, and
+  neither `Configuration` nor `RobotWrapper` carries a collision model or
+  collision data. Use Pink if you need collision-avoidance tasks.
 - One visualizer: Pinker works with [Viser](https://viser.studio), which
   handles both visualization and user inputs. If you would rather use (the
   older) MeshCat, head over to Pink, which is compatible with it.
