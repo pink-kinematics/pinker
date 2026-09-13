@@ -23,6 +23,7 @@ Inverse kinematics in Pinker is defined by weighted :ref:`tasks <Tasks>` and :re
     barriers.rst
     inverse-kinematics.rst
     kinematics.rst
+    visualization.rst
     developer-notes.rst
     references.rst
 

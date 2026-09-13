@@ -2,9 +2,19 @@
 
 """Kinematics backend of Pinker.
 
-The functions implemented in this backend were based on their homonyms in
-`Pinocchio v4.1.0 <https://github.com/stack-of-tasks/pinocchio/tree/v4.1.0>`__
-as a reference implementation.
+This module implements the kinematics functions used by Pinker:
+
+- models built from URDF (revolute, continuous, prismatic, planar, floating and
+  fixed joints);
+- forward kinematics, frame placements, frame and joint Jacobians in world,
+  local and local-world-aligned frames;
+- Lie-group operations on SE(3) and configuration spaces;
+- center of mass and its Jacobian.
+
+These functions were implemented based on their homonyms in `Pinocchio v4.1.0
+<https://github.com/stack-of-tasks/pinocchio/tree/v4.1.0>`__ as a reference.
+Their outputs are cross-validated against Pinocchio to 1e-10 by the test suite
+in `tests/kinematics`.
 """
 
 __version__ = "0.1.0"
