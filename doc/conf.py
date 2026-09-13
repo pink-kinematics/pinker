@@ -243,6 +243,10 @@ autodoc_type_aliases = {
     "ArrayLike": "numpy.typing.ArrayLike",
 }
 
+# The Viser visualizer imports viser lazily, so that the rest of the backend
+# runs without it. Documenting it does not require the package either.
+suppress_warnings = ["sphinx_autodoc_typehints.guarded_import"]
+
 # Treat warnings as errors, in particular when a reference target (such as a
 # :func:`something`) is not found.
 nitpicky = True
