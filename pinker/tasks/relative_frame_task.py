@@ -5,8 +5,8 @@
 from typing import Optional, Sequence, Union
 
 import numpy as np
-import pinocchio as pin
 
+from .. import kinematics as kin
 from ..configuration import Configuration
 from ..exceptions import TargetNotSet, TaskDefinitionError
 from .task import Task
@@ -25,7 +25,7 @@ class RelativeFrameTask(Task):
     cost: np.ndarray
     frame: str
     root: str
-    transform_target_to_root: Optional[pin.SE3]
+    transform_target_to_root: Optional[kin.SE3]
 
     def __init__(
         self,
@@ -125,7 +125,7 @@ class RelativeFrameTask(Task):
 
     def set_target(
         self,
-        transform_target_to_root: pin.SE3,
+        transform_target_to_root: kin.SE3,
     ) -> None:
         """Set task target pose in the root frame.
 
@@ -175,10 +175,10 @@ class RelativeFrameTask(Task):
         transform_frame_to_root = configuration.get_transform(
             self.frame, self.root
         )
-        transform_frame_to_target = self.transform_target_to_root.actInv(
+        transform_frame_to_target = self.transform_target_to_root.act_inv(
             transform_frame_to_root
         )
-        error_in_frame: np.ndarray = pin.log(transform_frame_to_target).vector
+        error_in_frame: np.ndarray = kin.log(transform_frame_to_target).vector
         return error_in_frame
 
     def compute_jacobian(self, configuration: Configuration) -> np.ndarray:
@@ -230,13 +230,13 @@ class RelativeFrameTask(Task):
         transform_frame_to_root = configuration.get_transform(
             self.frame, self.root
         )
-        transform_frame_to_target = self.transform_target_to_root.actInv(
+        transform_frame_to_target = self.transform_target_to_root.act_inv(
             transform_frame_to_root
         )
         action_root_to_frame = transform_frame_to_root.actionInverse
         jacobian_frame_in_frame = configuration.get_frame_jacobian(self.frame)
         jacobian_root_in_root = configuration.get_frame_jacobian(self.root)
-        J = pin.Jlog6(transform_frame_to_target) @ (
+        J = kin.Jlog6(transform_frame_to_target) @ (
             jacobian_frame_in_frame
             - action_root_to_frame @ jacobian_root_in_root
         )
