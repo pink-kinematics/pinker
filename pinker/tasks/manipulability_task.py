@@ -5,9 +5,9 @@
 from typing import Literal, Optional, Union
 
 import numpy as np
-import pinocchio as pin
 from typing_extensions import override
 
+from .. import kinematics as kin
 from ..configuration import Configuration
 from .task import Task
 
@@ -23,7 +23,7 @@ REVOLUTE_SHORTNAMES = {
 }
 
 
-def check_revolute_path(model: pin.Model, frame_name: str) -> None:
+def check_revolute_path(model: kin.Model, frame_name: str) -> None:
     """Check all joints from root to frame are revolute.
 
     Args:
@@ -33,7 +33,7 @@ def check_revolute_path(model: pin.Model, frame_name: str) -> None:
     Raises:
         ValueError: If a non-revolute joint is found on the path.
     """
-    frame_id = model.getFrameId(frame_name)
+    frame_id = model.get_frame_id(frame_name)
     joint_id = model.frames[frame_id].parentJoint
     while joint_id != 0:
         shortname = model.joints[joint_id].shortname()
@@ -91,11 +91,11 @@ class ManipulabilityTask(Task):
     def __init__(
         self,
         frame: str,
-        model: pin.Model,
+        model: kin.Model,
         cost: float = 1.0,
         lm_damping: float = 0.0,
         gain: float = 1.0,
-        reference_frame: pin.ReferenceFrame = pin.ReferenceFrame.LOCAL,
+        reference_frame: kin.ReferenceFrame = kin.ReferenceFrame.LOCAL,
         manipulability_rate: float = 0.1,
         mask: Optional[
             Union[Literal["position", "orientation", "planar_xy"], np.ndarray]
@@ -144,8 +144,8 @@ class ManipulabilityTask(Task):
         )
         self.frame = frame
         if reference_frame not in (
-            pin.ReferenceFrame.WORLD,
-            pin.ReferenceFrame.LOCAL,
+            kin.ReferenceFrame.WORLD,
+            kin.ReferenceFrame.LOCAL,
         ):
             raise ValueError(
                 f"invalid reference frame {reference_frame} for Jacobian "
@@ -241,8 +241,8 @@ class ManipulabilityTask(Task):
             When the Jacobian becomes singular (at kinematic singularities),
             the manipulability approaches zero.
         """
-        frame_id = configuration.model.getFrameId(self.frame)
-        J0 = pin.getFrameJacobian(
+        frame_id = configuration.model.get_frame_id(self.frame)
+        J0 = kin.get_frame_jacobian(
             configuration.model,
             configuration.data,
             frame_id,
@@ -301,9 +301,9 @@ class ManipulabilityTask(Task):
             number of degrees of freedom (model.nv).
 
         """
-        frame_id = configuration.model.getFrameId(self.frame)
+        frame_id = configuration.model.get_frame_id(self.frame)
 
-        J0 = pin.getFrameJacobian(
+        J0 = kin.get_frame_jacobian(
             configuration.model,
             configuration.data,
             frame_id,
@@ -367,8 +367,8 @@ class ManipulabilityTask(Task):
             The manipulability Jacobian as a row vector of shape (1, n),
             where n is the number of degrees of freedom (model.nv).
         """
-        frame_id = configuration.model.getFrameId(self.frame)
-        J = pin.getFrameJacobian(
+        frame_id = configuration.model.get_frame_id(self.frame)
+        J = kin.get_frame_jacobian(
             configuration.model,
             configuration.data,
             frame_id,
