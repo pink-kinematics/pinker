@@ -5,8 +5,8 @@
 from typing import Optional
 
 import numpy as np
-import pinocchio as pin
 
+from .. import kinematics as kin
 from ..configuration import Configuration
 from ..exceptions import TargetNotSet
 from ..utils import get_root_joint_dim
@@ -97,7 +97,7 @@ class PostureTask(Task):
         if self.target_q is None:
             raise TargetNotSet("no posture target")
         _, root_nv = get_root_joint_dim(configuration.model)
-        return pin.difference(
+        return kin.difference(
             configuration.model,
             self.target_q,
             configuration.q,
