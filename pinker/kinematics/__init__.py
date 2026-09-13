@@ -2,7 +2,7 @@
 
 """Kinematics backend of Pinker.
 
-The functions implemented in this backed were based on their homonyms in
+The functions implemented in this backend were based on their homonyms in
 `Pinocchio v4.1.0 <https://github.com/stack-of-tasks/pinocchio/tree/v4.1.0>`__
 as a reference implementation.
 """
