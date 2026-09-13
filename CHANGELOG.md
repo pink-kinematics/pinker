@@ -32,7 +32,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Barrier: `SelfCollisionBarrier`, which required collision detection
+- Configuration: `collision_model` and `collision_data`, arguments and
+  attributes, as Pinker does not support collision detection
+- RobotWrapper: `collision_model` and `collision_data` attributes
 - utils: `process_collision_pairs`, which required collision detection
+- visualization: `start_meshcat_visualizer`, Pinker visualizing with Viser
 - utils: `custom_configuration_vector`, `get_root_joint_dim` and
   `get_joint_idx`, which moved to the kinematics backend as
   `kinematics.custom_configuration`, `Model.get_root_joint_dim` and
