@@ -137,12 +137,17 @@ class TestVersusPinocchio(unittest.TestCase):
                 )
                 self.assertTrue(
                     np.allclose(
-                        pin_model.velocityLimit, kin_model.velocityLimit
+                        pin_model.velocityLimit, kin_model.velocity_limit
                     )
                 )
 
     def test_frame_lookup_matches(self):
-        """exist_frame/get_frame_id behave like Pinocchio's, incl. misses."""
+        """Frame lookups agree with Pinocchio's, except on misses.
+
+        Pinocchio returns the sentinel index ``nframes`` when a frame is not
+        found, where our getters raise, consistently with the other Model
+        getters.
+        """
         pin_model, kin_model = build_pair(URDF_PATHS[0], "fixed")
         for frame in kin_model.frames:
             self.assertTrue(pin_model.existFrame(frame.name))
@@ -152,6 +157,8 @@ class TestVersusPinocchio(unittest.TestCase):
                 kin_model.get_frame_id(frame.name),
             )
         self.assertFalse(kin_model.exist_frame("no_such_frame"))
-        self.assertEqual(
-            kin_model.get_frame_id("no_such_frame"), kin_model.nframes
+        self.assertEqual(  # just for the record
+            pin_model.getFrameId("no_such_frame"), pin_model.nframes
         )
+        with self.assertRaises(ValueError):
+            kin_model.get_frame_id("no_such_frame")

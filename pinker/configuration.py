@@ -56,6 +56,7 @@ class Configuration:
         forward_kinematics: bool = True,
         collision_model=None,
         collision_data=None,
+        default_limits: Optional[List[Limit]] = None,
     ):
         """Initialize configuration.
 
@@ -69,6 +70,10 @@ class Configuration:
                 from the q into the internal data.
             collision_model: Not supported by Pinker. Must be ``None``.
             collision_data: Not supported by Pinker. Must be ``None``.
+            default_limits: Limits enforced by default when calling
+                :func:`.solve_ik` without a custom `limits` keyword argument.
+                Defaults to the configuration and velocity limits read from the
+                model.
 
         Notes:
             Configurations copy data and run forward kinematics by default so
@@ -81,22 +86,19 @@ class Configuration:
                 "Pinker does not support collision models; "
                 "use Pink for collision-aware inverse kinematics"
             )
-        if not hasattr(model, "tangent"):
-            model.tangent = VectorSpace(model.nv)
-        if not hasattr(model, "configuration_limit"):
-            model.configuration_limit = ConfigurationLimit(model)
-        if not hasattr(model, "velocity_limit"):
-            model.velocity_limit = VelocityLimit(model)
-        if not hasattr(model, "floating_base_velocity_limit"):
-            model.floating_base_velocity_limit = None
         q_readonly = q.copy()
         q_readonly.setflags(write=False)
         self.collision_model = None
         self.collision_data = None
         self.data = data.copy() if copy_data else data
+        self.default_limits = (
+            list(default_limits)
+            if default_limits is not None
+            else [ConfigurationLimit(model), VelocityLimit(model)]
+        )
         self.model = model
         self.q = q_readonly
-        self.tangent = model.tangent
+        self.tangent = VectorSpace(model.nv)
 
         if forward_kinematics:
             self.update(None)
@@ -217,13 +219,13 @@ class Configuration:
             Current transform from the source frame to the dest frame.
 
         Raises:
-            KeyError: if any of the frame names is not found in the model.
+            FrameNotFound: if any frame name is not found in the model.
         """
         transform_source_to_world = self.get_transform_frame_to_world(source)
         transform_dest_to_world = self.get_transform_frame_to_world(dest)
         return transform_dest_to_world.act_inv(transform_source_to_world)
 
-    def integrate(self, velocity, dt) -> np.ndarray:
+    def integrate(self, velocity, dt) -> "Configuration":
         """Integrate a velocity starting from the current configuration.
 
         Args:
@@ -231,9 +233,13 @@ class Configuration:
             dt: Integration duration in [s].
 
         Returns:
-            New configuration vector after integration.
+            New configuration after integration, with the same default limits
+            as this one.
         """
-        return kin.integrate(self.model, self.q, velocity * dt)
+        q = kin.integrate(self.model, self.q, velocity * dt)
+        return Configuration(
+            self.model, self.data, q, default_limits=self.default_limits
+        )
 
     def integrate_inplace(self, velocity, dt) -> None:
         """Integrate a velocity starting from the current configuration.

@@ -38,7 +38,7 @@ def main() -> None:
         max_linear_velocity=[0.3, 0.3, 0.2],  # [m] / [s]
         max_angular_velocity=[0.8, 0.8, 0.8],  # [rad] / [s]
     )
-    configuration.model.floating_base_velocity_limit = floating_limit
+    configuration.default_limits.append(floating_limit)
 
     base_task = FrameTask(
         floating_limit.base_frame,

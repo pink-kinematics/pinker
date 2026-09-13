@@ -468,6 +468,6 @@ class TestConfiguration(unittest.TestCase):
         """Test in-place integration."""
         robot = load_robot_description("sigmaban_description", root_joint=None)
         configuration = Configuration(robot.model, robot.data, robot.q0)
-        velocity = robot.model.tangent.ones
+        velocity = configuration.tangent.ones
         configuration.integrate_inplace(velocity, dt=1e-3)
         self.assertGreater(np.linalg.norm(configuration.q - robot.q0), 2e-3)

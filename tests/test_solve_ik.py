@@ -326,8 +326,7 @@ class TestSolveIK(unittest.TestCase):
             )
             if norm(velocity) < conv_velocity_norm:
                 break
-            q = configuration.integrate(velocity, dt)
-            configuration = Configuration(robot.model, robot.data, q)
+            configuration = configuration.integrate(velocity, dt)
         self.assertLess(nb_iter, max_iter)
         self.assertLess(norm(velocity), conv_velocity_norm)
         self.assertLess(

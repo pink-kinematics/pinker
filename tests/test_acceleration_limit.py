@@ -103,8 +103,7 @@ class TestAccelerationLimit(unittest.TestCase):
         end_effector_target = end_effector_task.transform_target_to_world
         end_effector_target.translation[1] = 0.3
         end_effector_target.translation[2] = 0.2
-        configuration_limit = configuration.model.configuration_limit
-        velocity_limit = configuration.model.velocity_limit
+        default_limits = configuration.default_limits
         tasks = [end_effector_task]
         dt = 5e-3
         solver_settings = {
@@ -116,7 +115,7 @@ class TestAccelerationLimit(unittest.TestCase):
             tasks,
             dt,
             solver="scs",
-            limits=[configuration_limit, velocity_limit],
+            limits=default_limits,
             **solver_settings,
         )
         configuration.integrate_inplace(v_prev, dt)
@@ -127,7 +126,7 @@ class TestAccelerationLimit(unittest.TestCase):
             tasks,
             dt,
             solver="scs",
-            limits=[configuration_limit, velocity_limit, self.limit],
+            limits=default_limits + [self.limit],
             **solver_settings,
         )
         v_without = solve_ik(
@@ -135,7 +134,7 @@ class TestAccelerationLimit(unittest.TestCase):
             tasks,
             dt,
             solver="scs",
-            limits=[configuration_limit, velocity_limit],
+            limits=default_limits,
             **solver_settings,
         )
         a_with = (v_with - v_prev) / dt
