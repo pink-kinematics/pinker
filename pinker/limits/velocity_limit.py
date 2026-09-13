@@ -5,8 +5,8 @@
 from typing import TYPE_CHECKING, List, Optional, Tuple
 
 import numpy as np
-import pinocchio as pin
 
+from .. import kinematics as kin
 from ..exceptions import PinkerError
 from .limit import Limit
 
@@ -29,13 +29,13 @@ class VelocityLimit(Limit):
 
     indices: np.ndarray
     joints: list
-    model: pin.Model
+    model: kin.Model
     projection_matrix: Optional[np.ndarray]
     velocity_limit: np.ndarray
 
     def __init__(
         self,
-        model: pin.Model,
+        model: kin.Model,
         velocity_limit: Optional[np.ndarray] = None,
     ):
         """Initialize bounded tangent of a model.
