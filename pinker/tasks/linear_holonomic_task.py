@@ -5,8 +5,8 @@ r"""Linear holonomic task :math:`A (q \ominus q_0) = b`."""
 from typing import Optional, Sequence, Union
 
 import numpy as np
-import pinocchio as pin
 
+from .. import kinematics as kin
 from ..configuration import Configuration
 from ..exceptions import TaskDefinitionError, TaskJacobianNotSet
 from .task import Task
@@ -157,13 +157,13 @@ class LinearHolonomicTask(Task):
             Task error vector :math:`e(q)`.
         """
         q_ref = (
-            pin.neutral(configuration.model) if self.q_0 is None else self.q_0
+            kin.neutral(configuration.model) if self.q_0 is None else self.q_0
         )
         if not self.A.shape[1] == configuration.model.nv:
             raise TaskJacobianNotSet
         return (
             self.A
-            @ pin.difference(configuration.model, q_ref, configuration.q)
+            @ kin.difference(configuration.model, q_ref, configuration.q)
             - self.b
         )
 
@@ -181,12 +181,12 @@ class LinearHolonomicTask(Task):
             Task Jacobian :math:`J(q)`.
         """
         q_ref = (
-            pin.neutral(configuration.model) if self.q_0 is None else self.q_0
+            kin.neutral(configuration.model) if self.q_0 is None else self.q_0
         )
         if not self.A.shape[1] == configuration.model.nv:
             raise TaskJacobianNotSet
-        return self.A @ pin.dDifference(
-            configuration.model, q_ref, configuration.q, pin.ARG1
+        return self.A @ kin.d_difference(
+            configuration.model, q_ref, configuration.q, kin.ARG1
         )
 
     def __repr__(self):
