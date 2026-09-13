@@ -5,8 +5,8 @@
 from typing import Optional, Sequence, Union
 
 import numpy as np
-import pinocchio as pin
 
+from .. import kinematics as kin
 from ..configuration import Configuration
 from ..exceptions import TargetNotSet, TaskDefinitionError
 from .task import Task
@@ -97,7 +97,7 @@ class ComTask(Task):
             configuration: Robot configuration used to compute the target CoM.
         """
         q = configuration.q
-        desired_com = pin.centerOfMass(
+        desired_com = kin.center_of_mass(
             configuration.model, configuration.data, q
         )
         self.set_target(desired_com)
@@ -117,7 +117,7 @@ class ComTask(Task):
         if self.target_com is None:
             raise TargetNotSet("no target set for CoM")
         q = configuration.q
-        actual_com = pin.centerOfMass(
+        actual_com = kin.center_of_mass(
             configuration.model, configuration.data, q
         )
         error = actual_com - self.target_com
@@ -139,7 +139,7 @@ class ComTask(Task):
         if self.target_com is None:
             raise TargetNotSet("no target set for CoM")
         q = configuration.q
-        J = pin.jacobianCenterOfMass(
+        J = kin.jacobian_center_of_mass(
             configuration.model, configuration.data, q
         )
         return J
