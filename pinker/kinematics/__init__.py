@@ -11,10 +11,11 @@ This module implements the kinematics functions used by Pinker:
 - Lie-group operations on SE(3) and configuration spaces;
 - center of mass and its Jacobian.
 
-These functions were implemented based on their homonyms in `Pinocchio v4.1.0
+Heavy computations are delegated to an internal C extension. Functions were
+implemented based on their homonyms in `Pinocchio v4.1.0
 <https://github.com/stack-of-tasks/pinocchio/tree/v4.1.0>`__ as a reference.
-Their outputs are cross-validated against Pinocchio to 1e-10 by the test suite
-in `tests/kinematics`.
+Their outputs are cross-validated against Pinocchio by the test suite in
+`tests/kinematics`.
 """
 
 __version__ = "0.1.0"
