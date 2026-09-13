@@ -13,6 +13,7 @@ from typing import Optional, Union
 import numpy as np
 
 from . import _kinematics_c as _c
+from .rotations import quaternion_to_matrix, skew
 
 
 class SE3:
@@ -72,26 +73,7 @@ class SE3:
         """
         quat = np.random.randn(4)
         quat /= np.linalg.norm(quat)
-        x, y, z, w = quat
-        rotation = np.array(
-            [
-                [
-                    1.0 - 2.0 * (y * y + z * z),
-                    2.0 * (x * y - w * z),
-                    2.0 * (x * z + w * y),
-                ],
-                [
-                    2.0 * (x * y + w * z),
-                    1.0 - 2.0 * (x * x + z * z),
-                    2.0 * (y * z - w * x),
-                ],
-                [
-                    2.0 * (x * z - w * y),
-                    2.0 * (y * z + w * x),
-                    1.0 - 2.0 * (x * x + y * y),
-                ],
-            ]
-        )
+        rotation = quaternion_to_matrix(quat)
         return cls(rotation, np.random.uniform(-1.0, 1.0, 3))
 
     @classmethod
@@ -423,23 +405,3 @@ class Inertia:
 
         inertia = at_point(self, lever) + at_point(other, lever)
         return Inertia(mass, lever, inertia)
-
-
-def skew(v) -> np.ndarray:
-    """Skew-symmetric matrix of a 3D vector.
-
-    Args:
-        v: Three-dimensional vector.
-
-    Returns:
-        Matrix such that multiplying it by a vector w yields the cross
-        product of v and w.
-    """
-    x, y, z = v
-    return np.array(
-        [
-            [0.0, -z, y],
-            [z, 0.0, -x],
-            [-y, x, 0.0],
-        ]
-    )

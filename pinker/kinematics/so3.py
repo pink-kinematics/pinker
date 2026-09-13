@@ -1,8 +1,20 @@
 # SPDX-License-Identifier: Apache-2.0
 
-"""Conversions between representations of rotations."""
+"""Conversions between representations of rotations.
+
+Quaternions are laid out as (x, y, z, w), vector part first, as in
+configuration vectors. The one exception is :func:`quaternion_wxyz`,
+named after the scalar-first order that Viser expects.
+"""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 import numpy as np
+
+if TYPE_CHECKING:  # numpy.typing requires NumPy >= 1.20, we support >= 1.19
+    from numpy.typing import ArrayLike
 
 
 def quaternion_wxyz(R: np.ndarray) -> np.ndarray:
@@ -75,5 +87,57 @@ def rpy_to_matrix(roll: float, pitch: float, yaw: float) -> np.ndarray:
             [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
             [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
             [-sp, cp * sr, cp * cr],
+        ]
+    )
+
+
+def quaternion_to_matrix(quat: ArrayLike) -> np.ndarray:
+    """Rotation matrix of a unit quaternion.
+
+    Args:
+        quat: Unit quaternion, as (x, y, z, w) with its vector part first,
+            the way quaternions are laid out in configuration vectors.
+
+    Returns:
+        Corresponding rotation matrix.
+    """
+    x, y, z, w = quat
+    return np.array(
+        [
+            [
+                1.0 - 2.0 * (y * y + z * z),
+                2.0 * (x * y - w * z),
+                2.0 * (x * z + w * y),
+            ],
+            [
+                2.0 * (x * y + w * z),
+                1.0 - 2.0 * (x * x + z * z),
+                2.0 * (y * z - w * x),
+            ],
+            [
+                2.0 * (x * z - w * y),
+                2.0 * (y * z + w * x),
+                1.0 - 2.0 * (x * x + y * y),
+            ],
+        ]
+    )
+
+
+def skew(v: ArrayLike) -> np.ndarray:
+    """Skew-symmetric matrix of a 3D vector.
+
+    Args:
+        v: Three-dimensional vector.
+
+    Returns:
+        Matrix such that multiplying it by a vector w yields the cross
+        product of v and w.
+    """
+    x, y, z = v
+    return np.array(
+        [
+            [0.0, -z, y],
+            [z, 0.0, -x],
+            [-y, x, 0.0],
         ]
     )
