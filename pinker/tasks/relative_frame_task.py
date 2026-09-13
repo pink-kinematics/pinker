@@ -178,7 +178,7 @@ class RelativeFrameTask(Task):
         transform_frame_to_target = self.transform_target_to_root.act_inv(
             transform_frame_to_root
         )
-        error_in_frame: np.ndarray = kin.log(transform_frame_to_target).vector
+        error_in_frame: np.ndarray = kin.log6(transform_frame_to_target).vector
         return error_in_frame
 
     def compute_jacobian(self, configuration: Configuration) -> np.ndarray:
@@ -233,7 +233,7 @@ class RelativeFrameTask(Task):
         transform_frame_to_target = self.transform_target_to_root.act_inv(
             transform_frame_to_root
         )
-        action_root_to_frame = transform_frame_to_root.actionInverse
+        action_root_to_frame = transform_frame_to_root.action_inverse
         jacobian_frame_in_frame = configuration.get_frame_jacobian(self.frame)
         jacobian_root_in_root = configuration.get_frame_jacobian(self.root)
         J = kin.Jlog6(transform_frame_to_target) @ (

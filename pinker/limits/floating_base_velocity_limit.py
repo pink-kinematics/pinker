@@ -48,7 +48,7 @@ def _find_base_frame(
 
     root_joint_id = model.get_joint_id("root_joint")
     for frame in model.frames:
-        if frame.parentJoint == root_joint_id:
+        if frame.parent_joint == root_joint_id:
             return frame.name, model.get_frame_id(frame.name)
 
     raise ValueError("Model does not expose a frame attached to 'root_joint'.")
@@ -107,7 +107,7 @@ class FloatingBaseVelocityLimit(Limit):
 
         self.base_frame, self.frame_id = _find_base_frame(model, base_frame)
 
-        parent_joint = model.frames[self.frame_id].parentJoint
+        parent_joint = model.frames[self.frame_id].parent_joint
         if parent_joint != self.root_joint_id:
             raise ValueError(
                 f"Frame '{self.base_frame}' is not attached to the root joint."

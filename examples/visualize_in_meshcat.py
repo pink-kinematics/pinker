@@ -17,7 +17,7 @@ from robot_descriptions.loaders.pinocchio import load_robot_description
 import pinker
 from pinker import solve_ik
 from pinker.tasks import FrameTask, PostureTask
-from pinker.utils import custom_configuration_vector
+from pinker.kinematics import custom_configuration
 from pinker.visualization import start_meshcat_visualizer
 
 if __name__ == "__main__":
@@ -55,7 +55,7 @@ if __name__ == "__main__":
         ),
     }
     tasks["posture"].set_target(
-        custom_configuration_vector(robot, left_knee=0.2, right_knee=-0.2)
+        custom_configuration(robot, left_knee=0.2, right_knee=-0.2)
     )
 
     configuration = pinker.Configuration(robot.model, robot.data, robot.q0)

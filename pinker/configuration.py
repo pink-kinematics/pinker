@@ -10,14 +10,14 @@ frame Jacobians are available.
 """
 
 import logging
-from typing import Optional
+from typing import List, Optional
 
 import numpy as np
 
 from . import kinematics as kin
 from .exceptions import FrameNotFound, NotWithinConfigurationLimits
-from .limits import ConfigurationLimit, VelocityLimit
-from .utils import VectorSpace, get_root_joint_dim
+from .limits import ConfigurationLimit, Limit, VelocityLimit
+from .utils import VectorSpace
 
 
 class Configuration:
@@ -132,9 +132,9 @@ class Configuration:
             NotWithinConfigurationLimits: If the current configuration is
                 outside limits.
         """
-        q_max = self.model.upperPositionLimit
-        q_min = self.model.lowerPositionLimit
-        root_nq, _ = get_root_joint_dim(self.model)
+        q_max = self.model.upper_position_limit
+        q_min = self.model.lower_position_limit
+        root_nq, _ = self.model.get_root_joint_dim()
         for i in range(root_nq, self.model.nq):
             if q_max[i] <= q_min[i] + tol:  # no limit
                 continue
@@ -199,13 +199,12 @@ class Configuration:
             Current transform from the given frame to the world frame.
 
         Raises:
-            KeyError: if the frame name is not found in the robot model.
+            FrameNotFound: if the frame name is not found in the robot model.
         """
+        if not self.model.exist_frame(frame):
+            raise FrameNotFound(frame, self.model.frames)
         frame_id = self.model.get_frame_id(frame)
-        try:
-            return self.data.oMf[frame_id].copy()
-        except IndexError as index_error:
-            raise FrameNotFound(frame, self.model.frames) from index_error
+        return self.data.oMf[frame_id].copy()
 
     def get_transform(self, source: str, dest: str) -> kin.SE3:
         """Get the pose of a frame with respect to another frame.

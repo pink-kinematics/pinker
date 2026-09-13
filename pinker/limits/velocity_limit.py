@@ -44,13 +44,13 @@ class VelocityLimit(Limit):
             model: robot model.
             velocity_limit: Optional vector of velocity limits, of dimension
                 ``model.nv``. When ``None`` (the default), limits are read
-                from the model (``model.velocityLimit``). When given, it
+                from the model (``model.velocity_limit``). When given, it
                 takes precedence over the model's. This allows us to bound
                 joints that cannot have a limit from their URDF model, such as
                 continuous joints.
         """
         if velocity_limit is None:
-            velocity_limit = model.velocityLimit
+            velocity_limit = model.velocity_limit
         else:
             velocity_limit = np.asarray(velocity_limit, dtype=float).flatten()
             if model.nv > 0 and velocity_limit.shape[0] != model.nv:

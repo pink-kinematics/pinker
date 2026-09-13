@@ -203,7 +203,7 @@ def get_frame_jacobian(
         data.J,
         data._oMf_rot[frame_id],
         data._oMf_trans[frame_id],
-        packed["support_cols"][frame.parentJoint],
+        packed["support_cols"][frame.parent_joint],
         int(reference_frame),
         out,
         model.nv,

@@ -66,7 +66,7 @@ class TestConfigurationLimit(unittest.TestCase):
         configuration = Configuration(robot.model, robot.data, robot.q0)
         limit = ConfigurationLimit(robot.model)
         G, h = limit.compute_qp_inequalities(configuration, dt=dt)
-        v_lim = configuration.model.velocityLimit
+        v_lim = configuration.model.velocity_limit
         self.assertLess(np.max(+G @ v_lim * dt - h), -tol)
         self.assertLess(np.max(-G @ v_lim * dt - h), -tol)
 
@@ -84,12 +84,12 @@ class TestConfigurationLimit(unittest.TestCase):
         slack_vel = 5.5e-4  # [rad] / [s]
 
         # Clamp configuration limit to q +/- slack_vel * dt
-        robot.model.lowerPositionLimit = configuration.integrate(
+        robot.model.lower_position_limit = configuration.integrate(
             -slack_vel * configuration.tangent.ones, dt
-        )
-        robot.model.upperPositionLimit = configuration.integrate(
+        ).q
+        robot.model.upper_position_limit = configuration.integrate(
             +slack_vel * configuration.tangent.ones, dt
-        )
+        ).q
 
         limit = ConfigurationLimit(robot.model, config_limit_gain=0.5)
         G, h = limit.compute_qp_inequalities(configuration, dt)

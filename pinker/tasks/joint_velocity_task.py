@@ -8,7 +8,6 @@ import numpy as np
 
 from ..configuration import Configuration
 from ..exceptions import TargetNotSet, TaskDefinitionError
-from ..utils import get_root_joint_dim
 from .task import Task
 
 
@@ -65,7 +64,7 @@ class JointVelocityTask(Task):
         Returns:
             Joint-velocity task error.
         """
-        _, root_nv = get_root_joint_dim(configuration.model)
+        _, root_nv = configuration.model.get_root_joint_dim()
         task_nv = configuration.model.nv - root_nv
         if self.__target_Delta_q is None:
             raise TargetNotSet(repr(self))
@@ -103,7 +102,7 @@ class JointVelocityTask(Task):
         Returns:
             Joint-velocity task Jacobian :math:`J(q)`.
         """
-        _, root_nv = get_root_joint_dim(configuration.model)
+        _, root_nv = configuration.model.get_root_joint_dim()
         return configuration.tangent.eye[root_nv:, :]
 
     def __repr__(self):

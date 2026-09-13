@@ -93,11 +93,10 @@ Aside from their costs, most tasks take a second set of parameters called *targe
 Body tasks can be initialized, for example, from the robot's neutral configuration:
 
 ```python
-import pink
-from robot_descriptions.loaders.pinocchio import load_robot_description
+from pinker import Configuration, load_robot, solve_ik
 
-robot = load_robot_description("upkie_description")
-configuration = pink.Configuration(robot.model, robot.data, robot.q0)
+robot = load_robot("ur3_official_description")  # or: load_robot("robot.urdf")
+configuration = Configuration(robot.model, robot.data, robot.q0)
 for body, task in tasks.items():
     if type(task) is FrameTask:
         task.set_target(configuration.get_transform_frame_to_world(body))
@@ -117,7 +116,7 @@ for t in np.arange(0.0, 42.0, dt):
     time.sleep(dt)
 ```
 
-If task targets are continuously updated, there will be no stationary solution to converge to, but the model will keep on tracking each target at best. Note that [`solve_ik`](https://pink-kinematics.github.io/pink/inverse-kinematics.html#pink.solve_ik.solve_ik) will take care of both configuration and velocity limits read from the robot model.
+If task targets are continuously updated, there will be no stationary solution to converge to, but the model will keep on tracking each target at best. By default, `solve_ik` will take into account both joint limits and velocity limits read from the robot model.
 
 ## Compatibility
 

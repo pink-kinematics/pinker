@@ -48,25 +48,25 @@ def assert_models_equal(pin_model: pin.Model, kin_model: kin.Model) -> None:
         )
         assert np.allclose(
             pin_model.jointPlacements[i].homogeneous,
-            kin_model.jointPlacements[i].homogeneous,
+            kin_model.joint_placements[i].homogeneous,
             atol=TOL,
         )
     assert [f.name for f in pin_model.frames] == [
         f.name for f in kin_model.frames
     ]
     for fp, fm in zip(pin_model.frames, kin_model.frames):
-        assert fp.parentJoint == fm.parentJoint
+        assert fp.parentJoint == fm.parent_joint
         assert int(fp.type) == int(fm.type)
         assert np.allclose(
             fp.placement.homogeneous, fm.placement.homogeneous, atol=TOL
         )
     assert np.allclose(
-        pin_model.lowerPositionLimit, kin_model.lowerPositionLimit
+        pin_model.lowerPositionLimit, kin_model.lower_position_limit
     )
     assert np.allclose(
-        pin_model.upperPositionLimit, kin_model.upperPositionLimit
+        pin_model.upperPositionLimit, kin_model.upper_position_limit
     )
-    assert np.allclose(pin_model.velocityLimit, kin_model.velocityLimit)
+    assert np.allclose(pin_model.velocityLimit, kin_model.velocity_limit)
     assert list(pin_model.hasConfigurationLimit()) == list(
         kin_model.has_configuration_limit()
     )

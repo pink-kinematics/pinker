@@ -9,7 +9,6 @@ import numpy as np
 from .. import kinematics as kin
 from ..configuration import Configuration
 from ..exceptions import TargetNotSet
-from ..utils import get_root_joint_dim
 from .task import Task
 
 
@@ -96,7 +95,7 @@ class PostureTask(Task):
         """
         if self.target_q is None:
             raise TargetNotSet("no posture target")
-        _, root_nv = get_root_joint_dim(configuration.model)
+        _, root_nv = configuration.model.get_root_joint_dim()
         return kin.difference(
             configuration.model,
             self.target_q,
@@ -122,7 +121,7 @@ class PostureTask(Task):
         Returns:
             Posture task Jacobian :math:`J(q)`.
         """
-        _, nv = get_root_joint_dim(configuration.model)
+        _, nv = configuration.model.get_root_joint_dim()
         return configuration.tangent.eye[nv:, :]
 
     def __repr__(self):

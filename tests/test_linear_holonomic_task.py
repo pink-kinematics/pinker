@@ -10,7 +10,6 @@ from pinker import Configuration
 from pinker import kinematics as kin
 from pinker.exceptions import TaskDefinitionError, TaskJacobianNotSet
 from pinker.tasks import LinearHolonomicTask
-from pinker.utils import get_joint_idx
 
 from .loaders import load_robot_description
 
@@ -37,13 +36,10 @@ class TestLinearHolonomicTask(unittest.TestCase):
 
     def test_task_repr(self):
         """String representation reports the task gain, costs and target."""
-        A = np.zeros((1, self.configuration.model.nv))
-        _, r_knee_fe_jp_v_idx = get_joint_idx(
-            self.configuration.model, "r_knee_fe_jp"
-        )
-        _, r_knee_fe_jd_v_idx = get_joint_idx(
-            self.configuration.model, "r_knee_fe_jd"
-        )
+        model = self.configuration.model
+        A = np.zeros((1, model.nv))
+        r_knee_fe_jp_v_idx = model.get_joint_tangent_id("r_knee_fe_jp")
+        r_knee_fe_jd_v_idx = model.get_joint_tangent_id("r_knee_fe_jd")
         A[:, r_knee_fe_jp_v_idx] = 1.0
         A[:, r_knee_fe_jd_v_idx] = -1.0
         task = LinearHolonomicTask(A=A, b=np.zeros(1), q_0=None, cost=1.0)
@@ -61,21 +57,14 @@ class TestLinearHolonomicTask(unittest.TestCase):
 
     def test_unit_cost_qp_objective(self):
         """A unit cost vector means the QP objective is (J^T J, -e^T J)."""
-        A = np.zeros((2, self.configuration.model.nv))
-        _, r_knee_fe_jp_v_idx = get_joint_idx(
-            self.configuration.model, "r_knee_fe_jp"
-        )
-        _, r_knee_fe_jd_v_idx = get_joint_idx(
-            self.configuration.model, "r_knee_fe_jd"
-        )
+        model = self.configuration.model
+        A = np.zeros((2, model.nv))
+        r_knee_fe_jp_v_idx = model.get_joint_tangent_id("r_knee_fe_jp")
+        r_knee_fe_jd_v_idx = model.get_joint_tangent_id("r_knee_fe_jd")
         A[:, r_knee_fe_jp_v_idx] = 1.0
         A[:, r_knee_fe_jd_v_idx] = -1.0
-        _, l_knee_fe_jp_v_idx = get_joint_idx(
-            self.configuration.model, "l_knee_fe_jp"
-        )
-        _, l_knee_fe_jd_v_idx = get_joint_idx(
-            self.configuration.model, "l_knee_fe_jd"
-        )
+        l_knee_fe_jp_v_idx = model.get_joint_tangent_id("l_knee_fe_jp")
+        l_knee_fe_jd_v_idx = model.get_joint_tangent_id("l_knee_fe_jd")
         A[:, l_knee_fe_jp_v_idx] = 1.0
         A[:, l_knee_fe_jd_v_idx] = -1.0
         task = LinearHolonomicTask(
@@ -89,21 +78,14 @@ class TestLinearHolonomicTask(unittest.TestCase):
 
     def test_zero_cost_same_as_disabling_task(self):
         """The task has no effect when its cost is zero."""
-        A = np.zeros((2, self.configuration.model.nv))
-        _, r_knee_fe_jp_v_idx = get_joint_idx(
-            self.configuration.model, "r_knee_fe_jp"
-        )
-        _, r_knee_fe_jd_v_idx = get_joint_idx(
-            self.configuration.model, "r_knee_fe_jd"
-        )
+        model = self.configuration.model
+        A = np.zeros((2, model.nv))
+        r_knee_fe_jp_v_idx = model.get_joint_tangent_id("r_knee_fe_jp")
+        r_knee_fe_jd_v_idx = model.get_joint_tangent_id("r_knee_fe_jd")
         A[:, r_knee_fe_jp_v_idx] = 1.0
         A[:, r_knee_fe_jd_v_idx] = -1.0
-        _, l_knee_fe_jp_v_idx = get_joint_idx(
-            self.configuration.model, "l_knee_fe_jp"
-        )
-        _, l_knee_fe_jd_v_idx = get_joint_idx(
-            self.configuration.model, "l_knee_fe_jd"
-        )
+        l_knee_fe_jp_v_idx = model.get_joint_tangent_id("l_knee_fe_jp")
+        l_knee_fe_jd_v_idx = model.get_joint_tangent_id("l_knee_fe_jd")
         A[:, l_knee_fe_jp_v_idx] = 1.0
         A[:, l_knee_fe_jd_v_idx] = -1.0
         task = LinearHolonomicTask(

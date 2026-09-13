@@ -5,7 +5,6 @@
 import numpy as np
 
 from ..configuration import Configuration
-from ..utils import get_root_joint_dim
 from .joint_velocity_task import JointVelocityTask
 
 
@@ -36,7 +35,7 @@ class DampingTask(JointVelocityTask):
         Returns:
             Damping task error :math:`e(q) = 0`.
         """
-        _, root_nv = get_root_joint_dim(configuration.model)
+        _, root_nv = configuration.model.get_root_joint_dim()
         return np.zeros(configuration.model.nv - root_nv)
 
     def __repr__(self):

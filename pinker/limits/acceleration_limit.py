@@ -71,8 +71,9 @@ class AccelerationLimit(Limit):
         has_configuration_limit = np.logical_and(
             model.has_configuration_limit(),
             np.logical_and(
-                model.upperPositionLimit < 1e20,
-                model.upperPositionLimit > model.lowerPositionLimit + 1e-10,
+                model.upper_position_limit < 1e20,
+                model.upper_position_limit
+                > model.lower_position_limit + 1e-10,
             ),
         )
 
@@ -164,7 +165,7 @@ class AccelerationLimit(Limit):
 
         # Tangent upper position displacements
         Delta_q_max = kin.difference(
-            self.model, configuration.q, self.model.upperPositionLimit
+            self.model, configuration.q, self.model.upper_position_limit
         )[self.indices]
         Delta_q_max = np.where(
             self.has_configuration_limit, Delta_q_max, np.inf
@@ -173,7 +174,7 @@ class AccelerationLimit(Limit):
         # Tangent lower position displacements
         Delta_q_min = kin.difference(
             self.model,
-            self.model.lowerPositionLimit,
+            self.model.lower_position_limit,
             configuration.q,
         )[self.indices]
         Delta_q_min = np.where(

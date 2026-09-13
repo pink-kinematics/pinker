@@ -71,8 +71,9 @@ class ConfigurationLimit(Limit):
         has_configuration_limit = np.logical_and(
             model.has_configuration_limit(),
             np.logical_and(
-                model.upperPositionLimit < 1e20,
-                model.upperPositionLimit > model.lowerPositionLimit + 1e-10,
+                model.upper_position_limit < 1e20,
+                model.upper_position_limit
+                > model.lower_position_limit + 1e-10,
             ),
         )
 
@@ -130,10 +131,10 @@ class ConfigurationLimit(Limit):
             return None
 
         Delta_q_max = kin.difference(
-            self.model, configuration.q, self.model.upperPositionLimit
+            self.model, configuration.q, self.model.upper_position_limit
         )
         Delta_q_min = kin.difference(
-            self.model, configuration.q, self.model.lowerPositionLimit
+            self.model, configuration.q, self.model.lower_position_limit
         )
         p_max = self.config_limit_gain * Delta_q_max[self.indices]
         p_min = self.config_limit_gain * Delta_q_min[self.indices]

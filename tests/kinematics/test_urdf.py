@@ -50,14 +50,14 @@ class TestUrdf(unittest.TestCase):
             model = kin.build_model_from_urdf(urdf_path)
             geometry = kin.build_geom_from_urdf(model, urdf_path)
         self.assertEqual(geometry.ngeoms, 3)
-        box, sphere, cylinder = geometry.geometryObjects
+        box, sphere, cylinder = geometry.geometry_objects
         self.assertEqual(box.shape, "box")
         self.assertTrue(np.allclose(box.size, [0.3, 0.2, 0.1]))
-        self.assertTrue(np.allclose(box.meshColor, [0.1, 0.2, 0.3, 1.0]))
+        self.assertTrue(np.allclose(box.mesh_color, [0.1, 0.2, 0.3, 1.0]))
         self.assertTrue(
             np.allclose(box.placement.translation, [0.1, 0.0, 0.2])
         )
         self.assertEqual(sphere.shape, "sphere")
-        self.assertTrue(np.allclose(sphere.meshColor, [1.0, 0.0, 0.0, 0.5]))
+        self.assertTrue(np.allclose(sphere.mesh_color, [1.0, 0.0, 0.0, 0.5]))
         self.assertEqual(cylinder.shape, "cylinder")
-        self.assertEqual(cylinder.parentJoint, model.get_joint_id("hinge"))
+        self.assertEqual(cylinder.parent_joint, model.get_joint_id("hinge"))

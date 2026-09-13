@@ -18,7 +18,7 @@ from robot_descriptions.loaders.pinocchio import load_robot_description
 import pinker
 from pinker import solve_ik
 from pinker.tasks import FrameTask, PostureTask
-from pinker.utils import custom_configuration_vector
+from pinker.kinematics import custom_configuration
 
 if __name__ == "__main__":
     robot = load_robot_description(
@@ -52,7 +52,7 @@ if __name__ == "__main__":
             task.set_target_from_configuration(configuration)
 
     tasks["posture"].set_target(
-        custom_configuration_vector(robot, left_knee=0.2, right_knee=-0.2)
+        custom_configuration(robot, left_knee=0.2, right_knee=-0.2)
     )
 
     left_contact_target = configuration.get_transform_frame_to_world(

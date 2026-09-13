@@ -4,6 +4,7 @@
 
 from .configuration import Configuration
 from .exceptions import PinkerError
+from .kinematics import custom_configuration
 from .solve_ik import build_ik, solve_ik
 from .tasks import (
     FrameTask,
@@ -13,7 +14,6 @@ from .tasks import (
     PostureTask,
     Task,
 )
-from .utils import custom_configuration_vector
 
 __version__ = "0.1.0"
 
@@ -27,6 +27,6 @@ __all__ = [
     "PostureTask",
     "Task",
     "build_ik",
-    "custom_configuration_vector",
+    "custom_configuration",
     "solve_ik",
 ]

@@ -11,10 +11,6 @@ class PinkerError(Exception):
     """Base class for Pinker exceptions."""
 
 
-class ConfigurationError(PinkerError):
-    """Exception raised when encountering an invalid configuration vector."""
-
-
 class FrameNotFound(PinkerError):
     """Exception raised when a frame is not found in the robot model."""
 

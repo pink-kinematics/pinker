@@ -45,8 +45,8 @@ if __name__ == "__main__":
         )
     )
     robot.data = pin.Data(model)
-    low = model.lowerPositionLimit
-    high = model.upperPositionLimit
+    low = model.lower_position_limit
+    high = model.upper_position_limit
     q_init = pin.neutral(model)
 
     # Task details

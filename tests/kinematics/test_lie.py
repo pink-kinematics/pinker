@@ -29,7 +29,7 @@ class TestLie(unittest.TestCase):
             if angle >= np.pi:
                 nu[3:] *= 0.9 * np.pi / angle
             M = kin.exp6(nu)
-            self.assertTrue(np.allclose(kin.log(M).vector, nu, atol=1e-10))
+            self.assertTrue(np.allclose(kin.log6(M).vector, nu, atol=1e-10))
 
     def test_log_matches_pinocchio(self):
         """log6 and Jlog6 match Pinocchio, including near-pi rotations."""
@@ -39,7 +39,7 @@ class TestLie(unittest.TestCase):
             M_pin = pin.SE3(M.rotation, M.translation)
             self.assertTrue(
                 np.allclose(
-                    kin.log(M).vector, pin.log(M_pin).vector, atol=1e-10
+                    kin.log6(M).vector, pin.log6(M_pin).vector, atol=1e-10
                 )
             )
             self.assertTrue(
@@ -56,8 +56,8 @@ class TestLie(unittest.TestCase):
                     M_pin = pin.SE3(R, p)
                     self.assertTrue(
                         np.allclose(
-                            kin.log(M).vector,
-                            pin.log(M_pin).vector,
+                            kin.log6(M).vector,
+                            pin.log6(M_pin).vector,
                             atol=1e-6,
                         )
                     )
@@ -74,12 +74,12 @@ class TestLie(unittest.TestCase):
             M = random_se3(rng)
             J = kin.Jlog6(M)
             J_fd = np.empty((6, 6))
-            log_M = kin.log(M).vector
+            log_M = kin.log6(M).vector
             for k in range(6):
                 delta = np.zeros(6)
                 delta[k] = eps
                 M_pert = M * kin.exp6(delta)
-                J_fd[:, k] = (kin.log(M_pert).vector - log_M) / eps
+                J_fd[:, k] = (kin.log6(M_pert).vector - log_M) / eps
             self.assertTrue(np.allclose(J, J_fd, atol=1e-5))
 
     def test_se3_actions(self):
@@ -119,7 +119,7 @@ class TestLie(unittest.TestCase):
             A_pin = pin.SE3(A.rotation, A.translation)
             self.assertTrue(np.allclose(A.action, A_pin.action, atol=1e-12))
             self.assertTrue(
-                np.allclose(A.actionInverse, A_pin.actionInverse, atol=1e-12)
+                np.allclose(A.action_inverse, A_pin.actionInverse, atol=1e-12)
             )
 
     def test_skew(self):

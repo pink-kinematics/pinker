@@ -9,7 +9,6 @@ import numpy as np
 from pinker import Configuration
 from pinker import kinematics as kin
 from pinker.limits import FloatingBaseVelocityLimit
-from pinker.utils import get_joint_idx
 
 from .loaders import load_robot_description
 
@@ -31,7 +30,7 @@ class TestFloatingBaseVelocityLimitPlanar(unittest.TestCase):
         root_joint_id = self.model.get_joint_id("root_joint")
         base_frame = None
         for frame in self.model.frames:
-            if frame.parentJoint == root_joint_id:
+            if frame.parent_joint == root_joint_id:
                 base_frame = frame.name
                 break
         if base_frame is None:
@@ -52,7 +51,7 @@ class TestFloatingBaseVelocityLimitPlanar(unittest.TestCase):
         G, h = result
 
         twist_bounds = np.hstack([self.linear_max, self.angular_max])
-        _, idx_v = get_joint_idx(self.model, "root_joint")
+        idx_v = self.model.get_joint_tangent_id("root_joint")
 
         dq_inside = np.zeros(self.model.nv)
         finite_mask = np.isfinite(twist_bounds)
@@ -75,7 +74,7 @@ class TestFloatingBaseVelocityLimitPlanar(unittest.TestCase):
         )
         self.assertIsNotNone(result)
         G, _ = result
-        _, idx_v = get_joint_idx(self.model, "root_joint")
+        idx_v = self.model.get_joint_tangent_id("root_joint")
         root_nv = self.model.joints[self.model.get_joint_id("root_joint")].nv
         root_columns = G[:, idx_v : idx_v + root_nv]
         non_root_columns = np.delete(G, np.s_[idx_v : idx_v + root_nv], axis=1)
@@ -100,7 +99,7 @@ class TestFloatingBaseVelocityLimitFreeFlyer(unittest.TestCase):
         root_joint_id = self.model.get_joint_id("root_joint")
         base_frame = None
         for frame in self.model.frames:
-            if frame.parentJoint == root_joint_id:
+            if frame.parent_joint == root_joint_id:
                 base_frame = frame.name
                 break
         if base_frame is None:
@@ -137,7 +136,7 @@ class TestFloatingBaseVelocityLimitFreeFlyer(unittest.TestCase):
         self.assertIsNotNone(result)
         G, h = result
 
-        _, idx_v = get_joint_idx(self.model, "root_joint")
+        idx_v = self.model.get_joint_tangent_id("root_joint")
         dq = np.zeros(self.model.nv)
         dq[idx_v : idx_v + 6] = self.dt * np.hstack(
             [self.linear_max, self.angular_max]
@@ -167,5 +166,5 @@ class TestFloatingBaseVelocityLimitFreeFlyer(unittest.TestCase):
         )
         root_joint_id = self.model.get_joint_id("root_joint")
         self.assertEqual(
-            self.model.frames[limit.frame_id].parentJoint, root_joint_id
+            self.model.frames[limit.frame_id].parent_joint, root_joint_id
         )

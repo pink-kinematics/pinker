@@ -2,75 +2,7 @@
 
 """Utility classes and functions."""
 
-from typing import Tuple
-
 import numpy as np
-
-from . import kinematics as kin
-from .exceptions import ConfigurationError, PinkerError
-
-
-def custom_configuration_vector(
-    robot: kin.RobotWrapper, **kwargs
-) -> np.ndarray:
-    """Generate a configuration vector where named joints have specific values.
-
-    Args:
-        robot: Robot model.
-        kwargs: Custom values for joint coordinates.
-
-    Returns:
-        Configuration vector where named joints have the values specified in
-        keyword arguments, and other joints have their neutral value.
-    """
-    q = pin.neutral(robot.model)
-    for name, value in kwargs.items():
-        joint_id = robot.model.getJointId(name)
-        joint = robot.model.joints[joint_id]
-        value = np.array(value).flatten()
-        if value.shape[0] != joint.nq:
-            raise ConfigurationError(
-                f"Joint '{name}' has {joint.nq=} but is set to {value.shape=}"
-            )
-        q[joint.idx_q : joint.idx_q + joint.nq] = value
-    return q
-
-
-def get_root_joint_dim(model: pin.Model) -> Tuple[int, int]:
-    """Count configuration and tangent dimensions of the root joint, if any.
-
-    Args:
-        model: Robot model.
-
-    Returns:
-        nq: Number of configuration dimensions.
-        nv: Number of tangent dimensions.
-    """
-    if model.existJointName("root_joint"):
-        root_joint_id = model.getJointId("root_joint")
-        root_joint = model.joints[root_joint_id]
-        return root_joint.nq, root_joint.nv
-    return 0, 0
-
-
-def get_joint_idx(model: pin.Model, joint_name: str) -> Tuple[int, int]:
-    """Get joint index in the configuration and tangent space.
-
-    Args:
-        model: Robot model.
-        joint_name: Joint name.
-
-    Returns:
-        idx_q: Joint idx in configuration space.
-        idx_v: Joint idx in tangent space.
-    """
-    if model.existJointName(joint_name):
-        joint_id = model.getJointId(joint_name)
-        joint = model.joints[joint_id]
-        return joint.idx_q, joint.idx_v
-    raise PinkerError(
-        f"cannot find the joint index corresponding to joint {joint_name}"
-    )
 
 
 class VectorSpace:

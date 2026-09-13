@@ -193,8 +193,7 @@ class TestSolveIK(unittest.TestCase):
                 break
             self.assertLess(error, last_error)  # error stictly decreases
             last_error = error
-            q = configuration.integrate(velocity, dt)
-            configuration = Configuration(robot.model, robot.data, q)
+            configuration = configuration.integrate(velocity, dt)
             velocity = solve_ik(configuration, [task], dt, solver="daqp")
 
         # After nb_steps we are at the target and not moving

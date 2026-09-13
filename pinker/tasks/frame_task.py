@@ -186,7 +186,7 @@ class FrameTask(Task):
         #         = transform_frame_to_world * transform_target_to_frame
         #         = transform_target_to_frame
         #
-        error_in_frame: np.ndarray = kin.log(transform_target_to_frame).vector
+        error_in_frame: np.ndarray = kin.log6(transform_target_to_frame).vector
         return error_in_frame
 
     def compute_jacobian(self, configuration: Configuration) -> np.ndarray:

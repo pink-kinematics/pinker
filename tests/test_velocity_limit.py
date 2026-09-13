@@ -48,7 +48,7 @@ class TestVelocityLimit(unittest.TestCase):
         # Every tangent coordinate now carries a finite limit, so every
         # joint is bounded regardless of what the model declares.
         self.assertEqual(len(limit.indices), nv)
-        # The QP bound uses the argument, not model.velocityLimit.
+        # The QP bound uses the argument, not model.velocity_limit.
         _, h = limit.compute_qp_inequalities(configuration=None, dt=1e-3)
         self.assertTrue(np.allclose(h, 1e-3 * 2.0))
 

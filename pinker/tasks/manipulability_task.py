@@ -34,7 +34,7 @@ def check_revolute_path(model: kin.Model, frame_name: str) -> None:
         ValueError: If a non-revolute joint is found on the path.
     """
     frame_id = model.get_frame_id(frame_name)
-    joint_id = model.frames[frame_id].parentJoint
+    joint_id = model.frames[frame_id].parent_joint
     while joint_id != 0:
         shortname = model.joints[joint_id].shortname()
         if shortname not in REVOLUTE_SHORTNAMES:
