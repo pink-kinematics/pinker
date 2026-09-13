@@ -39,13 +39,19 @@ class Configuration:
 
     Attributes:
         data: Data corresponding to :data:`Configuration.model`.
+        default_limits: Limits that :func:`.solve_ik` enforces unless it is
+            given its own.
         model: Kinodynamic model.
         q: Configuration vector for the robot model.
+        tangent: Tangent space of the model, with its characteristic
+            matrices.
     """
 
     data: kin.Data
+    default_limits: List[Limit]
     model: kin.Model
     q: np.ndarray
+    tangent: VectorSpace
 
     def __init__(
         self,
@@ -54,8 +60,6 @@ class Configuration:
         q: np.ndarray,
         copy_data: bool = True,
         forward_kinematics: bool = True,
-        collision_model=None,
-        collision_data=None,
         default_limits: Optional[List[Limit]] = None,
     ):
         """Initialize configuration.
@@ -68,8 +72,6 @@ class Configuration:
                 data. Otherwise, work on the input data directly.
             forward_kinematics: If true (default), compute forward kinematics
                 from the q into the internal data.
-            collision_model: Not supported by Pinker. Must be ``None``.
-            collision_data: Not supported by Pinker. Must be ``None``.
             default_limits: Limits enforced by default when calling
                 :func:`.solve_ik` without a custom `limits` keyword argument.
                 Defaults to the configuration and velocity limits read from the
@@ -81,15 +83,8 @@ class Configuration:
             or forward kinematics (e.g. if it is already computed by the
             caller) using constructor parameters.
         """
-        if collision_model is not None or collision_data is not None:
-            raise NotImplementedError(
-                "Pinker does not support collision models; "
-                "use Pink for collision-aware inverse kinematics"
-            )
         q_readonly = q.copy()
         q_readonly.setflags(write=False)
-        self.collision_model = None
-        self.collision_data = None
         self.data = data.copy() if copy_data else data
         self.default_limits = (
             list(default_limits)
@@ -102,6 +97,25 @@ class Configuration:
 
         if forward_kinematics:
             self.update(None)
+
+    def copy(self) -> "Configuration":
+        """Copy this configuration.
+
+        The copy gets its own data, so that running forward kinematics on it
+        leaves the original untouched. Attributes that don't depend on the
+        configuration vector (model, default limits and tangent space) are
+        shared.
+
+        Returns:
+            New configuration initialized the same configuration vector.
+        """
+        other = Configuration.__new__(Configuration)
+        other.data = self.data.copy()
+        other.default_limits = list(self.default_limits)
+        other.model = self.model
+        other.q = self.q  # read-only, thus safe to share
+        other.tangent = self.tangent
+        return other
 
     def update(self, q: Optional[np.ndarray] = None) -> None:
         """Update configuration to a new vector.
@@ -233,13 +247,12 @@ class Configuration:
             dt: Integration duration in [s].
 
         Returns:
-            New configuration after integration, with the same default limits
-            as this one.
+            New configuration after integration, sharing the default limits
+            and tangent space of this one.
         """
-        q = kin.integrate(self.model, self.q, velocity * dt)
-        return Configuration(
-            self.model, self.data, q, default_limits=self.default_limits
-        )
+        other = self.copy()
+        other.integrate_inplace(velocity, dt)
+        return other
 
     def integrate_inplace(self, velocity, dt) -> None:
         """Integrate a velocity starting from the current configuration.

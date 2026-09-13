@@ -471,3 +471,33 @@ class TestConfiguration(unittest.TestCase):
         velocity = configuration.tangent.ones
         configuration.integrate_inplace(velocity, dt=1e-3)
         self.assertGreater(np.linalg.norm(configuration.q - robot.q0), 2e-3)
+
+    def test_copy_shares_limits_and_tangent(self):
+        """A copy shares limits and tangent space, but not its data."""
+        robot = load_robot_description("sigmaban_description", root_joint=None)
+        configuration = Configuration(robot.model, robot.data, robot.q0)
+        other = configuration.copy()
+        self.assertTrue(np.allclose(other.q, configuration.q))
+        self.assertIs(other.model, configuration.model)
+        self.assertIs(other.tangent, configuration.tangent)
+        self.assertIsNot(other.data, configuration.data)
+        for limit, other_limit in zip(
+            configuration.default_limits, other.default_limits
+        ):
+            self.assertIs(limit, other_limit)
+
+    def test_integrate_leaves_configuration_untouched(self):
+        """Integration returns a new configuration, leaving this one as is."""
+        robot = load_robot_description("sigmaban_description", root_joint=None)
+        configuration = Configuration(robot.model, robot.data, robot.q0)
+        velocity = configuration.tangent.ones
+        other = configuration.integrate(velocity, dt=1e-3)
+        self.assertTrue(np.allclose(configuration.q, robot.q0))
+        self.assertGreater(np.linalg.norm(other.q - robot.q0), 2e-3)
+        # Forward kinematics ran on the copy only
+        self.assertFalse(
+            np.allclose(
+                other.get_transform_frame_to_world("left_foot_tip").np,
+                configuration.get_transform_frame_to_world("left_foot_tip").np,
+            )
+        )
