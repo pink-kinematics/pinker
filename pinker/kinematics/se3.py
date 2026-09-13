@@ -13,7 +13,7 @@ from typing import Optional, Union
 import numpy as np
 
 from . import _kinematics_c as _c
-from .rotations import quaternion_to_matrix, skew
+from .so3 import quaternion_to_matrix, skew
 
 
 class SE3:

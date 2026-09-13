@@ -12,7 +12,7 @@ import numpy as np
 from . import kinematics as kin
 from .kinematics import GeometryModel, GeometryObject
 from .kinematics.model import Data, Model
-from .kinematics.rotations import quaternion_wxyz
+from .kinematics.so3 import quaternion_wxyz
 
 if TYPE_CHECKING:  # viser is imported lazily, when starting the viewer
     import viser
