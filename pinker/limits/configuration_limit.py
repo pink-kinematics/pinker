@@ -5,8 +5,8 @@
 from typing import TYPE_CHECKING, List, Optional, Tuple
 
 import numpy as np
-import pinocchio as pin
 
+from .. import kinematics as kin
 from .limit import Limit
 
 if TYPE_CHECKING:
@@ -54,11 +54,11 @@ class ConfigurationLimit(Limit):
 
     config_limit_gain: float
     indices: np.ndarray
-    model: pin.Model
+    model: kin.Model
     joints: list
     projection_matrix: Optional[np.ndarray]
 
-    def __init__(self, model: pin.Model, config_limit_gain: float = 0.5):
+    def __init__(self, model: kin.Model, config_limit_gain: float = 0.5):
         """Initialize bounded tangent of a model.
 
         Args:
@@ -69,7 +69,7 @@ class ConfigurationLimit(Limit):
         assert 0.0 < config_limit_gain <= 1.0
 
         has_configuration_limit = np.logical_and(
-            model.hasConfigurationLimit(),
+            model.has_configuration_limit(),
             np.logical_and(
                 model.upperPositionLimit < 1e20,
                 model.upperPositionLimit > model.lowerPositionLimit + 1e-10,
@@ -129,10 +129,10 @@ class ConfigurationLimit(Limit):
         if self.projection_matrix is None:  # no joint (thus checked for mypy)
             return None
 
-        Delta_q_max = pin.difference(
+        Delta_q_max = kin.difference(
             self.model, configuration.q, self.model.upperPositionLimit
         )
-        Delta_q_min = pin.difference(
+        Delta_q_min = kin.difference(
             self.model, configuration.q, self.model.lowerPositionLimit
         )
         p_max = self.config_limit_gain * Delta_q_max[self.indices]
