@@ -5,8 +5,8 @@
 from typing import Sequence
 
 import numpy as np
-import pinocchio as pin
 
+from .. import kinematics as kin
 from ..configuration import Configuration
 from .linear_holonomic_task import LinearHolonomicTask
 
@@ -81,7 +81,7 @@ class JointCouplingTask(LinearHolonomicTask):
         A = np.zeros((1, configuration.model.nv))
         for joint, ratio in zip(joint_names, ratios):
             joint_obj = configuration.model.joints[
-                configuration.model.getJointId(joint)
+                configuration.model.get_joint_id(joint)
             ]
             strt = joint_obj.idx_v
             end = strt + joint_obj.nv
@@ -90,7 +90,7 @@ class JointCouplingTask(LinearHolonomicTask):
         super().__init__(
             A,
             np.zeros(1),
-            pin.neutral(configuration.model),
+            kin.neutral(configuration.model),
             cost=cost,
             gain=gain,
             lm_damping=lm_damping,
