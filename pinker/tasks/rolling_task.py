@@ -5,8 +5,8 @@
 from typing import Optional, Sequence, Union
 
 import numpy as np
-import pinocchio as pin
 
+from .. import kinematics as kin
 from ..configuration import Configuration
 from .task import Task
 
@@ -124,11 +124,11 @@ class RollingTask(Task):
         position_rim_in_floor = position_hub_in_floor + np.array(
             [0.0, 0.0, -self.wheel_radius]
         )
-        transform_rim_to_floor = pin.SE3(
+        transform_rim_to_floor = kin.SE3(
             rotation=np.eye(3),
             translation=position_rim_in_floor,
         )
-        transform_hub_to_rim = transform_rim_to_floor.actInv(
+        transform_hub_to_rim = transform_rim_to_floor.act_inv(
             transform_hub_to_floor
         )
         jacobian_hub_in_hub = configuration.get_frame_jacobian(self.hub_frame)
