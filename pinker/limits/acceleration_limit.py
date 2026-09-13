@@ -5,8 +5,8 @@
 from typing import TYPE_CHECKING, List, Optional, Tuple
 
 import numpy as np
-import pinocchio as pin
 
+from .. import kinematics as kin
 from ..exceptions import PinkerError
 from .limit import Limit
 
@@ -39,10 +39,10 @@ class AccelerationLimit(Limit):
     a_max: np.ndarray
     has_configuration_limit: np.ndarray
     indices: np.ndarray
-    model: pin.Model
+    model: kin.Model
     projection_matrix: Optional[np.ndarray]
 
-    def __init__(self, model: pin.Model, acceleration_limit: np.ndarray):
+    def __init__(self, model: kin.Model, acceleration_limit: np.ndarray):
         """Initialize bounded tangent of a model.
 
         Args:
@@ -69,7 +69,7 @@ class AccelerationLimit(Limit):
         ]
 
         has_configuration_limit = np.logical_and(
-            model.hasConfigurationLimit(),
+            model.has_configuration_limit(),
             np.logical_and(
                 model.upperPositionLimit < 1e20,
                 model.upperPositionLimit > model.lowerPositionLimit + 1e-10,
@@ -163,7 +163,7 @@ class AccelerationLimit(Limit):
             return None
 
         # Tangent upper position displacements
-        Delta_q_max = pin.difference(
+        Delta_q_max = kin.difference(
             self.model, configuration.q, self.model.upperPositionLimit
         )[self.indices]
         Delta_q_max = np.where(
@@ -171,7 +171,7 @@ class AccelerationLimit(Limit):
         )
 
         # Tangent lower position displacements
-        Delta_q_min = pin.difference(
+        Delta_q_min = kin.difference(
             self.model,
             self.model.lowerPositionLimit,
             configuration.q,
