@@ -5,13 +5,14 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
+from pinker import kinematics as kin
 from pinker.exceptions import TaskDefinitionError, TaskJacobianNotSet
 from pinker.tasks import LinearHolonomicTask
 from pinker.utils import get_joint_idx
+
+from .loaders import load_robot_description
 
 
 class TestLinearHolonomicTask(unittest.TestCase):
@@ -25,7 +26,7 @@ class TestLinearHolonomicTask(unittest.TestCase):
     def setUp(self):
         """Prepare test fixture."""
         robot = load_robot_description(
-            "draco3_description", root_joint=pin.JointModelFreeFlyer()
+            "draco3_description", root_joint=kin.JointModelFreeFlyer()
         )
         self.configuration = Configuration(robot.model, robot.data, robot.q0)
 

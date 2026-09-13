@@ -5,11 +5,12 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
+from pinker import kinematics as kin
 from pinker.tasks import FrameTask, JointCouplingTask, PostureTask, Task
+
+from .loaders import load_robot_description
 
 
 class TestJacobians(unittest.TestCase):
@@ -26,9 +27,9 @@ class TestJacobians(unittest.TestCase):
         random_dirs = random_dq / l2norms.reshape((nb_dirs, 1))
         random_q = np.array(
             [
-                pin.integrate(
+                kin.integrate(
                     model,
-                    pin.neutral(model),
+                    kin.neutral(model),
                     0.1 * np.pi * (2.0 * np.random.random(model.nv) - 1.0),
                 )
                 for _ in range(nb_configs)
@@ -66,7 +67,7 @@ class TestJacobians(unittest.TestCase):
             for i in range(nv):
                 h = 0.000001
                 e_i = np.eye(nv)[i]
-                q_i = pin.integrate(self.model, q_0, h * e_i)
+                q_i = kin.integrate(self.model, q_0, h * e_i)
                 J_finite[:, i] = (e(q_i) - e_0) / h
 
             self.assertLess(np.linalg.norm(J_0 - J_finite, ord=np.inf), tol)
@@ -77,7 +78,7 @@ class TestJacobians(unittest.TestCase):
             position_cost=1.0,
             orientation_cost=1.0,
         )
-        frame_task.set_target(pin.SE3.Random())
+        frame_task.set_target(kin.SE3.Random())
         self.check_jacobian_finite_diff(frame_task, tol=1e-5)
 
     def test_joint_coupling_task(self):

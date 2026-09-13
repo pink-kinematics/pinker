@@ -5,11 +5,12 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
+from pinker import kinematics as kin
 from pinker.limits import ConfigurationLimit
+
+from .loaders import load_robot_description
 
 
 class TestConfigurationLimit(unittest.TestCase):
@@ -18,7 +19,7 @@ class TestConfigurationLimit(unittest.TestCase):
     def setUp(self):
         """Set test fixture up."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         model = robot.model
         self.data = robot.data
@@ -38,7 +39,7 @@ class TestConfigurationLimit(unittest.TestCase):
 
     def test_model_with_no_limit(self):
         """Check that unbounded models don't fail."""
-        empty_model = pin.Model()
+        empty_model = kin.Model()
         empty_bounded = ConfigurationLimit(empty_model)
         self.assertEqual(len(empty_bounded.indices), 0)
 
@@ -58,7 +59,7 @@ class TestConfigurationLimit(unittest.TestCase):
         """
         robot = load_robot_description(
             "upkie_description",
-            root_joint=pin.JointModelFreeFlyer(),
+            root_joint=kin.JointModelFreeFlyer(),
             commit="62f3ba24c2045b44faedb7c6c6167e74e157b49e",
         )
         dt = 1e-3  # [s]
@@ -76,7 +77,7 @@ class TestConfigurationLimit(unittest.TestCase):
             tol: Numerical tolerance.
         """
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         dt = 1e-3  # [s]
         configuration = Configuration(robot.model, robot.data, robot.q0)

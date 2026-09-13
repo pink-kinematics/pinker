@@ -5,11 +5,12 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
+from pinker import kinematics as kin
 from pinker.exceptions import FrameNotFound, NotWithinConfigurationLimits
+
+from .loaders import load_robot_description
 
 
 class TestConfiguration(unittest.TestCase):
@@ -19,7 +20,7 @@ class TestConfiguration(unittest.TestCase):
         """Constructing a configuration computes Jacobians."""
         robot = load_robot_description(
             "jvrc_description",
-            root_joint=pin.JointModelFreeFlyer(),
+            root_joint=kin.JointModelFreeFlyer(),
             commit="9ff8efbc7043459a8f0892662bd030d8020fb682",
         )
         robot.data.J.fill(42.0)
@@ -345,7 +346,7 @@ class TestConfiguration(unittest.TestCase):
     def test_copy_no_forward_kinematics(self):
         """Refer to the input data, compute forward kinematics."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         robot.data.J.fill(42.0)
         configuration = Configuration(
@@ -362,7 +363,7 @@ class TestConfiguration(unittest.TestCase):
     def test_no_copy_no_forward_kinematics(self):
         """Not copying means working directly on the underlying data."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         robot.data.J.fill(42.0)
         configuration = Configuration(
@@ -379,7 +380,7 @@ class TestConfiguration(unittest.TestCase):
     def test_transform_found(self):
         """Return the pose of an existing robot body."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         transform_pelvis_to_world = configuration.get_transform_frame_to_world(
@@ -395,7 +396,7 @@ class TestConfiguration(unittest.TestCase):
     def test_transform_not_found(self):
         """Raise an error when the request robot body is not found."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         with self.assertRaises(FrameNotFound):
@@ -404,7 +405,7 @@ class TestConfiguration(unittest.TestCase):
     def test_check_limits(self):
         """Raise an error if and only if a joint limit is exceened."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         q = robot.q0
         configuration = Configuration(robot.model, robot.data, q)
@@ -417,7 +418,7 @@ class TestConfiguration(unittest.TestCase):
     def test_q_is_a_read_only_copy(self):
         """The `q` attribute of a configuration is a read-only copy."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         original_q = robot.q0
         configuration = Configuration(robot.model, robot.data, original_q)
@@ -431,7 +432,7 @@ class TestConfiguration(unittest.TestCase):
     def test_tangent_eye(self):
         """Configuration's tangent eye is an identity matrix."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         v = np.array([i for i in range(robot.model.nv)])
@@ -440,7 +441,7 @@ class TestConfiguration(unittest.TestCase):
     def test_tangent_ones(self):
         """Configuration's tangent ones is a vector of 1.0's."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         self.assertEqual(np.sum(configuration.tangent.ones), robot.model.nv)
@@ -448,7 +449,7 @@ class TestConfiguration(unittest.TestCase):
     def test_tangent_zeros(self):
         """Configuration's tangent ones is a vector of 0.0's."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         self.assertAlmostEqual(np.sum(configuration.tangent.zeros), 0.0)
@@ -457,7 +458,7 @@ class TestConfiguration(unittest.TestCase):
     def test_frame_jacobian_not_found(self):
         """Querying a body that does not exist raises a ValueError."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         with self.assertRaises(FrameNotFound):

@@ -5,11 +5,12 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
+from pinker import kinematics as kin
 from pinker.exceptions import PinkerError
 from pinker.limits import VelocityLimit
+
+from .loaders import load_robot_description
 
 
 class TestVelocityLimit(unittest.TestCase):
@@ -18,7 +19,7 @@ class TestVelocityLimit(unittest.TestCase):
     def setUp(self):
         """Set test fixture up."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         model = robot.model
         self.limit = VelocityLimit(model)
@@ -36,7 +37,7 @@ class TestVelocityLimit(unittest.TestCase):
 
     def test_model_with_no_limit(self):
         """Check that unbounded models don't fail."""
-        empty_model = pin.Model()
+        empty_model = kin.Model()
         empty_bounded = VelocityLimit(empty_model)
         self.assertEqual(len(empty_bounded.indices), 0)
 

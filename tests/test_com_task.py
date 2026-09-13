@@ -5,12 +5,13 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
+from pinker import kinematics as kin
 from pinker.exceptions import TargetNotSet
 from pinker.tasks import ComTask
+
+from .loaders import load_robot_description
 
 
 class TestComTask(unittest.TestCase):
@@ -24,7 +25,7 @@ class TestComTask(unittest.TestCase):
     def setUp(self):
         """Prepare test fixture."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         self.configuration = Configuration(robot.model, robot.data, robot.q0)
 
@@ -45,7 +46,7 @@ class TestComTask(unittest.TestCase):
         """Check that target is set from its configuration value."""
         task = ComTask(cost=1.0)
         task.set_target_from_configuration(self.configuration)
-        com = pin.centerOfMass(
+        com = kin.center_of_mass(
             self.configuration.model,
             self.configuration.data,
             self.configuration.q,
@@ -72,7 +73,9 @@ class TestComTask(unittest.TestCase):
         """Error is zero when the target and body are at the same location."""
         task = ComTask(cost=1.0)
         task.set_target(
-            pin.centerOfMass(self.configuration.model, self.configuration.data)
+            kin.center_of_mass(
+                self.configuration.model, self.configuration.data
+            )
         )  # error == 0
         e = task.compute_error(self.configuration)
         self.assertLess(np.linalg.norm(e), 1e-10)
@@ -81,7 +84,9 @@ class TestComTask(unittest.TestCase):
         """A unit cost vector means the QP objective is (J^T J, -e^T J)."""
         task = ComTask(cost=1.0)
         task.set_target(
-            pin.centerOfMass(self.configuration.model, self.configuration.data)
+            kin.center_of_mass(
+                self.configuration.model, self.configuration.data
+            )
         )
         q_new = self.configuration.q.copy()
         q_new[1] += 1.0
@@ -99,7 +104,9 @@ class TestComTask(unittest.TestCase):
         """The task has no effect when its cost is zero."""
         task = ComTask(cost=0.0)
         task.set_target(
-            pin.centerOfMass(self.configuration.model, self.configuration.data)
+            kin.center_of_mass(
+                self.configuration.model, self.configuration.data
+            )
         )
         J = task.compute_jacobian(self.configuration)
         H, c = task.compute_qp_objective(self.configuration)

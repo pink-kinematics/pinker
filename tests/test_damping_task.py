@@ -5,10 +5,11 @@
 import unittest
 
 import numpy as np
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
 from pinker.tasks import DampingTask
+
+from .loaders import load_robot_description
 
 
 class TestDampingTask(unittest.TestCase):

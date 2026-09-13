@@ -5,11 +5,12 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
+from pinker import kinematics as kin
 from pinker.exceptions import ConfigurationError
 from pinker.utils import VectorSpace, custom_configuration_vector
+
+from .loaders import load_robot_description
 
 
 class TestUtils(unittest.TestCase):
@@ -22,7 +23,7 @@ class TestUtils(unittest.TestCase):
         11 in the configuration vector.
         """
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         q = custom_configuration_vector(robot, left_knee=0.2, right_knee=-0.2)
         self.assertAlmostEqual(q[8], 0.2)
@@ -42,7 +43,7 @@ class TestUtils(unittest.TestCase):
     def test_vector_space(self):
         """Check dimensions of regular tangent space."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         nv = robot.model.nv
         tangent = VectorSpace(robot.model.nv)

@@ -5,13 +5,14 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
 from qpsolvers import solve_qp
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
+from pinker import kinematics as kin
 from pinker.exceptions import TargetNotSet, TaskDefinitionError
 from pinker.tasks import FrameTask
+
+from .loaders import load_robot_description
 
 
 class TestFrameTask(unittest.TestCase):
@@ -25,23 +26,23 @@ class TestFrameTask(unittest.TestCase):
     def setUp(self):
         """Prepare test fixture."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         frame_name = "ee_frame"
         joint_name = robot.model.names[-1]
-        parent_joint = robot.model.getJointId(joint_name)
-        parent_frame = robot.model.getFrameId(joint_name)
-        placement = pin.SE3.Identity()
-        robot.model.addFrame(
-            pin.Frame(
+        parent_joint = robot.model.get_joint_id(joint_name)
+        parent_frame = robot.model.get_frame_id(joint_name)
+        placement = kin.SE3.Identity()
+        robot.model.add_frame(
+            kin.Frame(
                 frame_name,
                 parent_joint,
                 parent_frame,
                 placement,
-                pin.FrameType.OP_FRAME,
+                kin.FrameType.OP_FRAME,
             )
         )
-        robot.data = pin.Data(robot.model)
+        robot.data = kin.Data(robot.model)
         self.configuration = Configuration(robot.model, robot.data, robot.q0)
 
     def test_set_target_from_configuration(self):
@@ -120,7 +121,7 @@ class TestFrameTask(unittest.TestCase):
     def test_unit_cost_qp_objective(self):
         """Unit cost means the QP objective is exactly (J^T J, -e^T J)."""
         task = FrameTask("r_wrist", position_cost=1.0, orientation_cost=0.1)
-        transform_target_to_frame = pin.SE3(
+        transform_target_to_frame = kin.SE3(
             np.eye(3), np.array([0.0, 0.01, 0.0])
         )
         target = (
@@ -144,7 +145,7 @@ class TestFrameTask(unittest.TestCase):
         Jacobian and error coordinates.
         """
         task = FrameTask("l_wrist", position_cost=1.0, orientation_cost=0.1)
-        transform_target_to_frame = pin.SE3(
+        transform_target_to_frame = kin.SE3(
             np.eye(3), np.array([0.1, 0.02, 0.01])
         )
         target = (
@@ -195,7 +196,7 @@ class TestFrameTask(unittest.TestCase):
         That is, unless the task is fulfilled, it reduces velocities.
         """
         task = FrameTask("r_wrist", position_cost=1.0, orientation_cost=0.1)
-        transform_target_to_frame = pin.SE3(
+        transform_target_to_frame = kin.SE3(
             np.eye(3), np.array([0.0, 2.0, 0.0])
         )
         target = (

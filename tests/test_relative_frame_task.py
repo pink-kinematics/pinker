@@ -5,11 +5,12 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
+from pinker import kinematics as kin
 from pinker.tasks import FrameTask, RelativeFrameTask
+
+from .loaders import load_robot_description
 
 
 class TestRelativeFrameTask(unittest.TestCase):
@@ -18,7 +19,7 @@ class TestRelativeFrameTask(unittest.TestCase):
     def setUp(self):
         """Prepare test fixture."""
         robot = load_robot_description(
-            "stretch_description", root_joint=pin.JointModelPlanar()
+            "stretch_description", root_joint=kin.JointModelPlanar()
         )
         self.configuration = Configuration(robot.model, robot.data, robot.q0)
         self.robot = robot

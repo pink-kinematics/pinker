@@ -5,15 +5,16 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
 import qpsolvers
 from numpy.linalg import norm
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration, build_ik, solve_ik
+from pinker import kinematics as kin
 from pinker.barriers import PositionBarrier
 from pinker.exceptions import NotWithinConfigurationLimits
 from pinker.tasks import ComTask, FrameTask
+
+from .loaders import load_robot_description
 
 
 def _numpy_supports_copy_keyword() -> bool:
@@ -36,7 +37,7 @@ class TestSolveIK(unittest.TestCase):
     def test_checks_configuration_limits(self):
         """IK checks for configuration limits."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         q = robot.q0
         q[7] = 20  # above limit for Upkie's first joint
@@ -47,7 +48,7 @@ class TestSolveIK(unittest.TestCase):
     def test_ignore_configuration_limits(self):
         """If flag is set, do not check configuration limits."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         q = robot.q0
         q[7] = 20  # above limit for Upkie's first joint
@@ -63,11 +64,11 @@ class TestSolveIK(unittest.TestCase):
 
     def test_model_with_no_joint_limit(self):
         """Model with no joint limit has no inequality constraints."""
-        model = pin.Model()
-        model.addJoint(
-            0, pin.JointModelSpherical(), pin.SE3.Identity(), "spherical"
+        model = kin.Model()
+        model.add_joint(
+            0, kin.JointModelSpherical(), kin.SE3.Identity(), "spherical"
         )
-        robot = pin.RobotWrapper(model=model)
+        robot = kin.RobotWrapper(model=model)
         configuration = Configuration(robot.model, robot.data, robot.q0)
         problem = build_ik(configuration, [], dt=1.0)
         self.assertIsNone(problem.G)
@@ -76,7 +77,7 @@ class TestSolveIK(unittest.TestCase):
     def test_no_task(self):
         """Raise an error when the robot body is not found."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         tasks = []
@@ -86,7 +87,7 @@ class TestSolveIK(unittest.TestCase):
     def test_single_task_fulfilled(self):
         """Velocity is zero when the only task is already fulfilled."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         task = FrameTask(
@@ -101,7 +102,7 @@ class TestSolveIK(unittest.TestCase):
     def test_barrier_fullfilled(self):
         """Velocity is zero when the only task is already fulfilled."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         task = FrameTask(
@@ -129,7 +130,7 @@ class TestSolveIK(unittest.TestCase):
     def test_barrier_violated(self):
         """Velocity is zero when the only task is already fulfilled."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         task = FrameTask(
@@ -157,7 +158,7 @@ class TestSolveIK(unittest.TestCase):
     def test_single_task_convergence(self):
         """Integrating velocities makes a task converge to its target."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         task = FrameTask(
@@ -166,7 +167,7 @@ class TestSolveIK(unittest.TestCase):
         transform_init_to_world = configuration.get_transform_frame_to_world(
             "left_contact"
         )
-        transform_target_to_init = pin.SE3(
+        transform_target_to_init = kin.SE3(
             np.eye(3), np.array([0.0, 0.0, 0.1])
         )
         transform_target_to_world = (
@@ -182,7 +183,7 @@ class TestSolveIK(unittest.TestCase):
         self.assertFalse(
             configuration.get_transform_frame_to_world(
                 "left_contact"
-            ).isApprox(transform_target_to_world, prec=1e-4)
+            ).is_approx(transform_target_to_world, prec=1e-4)
         )
 
         last_error = 1e6
@@ -202,14 +203,14 @@ class TestSolveIK(unittest.TestCase):
         self.assertTrue(
             configuration.get_transform_frame_to_world(
                 "left_contact"
-            ).isApprox(transform_target_to_world, prec=1e-8)
+            ).is_approx(transform_target_to_world, prec=1e-8)
         )
         self.assertLess(nb_steps, 3)
 
     def test_single_task_translation(self):
         """Translating a target yields a pure linear velocity."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         contact_task = FrameTask(
@@ -246,7 +247,7 @@ class TestSolveIK(unittest.TestCase):
     def test_three_tasks_fulfilled(self):
         """No motion when all targets are reached."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         left_ankle_task = FrameTask(
@@ -276,7 +277,7 @@ class TestSolveIK(unittest.TestCase):
     def test_three_tasks_convergence(self):
         """Three simultaneously feasible tasks on the JVRC model converge."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
 
@@ -293,10 +294,10 @@ class TestSolveIK(unittest.TestCase):
         tasks = [pelvis_task, left_ankle_task, right_ankle_task]
 
         # Set task targets
-        transform_l_ankle_target_to_init = pin.SE3(
+        transform_l_ankle_target_to_init = kin.SE3(
             np.eye(3), np.array([0.1, 0.0, 0.0])
         )
-        transform_r_ankle_target_to_init = pin.SE3(
+        transform_r_ankle_target_to_init = kin.SE3(
             np.eye(3), np.array([-0.1, 0.0, 0.0])
         )
         left_ankle_task.set_target(
@@ -338,7 +339,7 @@ class TestSolveIK(unittest.TestCase):
     def test_com_task_fulfilled(self):
         """No motion when all targets, including the CoM, are reached."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         left_ankle_task = FrameTask(
@@ -368,7 +369,7 @@ class TestSolveIK(unittest.TestCase):
         visualization.
         """
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
 
@@ -383,10 +384,10 @@ class TestSolveIK(unittest.TestCase):
         tasks = [com_task, left_ankle_task, right_ankle_task]
 
         # Set task targets
-        transform_l_ankle_target_to_init = pin.SE3(
+        transform_l_ankle_target_to_init = kin.SE3(
             np.eye(3), np.array([0.1, 0.0, 0.0])
         )
-        transform_r_ankle_target_to_init = pin.SE3(
+        transform_r_ankle_target_to_init = kin.SE3(
             np.eye(3), np.array([-0.1, 0.0, 0.0])
         )
         left_ankle_task.set_target(
@@ -399,7 +400,7 @@ class TestSolveIK(unittest.TestCase):
         )
 
         # Set the desired CoM target 0.05 above the initial CoM position
-        initial_com = pin.centerOfMass(
+        initial_com = kin.center_of_mass(
             robot.model, robot.data, configuration.q
         )
         desired_com = initial_com.copy()
@@ -436,7 +437,7 @@ class TestSolveIK(unittest.TestCase):
     def get_jvrc_problem(self):
         """Get an IK problem with three tasks on a humanoid model."""
         robot = load_robot_description(
-            "jvrc_description", root_joint=pin.JointModelFreeFlyer()
+            "jvrc_description", root_joint=kin.JointModelFreeFlyer()
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         left_ankle_task = FrameTask(

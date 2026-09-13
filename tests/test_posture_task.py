@@ -5,12 +5,13 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
+from pinker import kinematics as kin
 from pinker.exceptions import TargetNotSet
 from pinker.tasks import PostureTask
+
+from .loaders import load_robot_description
 
 
 class TestPostureTask(unittest.TestCase):
@@ -24,7 +25,7 @@ class TestPostureTask(unittest.TestCase):
     def setUp(self):
         """Prepare test fixture."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         self.configuration = Configuration(robot.model, robot.data, robot.q0)
 

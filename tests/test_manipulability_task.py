@@ -5,11 +5,12 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
+from pinker import kinematics as kin
 from pinker.tasks import ManipulabilityTask
+
+from .loaders import load_robot_description
 
 
 class TestManipulabilityTask(unittest.TestCase):
@@ -126,7 +127,7 @@ class TestManipulabilityTask(unittest.TestCase):
                 self.frame_name,
                 self.configuration.model,
                 cost=1.0,
-                reference_frame=pin.ReferenceFrame.LOCAL_WORLD_ALIGNED,
+                reference_frame=kin.ReferenceFrame.LOCAL_WORLD_ALIGNED,
             )
 
     def test_mask_position(self):
@@ -325,7 +326,7 @@ class TestManipulabilityTask(unittest.TestCase):
     <limit lower="0.0" upper="1.0" effort="100" velocity="1.0"/>
   </joint>
 </robot>"""
-        model = pin.buildModelFromXML(urdf_string)
+        model = kin.build_model_from_xml(urdf_string)
         with self.assertRaises(ValueError):
             ManipulabilityTask("ee", model, cost=1.0)
 
@@ -333,7 +334,7 @@ class TestManipulabilityTask(unittest.TestCase):
         """Continuous (axis-aligned unbounded revolute) joint is supported.
 
         Regression test: such joints (e.g. the wrist_3_joint of the
-        official UR descriptions) report their pinocchio shortname as
+        official UR descriptions) report their shortname as
         ``JointModelRUBX``/``RUBY``/``RUBZ``, not
         ``JointModelRevoluteUnbounded``.
         """
@@ -353,7 +354,7 @@ class TestManipulabilityTask(unittest.TestCase):
     <axis xyz="0 0 1"/>
   </joint>
 </robot>"""
-        model = pin.buildModelFromXML(urdf_string)
+        model = kin.build_model_from_xml(urdf_string)
         ManipulabilityTask("ee", model, cost=1.0)
 
     def test_manipulability_jacobian_vs_finite_differences(self):
@@ -363,9 +364,9 @@ class TestManipulabilityTask(unittest.TestCase):
         )
         # q0 is singular for UR3; use a non-singular configuration
         model = self.configuration.model
-        q = pin.integrate(
+        q = kin.integrate(
             model,
-            pin.neutral(model),
+            kin.neutral(model),
             np.array(
                 [0.0, -np.pi / 4, np.pi / 2, -np.pi / 4, -np.pi / 2, 0.0]
             ),
@@ -378,13 +379,13 @@ class TestManipulabilityTask(unittest.TestCase):
         grad_fd = np.zeros(nv)
         for i in range(nv):
             e_i = np.eye(nv)[i]
-            q_plus = pin.integrate(model, q, eps * e_i)
+            q_plus = kin.integrate(model, q, eps * e_i)
             config_plus = Configuration(
                 model,
                 self.configuration.data,
                 q_plus,
             )
-            q_minus = pin.integrate(model, q, -eps * e_i)
+            q_minus = kin.integrate(model, q, -eps * e_i)
             config_minus = Configuration(
                 model,
                 self.configuration.data,

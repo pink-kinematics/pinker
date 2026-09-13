@@ -5,12 +5,14 @@
 from typing import Tuple
 
 import numpy as np
-import pinocchio as pin
 
+from . import kinematics as kin
 from .exceptions import ConfigurationError, PinkerError
 
 
-def custom_configuration_vector(robot: pin.Model, **kwargs) -> np.ndarray:
+def custom_configuration_vector(
+    robot: kin.RobotWrapper, **kwargs
+) -> np.ndarray:
     """Generate a configuration vector where named joints have specific values.
 
     Args:

@@ -5,12 +5,13 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
+from pinker import kinematics as kin
 from pinker.exceptions import TargetNotSet, TaskDefinitionError
 from pinker.tasks import JointVelocityTask
+
+from .loaders import load_robot_description
 
 
 class TestJointVelocityTask(unittest.TestCase):
@@ -25,7 +26,7 @@ class TestJointVelocityTask(unittest.TestCase):
         """Prepare test fixture."""
         robot = load_robot_description(
             "ur3_official_description",
-            root_joint=pin.JointModelFreeFlyer(),
+            root_joint=kin.JointModelFreeFlyer(),
         )
         configuration = Configuration(robot.model, robot.data, robot.q0)
         self.configuration = configuration

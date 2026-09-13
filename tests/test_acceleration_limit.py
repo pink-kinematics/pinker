@@ -5,12 +5,13 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration, solve_ik
+from pinker import kinematics as kin
 from pinker.limits import AccelerationLimit
 from pinker.tasks import FrameTask
+
+from .loaders import load_robot_description
 
 # UR3 max acceleration taken as 800 deg/s² ≈ 14 rad/s² in these tests
 # https://forum.universal-robots.com/t/maximum-axis-speed-acceleration/13338/2
@@ -39,11 +40,11 @@ class TestAccelerationLimit(unittest.TestCase):
 
     def test_model_with_no_limit(self):
         """Check that unbounded models don't fail."""
-        empty_model = pin.Model()
+        empty_model = kin.Model()
         empty_bounded = AccelerationLimit(empty_model, self.a_max)
         self.assertEqual(len(empty_bounded.indices), 0)
         empty_configuration = Configuration(
-            empty_model, empty_model.createData(), np.empty(0)
+            empty_model, empty_model.create_data(), np.empty(0)
         )
         self.assertIsNone(
             empty_bounded.compute_qp_inequalities(empty_configuration, 1e-3)
@@ -71,12 +72,12 @@ class TestAccelerationLimit(unittest.TestCase):
           </joint>
         </robot>
         """
-        model = pin.buildModelFromXML(urdf)
-        data = model.createData()
+        model = kin.build_model_from_xml(urdf)
+        data = model.create_data()
         a_max = np.array([14.0])  # rad/s^2
         dt = 5e-3  # s
         limit = AccelerationLimit(model, a_max)
-        configuration = Configuration(model, data, pin.neutral(model))
+        configuration = Configuration(model, data, kin.neutral(model))
         # Previous displacement large enough (3 rad / s * dt > a_max * dt^2)
         # that the acceleration bound alone requires decelerating at next step.
         limit.set_last_integration(np.array([3.0]), dt)

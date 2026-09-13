@@ -5,11 +5,12 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
+from pinker import kinematics as kin
 from pinker.barriers import PositionBarrier
+
+from .loaders import load_robot_description
 
 
 class TestBarrier(unittest.TestCase):
@@ -18,7 +19,7 @@ class TestBarrier(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures."""
         self.robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         self.conf = Configuration(
             self.robot.model,

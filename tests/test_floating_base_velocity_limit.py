@@ -5,12 +5,13 @@
 import unittest
 
 import numpy as np
-import pinocchio as pin
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from pinker import Configuration
+from pinker import kinematics as kin
 from pinker.limits import FloatingBaseVelocityLimit
 from pinker.utils import get_joint_idx
+
+from .loaders import load_robot_description
 
 
 class TestFloatingBaseVelocityLimitPlanar(unittest.TestCase):
@@ -19,7 +20,7 @@ class TestFloatingBaseVelocityLimitPlanar(unittest.TestCase):
     def setUp(self):
         """Load a robot with a planar root joint."""
         robot = load_robot_description(
-            "stretch_description", root_joint=pin.JointModelPlanar()
+            "stretch_description", root_joint=kin.JointModelPlanar()
         )
         self.robot = robot
         self.model = robot.model
@@ -27,7 +28,7 @@ class TestFloatingBaseVelocityLimitPlanar(unittest.TestCase):
         self.dt = 0.1  # [s]
         self.linear_max = np.array([0.4, 0.2, np.inf])  # [m] / [s]
         self.angular_max = np.array([np.inf, np.inf, 1.0])  # [rad] / [s]
-        root_joint_id = self.model.getJointId("root_joint")
+        root_joint_id = self.model.get_joint_id("root_joint")
         base_frame = None
         for frame in self.model.frames:
             if frame.parentJoint == root_joint_id:
@@ -75,7 +76,7 @@ class TestFloatingBaseVelocityLimitPlanar(unittest.TestCase):
         self.assertIsNotNone(result)
         G, _ = result
         _, idx_v = get_joint_idx(self.model, "root_joint")
-        root_nv = self.model.joints[self.model.getJointId("root_joint")].nv
+        root_nv = self.model.joints[self.model.get_joint_id("root_joint")].nv
         root_columns = G[:, idx_v : idx_v + root_nv]
         non_root_columns = np.delete(G, np.s_[idx_v : idx_v + root_nv], axis=1)
         self.assertGreater(np.linalg.norm(root_columns), 0.0)
@@ -88,7 +89,7 @@ class TestFloatingBaseVelocityLimitFreeFlyer(unittest.TestCase):
     def setUp(self):
         """Load a robot with a free flyer root joint."""
         robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
+            "upkie_description", root_joint=kin.JointModelFreeFlyer()
         )
         self.robot = robot
         self.model = robot.model
@@ -96,7 +97,7 @@ class TestFloatingBaseVelocityLimitFreeFlyer(unittest.TestCase):
         self.dt = 0.05  # [s]
         self.linear_max = np.array([0.3, 0.3, 0.2])  # [m] / [s]
         self.angular_max = np.array([1.0, 1.0, 1.5])  # [rad] / [s]
-        root_joint_id = self.model.getJointId("root_joint")
+        root_joint_id = self.model.get_joint_id("root_joint")
         base_frame = None
         for frame in self.model.frames:
             if frame.parentJoint == root_joint_id:
@@ -147,7 +148,7 @@ class TestFloatingBaseVelocityLimitFreeFlyer(unittest.TestCase):
 
     def test_missing_root_joint_raises(self):
         """Manipulator only robots should fail fast when no floating base exists."""
-        model = pin.Model()
+        model = kin.Model()
         with self.assertRaises(ValueError):
             FloatingBaseVelocityLimit(
                 model=model,
@@ -164,7 +165,7 @@ class TestFloatingBaseVelocityLimitFreeFlyer(unittest.TestCase):
             max_linear_velocity=self.linear_max,
             max_angular_velocity=self.angular_max,
         )
-        root_joint_id = self.model.getJointId("root_joint")
+        root_joint_id = self.model.get_joint_id("root_joint")
         self.assertEqual(
             self.model.frames[limit.frame_id].parentJoint, root_joint_id
         )

@@ -4,10 +4,10 @@
 
 import unittest
 
-from robot_descriptions.loaders.pinocchio import load_robot_description
-
 from pinker import Configuration
 from pinker.tasks import OmniwheelTask
+
+from .loaders import load_robot_description
 
 
 class TestOmniwheelTask(unittest.TestCase):
