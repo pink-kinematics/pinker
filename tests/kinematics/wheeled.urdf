@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<!-- Synthetic robot exercising continuous, prismatic, revolute and fixed
-     joints, unaligned axes, and non-trivial origins. -->
+<!-- Synthetic robot with continuous, prismatic, revolute and fixed joints, unaligned axes, and non-trivial origins. -->
 <robot name="wheeled">
   <link name="base">
     <inertial>
