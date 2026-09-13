@@ -2,18 +2,19 @@
 
 """Configuration of a robot model.
 
-A :class:`Configuration` holds a robot model and data for this model where
-forward kinematics have been run. This means that the geometric state of the
-model has been computed, and quantities such as frame transforms and frame
-Jacobians are available.
+Pinker uses :mod:`pinker.kinematics` for forward kinematics. A
+:class:`Configuration` holds a robot model and data for this model where
+forward kinematics have been run. This means that the geometric state of
+the model has been computed, and quantities such as frame transforms and
+frame Jacobians are available.
 """
 
 import logging
 from typing import Optional
 
 import numpy as np
-import pinocchio as pin
 
+from . import kinematics as kin
 from .exceptions import FrameNotFound, NotWithinConfigurationLimits
 from .limits import ConfigurationLimit, VelocityLimit
 from .utils import VectorSpace, get_root_joint_dim
@@ -28,48 +29,33 @@ class Configuration:
 
     .. code:: python
 
-        pin.computeJointJacobians(model, data, configuration)
-        pin.updateFramePlacements(model, data)
+        kin.compute_joint_jacobians(model, data, configuration)
+        kin.update_frame_placements(model, data)
 
     The former computes the full model Jacobian into ``data.J``. (It also
     computes forward kinematics, so there is no need to further call
-    ``pin.forwardKinematics(model, data, configuration)``.) The latter updates
+    ``kin.forward_kinematics(model, data, configuration)``.) The latter updates
     frame placements.
 
-    Additionally, if a collision model is provided, it is used to evaluate
-    distances between frames by calling the following two functions:
-
-    .. code:: python
-
-        pin.computeCollisions(
-            model, data, collision_model, collision_data, q)
-        pin.updateGeometryPlacements(
-            model, data, collision_model, collision_data, q)
-
     Attributes:
-        collision_data: Data corresponding to
-            :data:`Configuration.collision_model`.
-        collision_model: Collision model.
         data: Data corresponding to :data:`Configuration.model`.
         model: Kinodynamic model.
         q: Configuration vector for the robot model.
     """
 
-    collision_data: pin.GeometryData
-    collision_model: pin.GeometryModel
-    data: pin.Data
-    model: pin.Model
+    data: kin.Data
+    model: kin.Model
     q: np.ndarray
 
     def __init__(
         self,
-        model: pin.Model,
-        data: pin.Data,
+        model: kin.Model,
+        data: kin.Data,
         q: np.ndarray,
         copy_data: bool = True,
         forward_kinematics: bool = True,
-        collision_model: Optional[pin.GeometryModel] = None,
-        collision_data: Optional[pin.GeometryData] = None,
+        collision_model=None,
+        collision_data=None,
     ):
         """Initialize configuration.
 
@@ -81,12 +67,8 @@ class Configuration:
                 data. Otherwise, work on the input data directly.
             forward_kinematics: If true (default), compute forward kinematics
                 from the q into the internal data.
-            collision_model: collision geometry model, with already loaded
-                collisions. Default is None, meaning no collisions are
-                processeed.
-            collision_data: collision geometry data, with already loaded
-                collisions. Default is None, which generates it from the model
-                if possible, None otherwise.
+            collision_model: Not supported by Pinker. Must be ``None``.
+            collision_data: Not supported by Pinker. Must be ``None``.
 
         Notes:
             Configurations copy data and run forward kinematics by default so
@@ -94,6 +76,11 @@ class Configuration:
             or forward kinematics (e.g. if it is already computed by the
             caller) using constructor parameters.
         """
+        if collision_model is not None or collision_data is not None:
+            raise NotImplementedError(
+                "Pinker does not support collision models; "
+                "use Pink for collision-aware inverse kinematics"
+            )
         if not hasattr(model, "tangent"):
             model.tangent = VectorSpace(model.nv)
         if not hasattr(model, "configuration_limit"):
@@ -104,22 +91,12 @@ class Configuration:
             model.floating_base_velocity_limit = None
         q_readonly = q.copy()
         q_readonly.setflags(write=False)
+        self.collision_model = None
+        self.collision_data = None
         self.data = data.copy() if copy_data else data
         self.model = model
         self.q = q_readonly
         self.tangent = model.tangent
-
-        # Update collision
-        self.collision_model = collision_model
-        self.collision_data = (
-            collision_data
-            if collision_data is not None
-            else (
-                pin.GeometryData(collision_model)
-                if collision_model is not None
-                else None
-            )
-        )
 
         if forward_kinematics:
             self.update(None)
@@ -127,8 +104,7 @@ class Configuration:
     def update(self, q: Optional[np.ndarray] = None) -> None:
         """Update configuration to a new vector.
 
-        Calling this function runs forward kinematics and computes
-        collision-pair distances, if applicable.
+        Calling this function runs forward kinematics.
 
         Args:
             q: New configuration vector.
@@ -138,26 +114,8 @@ class Configuration:
             q_readonly.setflags(write=False)
             self.q = q_readonly
 
-        # Compute collisions, if needed
-        if self.collision_model is not None:
-            pin.computeCollisions(
-                self.model,
-                self.data,
-                self.collision_model,
-                self.collision_data,
-                self.q,
-                False,
-            )
-            pin.computeDistances(
-                self.model,
-                self.data,
-                self.collision_model,
-                self.collision_data,
-                self.q,
-            )
-
-        pin.computeJointJacobians(self.model, self.data, self.q)
-        pin.updateFramePlacements(self.model, self.data)
+        kin.compute_joint_jacobians(self.model, self.data, self.q)
+        kin.update_frame_placements(self.model, self.data)
 
     def check_limits(
         self, tol: float = 1e-6, safety_break: bool = True
@@ -214,7 +172,7 @@ class Configuration:
             Jacobian :math:`{}_B J_{WB}` of the frame.
 
         When the robot model includes a floating base
-        (pin.JointModelFreeFlyer), the configuration vector :math:`q` consists
+        (kin.JointModelFreeFlyer), the configuration vector :math:`q` consists
         of:
 
         - ``q[0:3]``: position in [m] of the floating base in the inertial
@@ -223,15 +181,15 @@ class Configuration:
           in the inertial frame, formatted as :math:`[q_x, q_y, q_z, q_w]`.
         - ``q[7:]``: joint angles in [rad].
         """
-        if not self.model.existFrame(frame):
+        if not self.model.exist_frame(frame):
             raise FrameNotFound(frame, self.model.frames)
-        frame_id = self.model.getFrameId(frame)
-        J: np.ndarray = pin.getFrameJacobian(
-            self.model, self.data, frame_id, pin.ReferenceFrame.LOCAL
+        frame_id = self.model.get_frame_id(frame)
+        J: np.ndarray = kin.get_frame_jacobian(
+            self.model, self.data, frame_id, kin.ReferenceFrame.LOCAL
         )
         return J
 
-    def get_transform_frame_to_world(self, frame: str) -> pin.SE3:
+    def get_transform_frame_to_world(self, frame: str) -> kin.SE3:
         """Get the pose of a frame in the current configuration.
 
         Args:
@@ -243,13 +201,13 @@ class Configuration:
         Raises:
             KeyError: if the frame name is not found in the robot model.
         """
-        frame_id = self.model.getFrameId(frame)
+        frame_id = self.model.get_frame_id(frame)
         try:
             return self.data.oMf[frame_id].copy()
         except IndexError as index_error:
             raise FrameNotFound(frame, self.model.frames) from index_error
 
-    def get_transform(self, source: str, dest: str) -> pin.SE3:
+    def get_transform(self, source: str, dest: str) -> kin.SE3:
         """Get the pose of a frame with respect to another frame.
 
         Args:
@@ -264,7 +222,7 @@ class Configuration:
         """
         transform_source_to_world = self.get_transform_frame_to_world(source)
         transform_dest_to_world = self.get_transform_frame_to_world(dest)
-        return transform_dest_to_world.actInv(transform_source_to_world)
+        return transform_dest_to_world.act_inv(transform_source_to_world)
 
     def integrate(self, velocity, dt) -> np.ndarray:
         """Integrate a velocity starting from the current configuration.
@@ -276,7 +234,7 @@ class Configuration:
         Returns:
             New configuration vector after integration.
         """
-        return pin.integrate(self.model, self.q, velocity * dt)
+        return kin.integrate(self.model, self.q, velocity * dt)
 
     def integrate_inplace(self, velocity, dt) -> None:
         """Integrate a velocity starting from the current configuration.
@@ -285,5 +243,5 @@ class Configuration:
             velocity: Velocity in tangent space.
             dt: Integration duration in [s].
         """
-        q = pin.integrate(self.model, self.q, velocity * dt)
+        q = kin.integrate(self.model, self.q, velocity * dt)
         self.update(q)
