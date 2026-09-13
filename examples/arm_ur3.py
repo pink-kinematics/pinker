@@ -16,7 +16,7 @@ from robot_descriptions.loaders.pinocchio import load_robot_description
 import pinker
 from pinker import solve_ik
 from pinker.tasks import FrameTask, PostureTask
-from pinker.utils import custom_configuration_vector
+from pinker.kinematics import custom_configuration
 from pinker.visualization import start_meshcat_visualizer
 
 if __name__ == "__main__":
@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
     tasks = [end_effector_task, posture_task]
 
-    q_ref = custom_configuration_vector(
+    q_ref = custom_configuration(
         robot,
         shoulder_lift_joint=1.0,
         shoulder_pan_joint=1.0,

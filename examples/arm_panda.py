@@ -15,7 +15,7 @@ from scipy.spatial.transform import Rotation
 import pinker
 from pinker import solve_ik
 from pinker.tasks import DampingTask, FrameTask, PostureTask
-from pinker.utils import custom_configuration_vector
+from pinker.kinematics import custom_configuration
 from pinker.visualization import start_viser_visualizer
 
 if __name__ == "__main__":
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     )
     tasks = [end_effector_task, posture_task, damping_task]
 
-    q_ref = custom_configuration_vector(
+    q_ref = custom_configuration(
         robot,
         panda_joint1=0.0,
         panda_joint2=-0.785398,

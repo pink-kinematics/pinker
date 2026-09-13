@@ -18,7 +18,7 @@ import pinker
 from pinker import solve_ik
 from pinker.limits import AccelerationLimit
 from pinker.tasks import DampingTask, FrameTask, PostureTask
-from pinker.utils import custom_configuration_vector
+from pinker.kinematics import custom_configuration
 from pinker.visualization import start_meshcat_visualizer
 
 NB_STEPS = 3000  # number of steps to run the example for
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     )
 
     # Initial configuration and task setup
-    q_ref = custom_configuration_vector(
+    q_ref = custom_configuration(
         robot,
         shoulder_lift_joint=1.0,
         shoulder_pan_joint=1.0,

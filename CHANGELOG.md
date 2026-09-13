@@ -7,14 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Configuration: `default_limits` attribute and constructor argument, holding
+  the limits `solve_ik` enforces unless it is given its own
+
 ### Changed
 
+- **Breaking:** `Configuration.integrate` returns a new `Configuration` rather
+  than a configuration vector
+- **Breaking:** Default limits are stored on the configuration rather than
+  cached on the robot model, which Pinker no longer adds attributes to: append
+  to `configuration.default_limits` where you used to set
+  `configuration.model.floating_base_velocity_limit`
+- Kinematics: Follow Python naming for functions, methods and attributes, for
+  instance `model.get_frame_id` and `model.lower_position_limit` instead of
+  Pinocchio's `getFrameId` and `lowerPositionLimit`
+- Kinematics: Model getters raise when a name is not found, where Pinocchio
+  returns a sentinel index
 - pixi: Rename lint and format tasks to `dev-lint` and `dev-format`
 
 ### Removed
 
 - Barrier: `SelfCollisionBarrier`, which required collision detection
 - utils: `process_collision_pairs`, which required collision detection
+- utils: `custom_configuration_vector`, `get_root_joint_dim` and
+  `get_joint_idx`, which moved to the kinematics backend as
+  `kinematics.custom_configuration`, `Model.get_root_joint_dim` and
+  `Model.get_joint_tangent_id`
 - Clean up unnecessary shebangs from source file headers
 - Clean up unnecessary source encoding lines from source file headers
 - examples: Flying dual-arm UR3

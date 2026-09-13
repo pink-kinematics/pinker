@@ -121,72 +121,72 @@ If task targets are continuously updated, there will be no stationary solution t
 
 ## Compatibility
 
-Pinker is API-compatible with **Pink 4.4.0**.
+Pinker is API-compatible with **Pink 4.4.0**, with the following exceptions:
 
-```python
-from pink.limits import FloatingBaseVelocityLimit
+- Default limits live on the configuration, as `configuration.default_limits`, rather than being cached on the robot model. Add your own, for instance a `FloatingBaseVelocityLimit`, by appending to that list.
+- `Configuration.integrate` returns a new `Configuration` rather than a configuration vector. Its vector is `configuration.integrate(v, dt).q`.
+- Functions and methods of the kinematics backend follow Python naming, so `model.getFrameId` is `model.get_frame_id` and `model.lowerPositionLimit` is `model.lower_position_limit`. Model getters raise rather than returning the sentinel index Pinocchio returns when a name is not found.
 
-floating_limit = FloatingBaseVelocityLimit(
-    configuration.model,
-    base_frame="base_link",
-    max_linear_velocity=[0.3, 0.3, 0.2],    # [m] / [s]
-    max_angular_velocity=[1.0, 1.0, 1.0],   # [rad] / [s]
-)
-configuration.model.floating_base_velocity_limit = floating_limit
-```
-
-Once attached, the limit is automatically taken into account when building the IK constraints.
-Pass ``base_frame=None`` to let Pink pick the frame attached to ``root_joint`` automatically.
+Pinker is a standalone replacement for Pink where kinematics are carried out by `pinker.kinematics`, a backend written as a single C extension with a thin Python layer. Tasks, limits, barriers, the `Configuration` class and `solve_ik`, is the same as in Pink, and differential IK problems are still solved through [qpsolvers](https://github.com/qpsolvers/qpsolvers).
 
 ## Examples
 
-Illustrated examples showcase how Pink performs on various robot morphologies:
+The `examples/` directory mirrors Pink's examples, ported to the `pinker.kinematics` backend with [Viser](https://viser.studio) visualization:
 
-- Arm: [UR5](https://github.com/pink-kinematics/pink/tree/main/examples#arm-ur5) and [UR5 with end-effector limits](https://github.com/pink-kinematics/pink/tree/main/examples/barriers#arm-ur5)
-- Arm: [Panda](https://github.com/pink-kinematics/pink/tree/main/examples#arm-panda)
-- Dual arms: [Flying dual-arm UR3](https://github.com/pink-kinematics/pink/tree/main/examples#flying-dual-arm-ur3)
-- Dual arms: [Yumi with spherical self-collision avoidance](https://github.com/pink-kinematics/pink/tree/main/examples/barriers#yumi-end-effector-self-collision-avoidance)
-- Dual arms: [Iiwa with whole-body self-collision avoidance](https://github.com/pink-kinematics/pink/tree/main/examples/barriers#iiwa-whole-body-collision-avoidance)
-- Humanoid: [Draco 3](https://github.com/pink-kinematics/pink/tree/main/examples#humanoid-draco-3)
-- Mobile base: [Stretch R1](https://github.com/pink-kinematics/pink/tree/main/examples#mobile-stretch)
-- Quadruped: [Go2 squatting with floating-base limits](https://github.com/pink-kinematics/pink/tree/main/examples/barriers#go2-squat)
-- Floating base: [Clamp free-flyer velocities](https://github.com/pink-kinematics/pink/blob/main/examples/floating_base_velocity_limit.py)
-- Wheeled biped: [Upkie rolling without slipping](https://github.com/pink-kinematics/pink/tree/main/examples#wheeled-biped-upkie)
+```console
+pixi run -e examples python examples/arm_ur3.py
+```
 
-There are also more basic examples to get started:
+Each example can also be run standalone with [uv](https://docs.astral.sh/uv/):
 
-- [Double pendulum](https://github.com/pink-kinematics/pink/blob/main/examples/double_pendulum.py)
-- [Loading a custom URDF](https://github.com/pink-kinematics/pink/blob/main/examples/load_custom_urdf.py)
-- [Visualization in MeshCat](https://github.com/pink-kinematics/pink/blob/main/examples/visualize_in_meshcat.py)
-- [Visualization in yourdfpy](https://github.com/pink-kinematics/pink/blob/main/examples/visualize_in_yourdfpy.py)
+```console
+uv run examples/arm_ur3.py
+```
 
-Check out the [examples](https://github.com/pink-kinematics/pink/tree/main/examples) directory for more.
+- **Single arms:** [Panda](https://github.com/pink-kinematics/pinker/tree/main/examples#arm-panda), [UR5](https://github.com/pink-kinematics/pinker/tree/main/examples#arm-ur5), [UR5 with end-effector limits](https://github.com/pink-kinematics/pinker/tree/main/examples#barrier-arm-ur5)
+- **Humanoid:** [Draco 3](https://github.com/pink-kinematics/pinker/tree/main/examples#humanoid-draco-3)
+- **Mobile base:** [Stretch R1](https://github.com/pink-kinematics/pinker/tree/main/examples#mobile-stretch)
+- **Quadruped:** [Go2 squatting with floating-base limits](https://github.com/pink-kinematics/pinker/tree/main/examples#barrier-quadruped-go2)
+- **Floating base:** [Clamp free-flyer velocities](https://github.com/pink-kinematics/pinker/blob/main/examples/floating_base_velocity_limit.py)
+- **Wheeled biped:** [Upkie rolling without slipping](https://github.com/pink-kinematics/pinker/tree/main/examples#wheeled-biped-upkie)
 
-## Frequently Asked Questions
+Check out the [examples](https://github.com/pink-kinematics/pinker/tree/main/examples) directory for more.
 
-- [Can I solve **global** inverse kinematics?](https://github.com/pink-kinematics/pink/discussions/66#discussioncomment-8224315)
-- [Can I make velocities smoother?](https://github.com/pink-kinematics/pink/discussions/103)
-- [My configuration gets stuck somewhere and does not solve the task, what is going on?](https://github.com/pink-kinematics/pink/discussions/66#discussioncomment-8224315)
+## Limitations
 
-## Global inverse kinematics
+- No collision support: Pink's `SelfCollisionBarrier` and the collision
+  arguments of `Configuration` are not available. Use Pink if you need
+  collision-avoidance tasks.
+- One visualizer: Pinker works with [Viser](https://viser.studio), which
+  handles both visualization and user inputs. If you would rather use (the
+  older) MeshCat, head over to Pink, which is compatible with it.
+- The `pinker.kinematics` backend is not type-checked yet: mypy is disabled on
+  it in `pyproject.toml`. Enabling it is a matter of shipping a
+  `_kinematics_c.pyi` stub for the C extension, annotating the arrays cached in
+  `Model._packed` and the optional values the URDF parser reads, then removing
+  the override.
 
-Pink implements differential inverse kinematics, a first-order algorithm that converges to the closest optimum of its cost function. It is a **local** method that does not solve the more difficult problem of [global inverse kinematics](https://github.com/pink-kinematics/pink/discussions/66). That is, it may converge to a global optimum, or to a local one stuck to some configuration limits. This behavior is illustrated in the [simple pendulum with configuration limit](https://github.com/pink-kinematics/pink/blob/main/examples/simple_pendulum_configuration_limit.py) example.
+## Benchmark
 
-## How can I help?
+Pinker and Pink can be compared using [pinker_benchmark](https://github.com/pink-kinematics/pinker_benchmark), a standalone pixi project that runs a collection of arm and humanoid examples. On a Raspberry Pi 4 Model B:
 
-Install the library and use it! Report bugs in the [issue tracker](https://github.com/pink-kinematics/pink/issues). If you are a developer with some robotics experience looking to hack on open source, check out the [contribution guidelines](CONTRIBUTING.md).
+```
+TODO: benchmark results
+```
+
+See the readme and data files in the benchmark repository for more details.
 
 ## Citation
 
-If you use Pink in your scientific works, please cite it *e.g.* as follows:
+If you use Pinker in your scientific works, please cite it *e.g.* as follows:
 
 ```bibtex
-@software{pink,
-  title = {{Pink: Python inverse kinematics based on Pinocchio}},
+@software{pinker,
+  title = {{Pinker: Python inverse kinematics for embedded robots}},
   author = {Caron, Stéphane and De Mont-Marin, Yann and Budhiraja, Rohan and Bang, Seung Hyeon and Domrachev, Ivan and Nedelchev, Simeon and Du, Peter and Escande, Adrien and Vaillant, Joris and Wingo, Bruce and Patapati, Santosh and San José Pro, Daniel and Marticorena Vidal, Nicolas Guillermo},
   license = {Apache-2.0},
-  url = {https://github.com/pink-kinematics/pink},
-  version = {4.4.0},
+  url = {https://github.com/pink-kinematics/pinker},
+  version = {0.1.0},
   year = {2026}
 }
 ```
@@ -199,9 +199,10 @@ Software:
 
 - [Jink.jl](https://github.com/adubredu/Jink.jl): Julia package for differential multi-task inverse kinematics.
 - [mink](https://github.com/kevinzakka/mink): differential inverse kinematics in Python, based on the MuJoCo physics engine.
-- [Pinocchio](https://github.com/stack-of-tasks/pinocchio): C++ rigid body dynamics algorithms library, used as reference in the C kinematics backend of Pinker.
-- [PlaCo](https://github.com/rhoban/placo): C++ inverse kinematics based on Pinocchio.
-- [pymanoid](https://github.com/stephane-caron/pymanoid): precursor to Pink based on OpenRAVE.
+- [Pink](https://github.com/pink-kinematics/pink/): precursor to Pinker based on Pinocchio.
+- [Pinocchio](https://github.com/stack-of-tasks/pinocchio): C++ rigid body dynamics algorithms library and reference implementation for the C kinematics backend of Pinker.
+- [PlaCo](https://github.com/rhoban/placo): C++ differential multi-task inverse kinematics based on Pinocchio.
+- [pymanoid](https://github.com/stephane-caron/pymanoid): precursor to Pink and Pinker based on OpenRAVE.
 - [TSID](https://github.com/stack-of-tasks/tsid): C++ inverse kinematics based on Pinocchio.
 
 Technical notes:

@@ -237,11 +237,18 @@ intersphinx_mapping = {
     "qpsolvers": ("https://qpsolvers.github.io/qpsolvers/", None),
 }
 
+# Render array-like annotations as the alias rather than as the union NumPy
+# expands it to, which has no documented target to link to
+autodoc_type_aliases = {
+    "ArrayLike": "numpy.typing.ArrayLike",
+}
+
 # Treat warnings as errors, in particular when a reference target (such as a
 # :func:`something`) is not found.
 nitpicky = True
 
 nitpick_ignore = [
+    ("py:class", "pinker.kinematics.model._SE3View"),  # private helper
     ("py:class", "pinocchio.pinocchio_pywrap_default.SE3"),
     ("py:data", "typing.Optional"),
     ("py:data", "typing.Tuple"),

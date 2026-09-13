@@ -38,13 +38,13 @@ from scipy.spatial.transform import Rotation, Slerp
 
 import pinker
 from pinker import solve_ik
+from pinker.kinematics import custom_configuration
 from pinker.tasks import (
     DampingTask,
     FrameTask,
     ManipulabilityTask,
     PostureTask,
 )
-from pinker.utils import custom_configuration_vector
 from pinker.visualization import start_viser_visualizer
 
 WINDOW_DURATION = 5.0  # seconds of data to show in the manipulability plot
@@ -302,7 +302,7 @@ if __name__ == "__main__":
     ]
 
     # Initial configuration (same for both robots)
-    q_ref = custom_configuration_vector(
+    q_ref = custom_configuration(
         robot,
         panda_joint1=0.0,
         panda_joint2=-0.785398,
