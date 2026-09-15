@@ -527,7 +527,7 @@ wheels = [
 ]
 
 [[package]]
-name = "pin-pink"
+name = "pinker"
 source = { editable = "." }
 dependencies = [
     { name = "loop-rate-limiters" },
