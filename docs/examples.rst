@@ -93,27 +93,17 @@ visualizer:
 Running the examples
 ====================
 
-Examples live in the ``examples/`` directory of the repository and run in the
-``examples`` pixi environment, which provides the visualizer and the robot
-descriptions:
-
-.. code:: bash
-
-    pixi run -e examples example examples/ur3_end_effector_tracking.py
-
-The command starts a Viser server and opens the visualization in a new browser
-tab.
-
-Alternatively, every example carries its dependencies in an inline script
-metadata block (`PEP 723 <https://peps.python.org/pep-0723/>`__), so that `uv
-<https://docs.astral.sh/uv/>`__ can run it standalone:
+Examples live in the ``examples/`` directory and carry their own dependencies
+in an inline script metadata block (`PEP 723
+<https://peps.python.org/pep-0723/>`__), so that `uv
+<https://docs.astral.sh/uv/>`__ can run them standalone:
 
 .. code:: bash
 
     uv run examples/ur3_end_effector_tracking.py
 
-The block points ``pinker`` at the repository it lives in, so this works from a
-clone (uv compiles the C extension) without installing anything first.
+Most examples start a Viser server and open the visualization in a new browser
+tab.
 
 What the examples cover
 =======================
