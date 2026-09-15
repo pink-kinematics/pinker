@@ -83,6 +83,16 @@ if __name__ == "__main__":
         "/right_wheel_target", axes_length=0.1, axes_radius=0.005
     )
 
+    # Visualization: add background and ground plane. The rolling tasks
+    # constrain both wheels to the xy-plane of the universe frame, so the
+    # floor is located at z = 0.
+    viewer.scene.set_background_image(np.full((1, 1, 3), 220, dtype=np.uint8))
+    viewer.scene.add_grid(
+        "/grid",
+        position=(0.0, 0.0, 0.0),
+        plane_opacity=0.5,
+    )
+
     # Select QP solver
     solver = qpsolvers.available_solvers[0]
     if "proxqp" in qpsolvers.available_solvers:
