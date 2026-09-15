@@ -18,8 +18,8 @@ from loop_rate_limiters import RateLimiter
 
 import pinker
 from pinker import solve_ik
-from pinker.tasks import FrameTask, PostureTask
 from pinker.kinematics import custom_configuration
+from pinker.tasks import FrameTask, PostureTask
 from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":

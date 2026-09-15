@@ -9,11 +9,9 @@
 # pinker = { path = "..", editable = true }
 # ///
 
-"""Upkie wheeled biped rolling around."""
+"""Upkie wheeled biped rolling without slipping."""
 
-import meshcat_shapes
 import numpy as np
-import pinocchio as pin
 import qpsolvers
 import viser.transforms as vtf
 from loop_rate_limiters import RateLimiter
