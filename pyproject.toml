@@ -87,16 +87,11 @@ platforms = ["linux-64", "linux-aarch64", "osx-arm64"]
 [tool.pixi.dependencies]
 python = ">=3.10"
 c-compiler = "*"
-loop-rate-limiters = ">=0.1.0"
 numpy = ">=1.19.0"
-pinocchio = ">=2.6.3"
 pip = "*"
 qpsolvers = ">=4.3.1"
-robot_descriptions = ">=1.9.0"
 setuptools = ">=77"
-
-[tool.pixi.pypi-dependencies]
-xacrodoc = ">=2.0.0"
+typing-extensions = "*"
 
 [tool.pixi.tasks]
 build = "pip install --no-build-isolation --no-deps --force-reinstall -e ."
@@ -154,18 +149,47 @@ python = "3.14.*"
 [tool.pixi.feature.test.dependencies]
 daqp = "*"
 osqp = "*"
+pinocchio = ">=3.0.0"  # cross-validation of the kinematics backend
 proxsuite = "*"
+quadprog = "*"
+rich = "<15"  # viser >=1.0 requires rich <15
+robot_descriptions = ">=3.1.0"
 scs = "*"
+xacrodoc = "*"
 
 [tool.pixi.feature.test.tasks]
 _test-kinematics = { cmd = "python -m unittest discover --failfast --start-directory tests/kinematics --top-level-directory tests/kinematics", depends-on = ["build"] }
 _test-python = { cmd = "python -m unittest discover --failfast", depends-on = ["build"] }
 test = { depends-on = ["_test-python", "_test-kinematics"] }
 
+[tool.pixi.feature.examples.dependencies]
+loop-rate-limiters = ">=1.2.0"
+matplotlib = "*"
+pycollada = "*"
+rich = "<15"  # viser >=1.0 requires rich <15
+robot_descriptions = ">=3.1.0"
+xacrodoc = "*"
+
+[tool.pixi.feature.examples.pypi-dependencies]
+viser = ">=1.0.0"
+
+[tool.pixi.feature.examples.tasks]
+example = { cmd = "python", depends-on = ["build"] }
+
+[tool.pixi.feature.dist.dependencies]
+python-build = "*"
+twine = "*"
+
+[tool.pixi.feature.dist.tasks]
+sdist = "python -m build --sdist"
+check-dist = { cmd = "twine check dist/*.tar.gz", depends-on = ["sdist"] }
+
 [tool.pixi.environments]
 coverage = { features = ["py312", "coverage"], solve-group = "py312" }
 dev = { features = ["py312", "dev"], solve-group = "py312" }
+dist = { features = ["py312", "dist"], solve-group = "py312" }
 docs = { features = ["py312", "docs"], solve-group = "py312" }
+examples = { features = ["py312", "test", "examples"], solve-group = "py312" }
 test-py310 = { features = ["py310", "test"], solve-group = "py310" }
 test-py311 = { features = ["py311", "test"], solve-group = "py311" }
 test-py312 = { features = ["py312", "test"], solve-group = "py312" }

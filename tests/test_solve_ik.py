@@ -361,7 +361,7 @@ class TestSolveIK(unittest.TestCase):
     def test_com_task_convergence(self):
         """Feasible CoM and ankle tasks on the JVRC model converge.
 
-        Check out examples/humanoid_jvrc_com.py to run this test with live
+        Check out examples/jvrc_com_tracking.py to run this test with live
         visualization.
         """
         robot = load_robot_description(
