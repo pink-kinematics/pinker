@@ -1,21 +1,25 @@
-:github_url: https://github.com/pink-kinematics/pinker/tree/main/doc/introduction.rst
-
 ************
 Introduction
 ************
 
-Inverse kinematics (IK) is the problem of computing *motions* (in Pinker: velocities) that achieve a given set of *tasks*, such as putting a foot on a surface, moving the center of mass to a target location, etc.
+Inverse kinematics (IK) is the problem of computing *motions* (in Pinker:
+velocities) that achieve a given set of *tasks*, such as putting a foot on a
+surface, moving the center of mass to a target location, etc.
 
-This documentation assumes you are already familiar with task-based inverse kinematics. You can check out for instance this `post on inverse kinematics <https://scaron.info/robot-locomotion/inverse-kinematics.html>`__ for a general introduction.
+This documentation assumes you are already familiar with task-based inverse
+kinematics. You can check out for instance this `post on inverse kinematics
+<https://scaron.info/robot-locomotion/inverse-kinematics.html>`__ for a general
+introduction.
 
 Notations
 =========
 
-In Pinker, we adopt the subscript right-to-left convention for transforms, and superscript notation to indicate the frame of a motion or force vector:
+In Pinker, we adopt the subscript right-to-left convention for transforms, and
+superscript notation to indicate the frame of a motion or force vector:
 
 .. list-table::
-    :class: cheatsheet
     :widths: 70 30
+    :header-rows: 1
 
     * - Quantity
       - Notation
@@ -34,7 +38,7 @@ In Pinker, we adopt the subscript right-to-left convention for transforms, and s
 
 With these notations frame transforms can be read left to right, for example:
 
-.. raw:: latex html
+.. math::
 
     \begin{align}
     T_{CA} & = T_{CB} T_{BA} &
@@ -44,6 +48,12 @@ With these notations frame transforms can be read left to right, for example:
 
 See also this `spatial algebra cheat sheet
 <https://scaron.info/robot-locomotion/spatial-vector-algebra-cheat-sheet.html>`_.
+
+Loading a robot
+===============
+
+.. automodule:: pinker.load_robot
+    :members:
 
 .. _Configuration:
 
@@ -56,7 +66,8 @@ Configuration
 Task formalism
 ==============
 
-The *task function approach* followed in Pinker, and many works before it, was originally formalized by Samson, Espiau and Le Borgne in [Samson1991]_.
+The *task function approach* followed in Pinker, and many works before it, was
+originally formalized by Samson, Espiau and Le Borgne in [Samson1991]_.
 
 .. automodule:: pinker.tasks.task
     :members:

@@ -1,10 +1,8 @@
-:github_url: https://github.com/pink-kinematics/pinker/tree/main/doc/inverse-kinematics.rst
-
 ******************
 Inverse kinematics
 ******************
 
-The main function solve inverse kinematics is :func:`.solve_ik`. Here is for
+The main function to solve inverse kinematics is :func:`.solve_ik`. Here is for
 instance how it appears in a closed-loop inverse kinematics:
 
 .. code:: python
@@ -16,11 +14,18 @@ instance how it appears in a closed-loop inverse kinematics:
         configuration.integrate_inplace(velocity, rate.dt)
         rate.sleep()
 
-See the ``examples/`` folder in the repository for complete use cases.
+See the ``examples/`` folder in the repository for complete use cases, and
+:ref:`Examples` for a commented one.
 
 .. autofunction:: pinker.solve_ik.solve_ik
 
-It is also possible to ask Pinker to only build the underlying inverse kinematics
-problem via the :func:`.build_ik` function:
+It is also possible to only build the underlying inverse kinematics problem,
+without solving it, via the :func:`.build_ik` function:
 
 .. autofunction:: pinker.solve_ik.build_ik
+
+Utility functions
+=================
+
+.. automodule:: pinker.utils
+    :members:
