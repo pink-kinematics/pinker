@@ -133,17 +133,16 @@ coverage-run = { cmd = "coverage report --include=\"pinker/*\"", depends-on = ["
 coverage-open = { cmd = "xdg-open htmlcov/index.html", depends-on = ["_coverage-html"] }
 
 [tool.pixi.feature.docs.dependencies]
-sphinx = ">=7.2.2"
-sphinx-rtd-theme = "*"
-sphinx-favicon = "*"
+sphinx = ">=8.0.0"
 sphinx-autodoc-typehints = "*"
 
 [tool.pixi.feature.docs.pypi-dependencies]
+sphinx-material = "*"
 sphinx-mathjax-offline = "*"
 
 [tool.pixi.feature.docs.tasks]
-docs-build = { cmd = "sphinx-build doc/ _build -W" }
-docs-open = { cmd = "xdg-open _build/index.html", depends-on = "docs-build" }
+docs-build = { cmd = "sphinx-build docs/ docs/_build -W", depends-on = ["build"] }
+docs-open = { cmd = "xdg-open docs/_build/index.html", depends-on = ["docs-build"] }
 
 [tool.pixi.feature.dev.dependencies]
 mypy = ">=0.812"
