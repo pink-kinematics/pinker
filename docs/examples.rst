@@ -124,9 +124,8 @@ What the examples cover
 
     * - Example
       - Illustrates
-    * - ``cookie_viser_visualization.py``,
-        ``cookie_yourdfpy_visualization.py``
-      - Displaying a robot description, in Viser and in yourdfpy
+    * - ``cookie_visualization.py``
+      - Displaying a robot description in Viser
     * - ``draco3_reaching.py``
       - Closed kinematic chains with :class:`.JointCouplingTask`
     * - ``g1_com_tracking.py``, ``jvrc_com_tracking.py``
