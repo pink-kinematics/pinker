@@ -386,7 +386,7 @@ class TestConfiguration(unittest.TestCase):
         )
         self.assertTrue(
             np.allclose(
-                transform_pelvis_to_world.np[3, :],
+                transform_pelvis_to_world.toarray()[3, :],
                 np.array([0.0, 0.0, 0.0, 1.0]),
             )
         )
@@ -495,7 +495,9 @@ class TestConfiguration(unittest.TestCase):
         # Forward kinematics ran on the copy only
         self.assertFalse(
             np.allclose(
-                other.get_transform_frame_to_world("left_foot_tip").np,
-                configuration.get_transform_frame_to_world("left_foot_tip").np,
+                other.get_transform_frame_to_world("left_foot_tip").toarray(),
+                configuration.get_transform_frame_to_world(
+                    "left_foot_tip"
+                ).toarray(),
             )
         )

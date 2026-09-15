@@ -4,8 +4,8 @@
 
 import unittest
 
-from pinker import load_robot_description
 from pinker import kinematics as kin
+from pinker import load_robot_description
 from pinker.utils import VectorSpace
 
 

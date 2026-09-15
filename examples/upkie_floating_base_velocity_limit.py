@@ -22,7 +22,9 @@ from pinker.tasks import FrameTask
 
 def main() -> None:
     """Run a short IK loop where the base velocity remains bounded."""
-    robot = pinker.load_robot_description("upkie_description", root_joint="free_flyer")
+    robot = pinker.load_robot_description(
+        "upkie_description", root_joint="free_flyer"
+    )
     configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
 
     floating_limit = FloatingBaseVelocityLimit(

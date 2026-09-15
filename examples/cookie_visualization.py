@@ -17,7 +17,9 @@ import pinker
 from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = pinker.load_robot_description("cookie_description", root_joint="free_flyer")
+    robot = pinker.load_robot_description(
+        "cookie_description", root_joint="free_flyer"
+    )
     viz = start_viser_visualizer(robot)
     viz.display_frames(True)
     viz.display(robot.q0)

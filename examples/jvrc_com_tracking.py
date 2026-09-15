@@ -24,7 +24,9 @@ from pinker.tasks import ComTask, FrameTask
 from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = pinker.load_robot_description("jvrc_description", root_joint="free_flyer")
+    robot = pinker.load_robot_description(
+        "jvrc_description", root_joint="free_flyer"
+    )
 
     # Initialize visualization
     viz = start_viser_visualizer(robot)

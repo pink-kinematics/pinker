@@ -84,14 +84,12 @@ if __name__ == "__main__":
         end_effector_task.transform_target_to_world.translation = target_pos
 
         # Update visualization frames
-        _T = np.asarray(end_effector_task.transform_target_to_world.np)
+        _T = end_effector_task.transform_target_to_world.toarray()
         target_frame.position = _T[:3, 3]
         target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
-        _T = np.asarray(
-            configuration.get_transform_frame_to_world(
-                end_effector_task.frame
-            ).np
-        )
+        _T = configuration.get_transform_frame_to_world(
+            end_effector_task.frame
+        ).toarray()
         end_effector_frame.position = _T[:3, 3]
         end_effector_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 

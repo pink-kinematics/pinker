@@ -22,7 +22,9 @@ from pinker.tasks import FrameTask, RollingTask
 from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = pinker.load_robot_description("upkie_description", root_joint="free_flyer")
+    robot = pinker.load_robot_description(
+        "upkie_description", root_joint="free_flyer"
+    )
     visualizer = start_viser_visualizer(robot)
 
     base_task = FrameTask(
@@ -98,16 +100,16 @@ if __name__ == "__main__":
         right_wheel_target.translation[0] = base_x - 0.1 * np.sin(t)
 
         # Update visualization frames
-        _T = np.asarray(base_target.np)
+        _T = base_target.toarray()
         base_target_frame.position = _T[:3, 3]
         base_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
-        _T = np.asarray(left_wheel_target.np)
+        _T = left_wheel_target.toarray()
         left_wheel_target_frame.position = _T[:3, 3]
         left_wheel_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
-        _T = np.asarray(right_wheel_target.np)
+        _T = right_wheel_target.toarray()
         right_wheel_target_frame.position = _T[:3, 3]
         right_wheel_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
-        _T = np.asarray(configuration.get_transform_frame_to_world("base").np)
+        _T = configuration.get_transform_frame_to_world("base").toarray()
         base_frame.position = _T[:3, 3]
         base_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 

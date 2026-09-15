@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Kinematics: `SE3.toarray` and `Motion.asarray`, converting to NumPy arrays.
+  The two names differ because the transform assembles a new homogeneous
+  matrix, while the motion hands back the vector it stores
+- Kinematics: `Motion.__array__`, so that `numpy.asarray` works on a motion as
+  it already did on a transform
 - `load_robot_description` function, loading a model from a robot description
 - `load_robot_urdf` function, loading a model from a URDF file
 - Configuration: `copy` function, sharing the model, default limits and
@@ -51,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clean up unnecessary shebangs from source file headers
 - Clean up unnecessary source encoding lines from source file headers
 - examples: MeshCat shapes helper, superseded by the Viser visualizer
+- examples: Stretch mobile manipulation, same motion as the world-target one
 - examples: Panda manipulability comparison
 - examples: Visualization in yourdfpy, Pinker focusing on Viser
 - examples: Flying dual-arm UR3

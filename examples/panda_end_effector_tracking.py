@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     pose_home = configuration.get_transform_frame_to_world(
         end_effector_task.frame
-    ).np
+    ).toarray()
 
     end_effector_task.set_target_from_configuration(configuration)
     posture_task.set_target_from_configuration(configuration)
@@ -161,11 +161,11 @@ if __name__ == "__main__":
         posture_task.set_target_from_configuration(configuration)
         transform_handle.position = configuration.get_transform_frame_to_world(
             end_effector_task.frame
-        ).np[:3, 3]
+        ).toarray()[:3, 3]
         transform_handle.wxyz = Rotation.from_matrix(
             configuration.get_transform_frame_to_world(
                 end_effector_task.frame
-            ).np[:3, :3]
+            ).toarray()[:3, :3]
         ).as_quat(scalar_first=True)
 
     # === End of GUI elements ===

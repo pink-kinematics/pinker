@@ -27,7 +27,9 @@ CIRCLE_RADIUS = 0.5  # [m]
 FINGERTIP_HEIGHT = 0.7  # [m]
 
 if __name__ == "__main__":
-    robot = pinker.load_robot_description("stretch_description", root_joint="planar")
+    robot = pinker.load_robot_description(
+        "stretch_description", root_joint="planar"
+    )
 
     # Initialize visualization
     viz = start_viser_visualizer(robot)
@@ -94,24 +96,24 @@ if __name__ == "__main__":
         )
 
         # Update visualizer frames
-        _T = np.asarray(T.np)
+        _T = T.toarray()
         base_target_frame.position = _T[:3, 3]
         base_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
         transform_fingertip_target_to_world = (
             configuration.get_transform_frame_to_world("base_link")
             * fingertip_task.transform_target_to_root
         )
-        _T = np.asarray(transform_fingertip_target_to_world.np)
+        _T = transform_fingertip_target_to_world.toarray()
         fingertip_target_frame.position = _T[:3, 3]
         fingertip_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
-        _T = np.asarray(
-            configuration.get_transform_frame_to_world(base_task.frame).np
-        )
+        _T = configuration.get_transform_frame_to_world(
+            base_task.frame
+        ).toarray()
         base_frame.position = _T[:3, 3]
         base_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
-        _T = np.asarray(
-            configuration.get_transform_frame_to_world(fingertip_task.frame).np
-        )
+        _T = configuration.get_transform_frame_to_world(
+            fingertip_task.frame
+        ).toarray()
         fingertip_frame.position = _T[:3, 3]
         fingertip_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 

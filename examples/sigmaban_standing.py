@@ -23,7 +23,9 @@ from pinker.tasks import FrameTask, PostureTask
 from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = pinker.load_robot_description("sigmaban_description", root_joint="free_flyer")
+    robot = pinker.load_robot_description(
+        "sigmaban_description", root_joint="free_flyer"
+    )
 
     # Initialize visualization
     viz = start_viser_visualizer(robot)
@@ -84,13 +86,13 @@ if __name__ == "__main__":
     torso_task.set_target(configuration.get_transform_frame_to_world("torso"))
 
     # Display targets
-    _T = np.asarray(left_foot_task.transform_target_to_world.np)
+    _T = left_foot_task.transform_target_to_world.toarray()
     left_foot_target_frame.position = _T[:3, 3]
     left_foot_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
-    _T = np.asarray(right_foot_task.transform_target_to_world.np)
+    _T = right_foot_task.transform_target_to_world.toarray()
     right_foot_target_frame.position = _T[:3, 3]
     right_foot_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
-    _T = np.asarray(torso_task.transform_target_to_world.np)
+    _T = torso_task.transform_target_to_world.toarray()
     torso_target_frame.position = _T[:3, 3]
     torso_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 

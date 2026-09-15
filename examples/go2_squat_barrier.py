@@ -23,7 +23,9 @@ from pinker.tasks import FrameTask, PostureTask
 from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = pinker.load_robot_description("go2_description", root_joint="free_flyer")
+    robot = pinker.load_robot_description(
+        "go2_description", root_joint="free_flyer"
+    )
     viz = start_viser_visualizer(robot)
 
     q_ref = np.array(
@@ -115,12 +117,12 @@ if __name__ == "__main__":
         end_effector_target.translation[2] = 0.3 + Az * np.sin(omega * t)
 
         # Update visualization frames
-        _T = np.asarray(end_effector_target.np)
+        _T = end_effector_target.toarray()
         base_target_frame.position = _T[:3, 3]
         base_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
-        _T = np.asarray(
-            configuration.get_transform_frame_to_world(base_task.frame).np
-        )
+        _T = configuration.get_transform_frame_to_world(
+            base_task.frame
+        ).toarray()
         base_frame.position = _T[:3, 3]
         base_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 

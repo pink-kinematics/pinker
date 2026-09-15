@@ -22,7 +22,9 @@ from pinker.tasks import ComTask, FrameTask, PostureTask
 from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = pinker.load_robot_description("g1_description", root_joint="free_flyer")
+    robot = pinker.load_robot_description(
+        "g1_description", root_joint="free_flyer"
+    )
 
     # Initialize visualization
     viz = start_viser_visualizer(robot)

@@ -6,7 +6,7 @@ and what they do with it. Here is an overview of some of them:
 - [Draco 3: reaching](#draco-3-reaching)
 - [Go2: squat barrier](#go2-squat-barrier)
 - [Panda: end-effector tracking](#panda-end-effector-tracking)
-- [Stretch: mobile manipulation](#stretch-mobile-manipulation)
+- [Stretch: world target](#stretch-world-target)
 - [Upkie: rolling](#upkie-rolling)
 - [UR10: inverse kinematics](#ur10-inverse-kinematics)
 - [UR5: end-effector tracking](#ur5-end-effector-tracking)
@@ -66,9 +66,9 @@ In `panda_end_effector_tracking.py`, a Panda arm tracks an interactive target in
 
 https://github.com/user-attachments/assets/1c4ac222-8e3f-469d-95c3-550f1c0979fa
 
-## Stretch: mobile manipulation
+## Stretch: world target
 
-In `stretch_mobile_manipulation.py`, a Stretch RE1 moves with a fixed fingertip target around the origin:
+In `stretch_world_target.py`, a Stretch RE1 moves with a fixed fingertip target around the origin. Its counterpart `stretch_relative_target.py` tracks the same target in the frame of the mobile base:
 
 https://github.com/stephane-caron/pink/assets/1189580/711c4b92-6234-41bd-945b-e6c043f6b2e6
 

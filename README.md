@@ -144,7 +144,7 @@ uv run examples/ur3_end_effector_tracking.py
 
 - **Single arms:** [Panda](https://github.com/pink-kinematics/pinker/tree/main/examples#panda-end-effector-tracking), [UR5](https://github.com/pink-kinematics/pinker/tree/main/examples#ur5-end-effector-tracking), [UR5 with end-effector limits](https://github.com/pink-kinematics/pinker/tree/main/examples#ur5-position-barrier)
 - **Humanoid:** [Draco 3](https://github.com/pink-kinematics/pinker/tree/main/examples#draco-3-reaching)
-- **Mobile base:** [Stretch R1](https://github.com/pink-kinematics/pinker/tree/main/examples#stretch-mobile-manipulation)
+- **Mobile base:** [Stretch R1](https://github.com/pink-kinematics/pinker/tree/main/examples#stretch-world-target)
 - **Quadruped:** [Go2 squatting with floating-base limits](https://github.com/pink-kinematics/pinker/tree/main/examples#go2-squat-barrier)
 - **Floating base:** [Clamp free-flyer velocities](https://github.com/pink-kinematics/pinker/blob/main/examples/upkie_floating_base_velocity_limit.py)
 - **Wheeled biped:** [Upkie rolling without slipping](https://github.com/pink-kinematics/pinker/tree/main/examples#upkie-rolling)

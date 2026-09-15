@@ -141,8 +141,7 @@ What the examples cover
       - Whole-body inverse kinematics, with the feet in contact
     * - ``piper_inverse_kinematics.py``, ``ur10_inverse_kinematics.py``
       - Iterating differential IK to reach a prescribed end-effector pose
-    * - ``stretch_mobile_manipulation.py``, ``stretch_relative_target.py``,
-        ``stretch_world_target.py``
+    * - ``stretch_relative_target.py``, ``stretch_world_target.py``
       - Mobile manipulation, with world and mobile-base targets
     * - ``upkie_floating_base_velocity_limit.py``
       - Clamping base velocities with :class:`.FloatingBaseVelocityLimit`

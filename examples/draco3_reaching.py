@@ -52,7 +52,9 @@ class WavingPose:
 
 
 if __name__ == "__main__":
-    robot = pinker.load_robot_description("draco3_description", root_joint="free_flyer")
+    robot = pinker.load_robot_description(
+        "draco3_description", root_joint="free_flyer"
+    )
 
     # Initialize visualization
     viz = start_viser_visualizer(robot)
@@ -159,7 +161,7 @@ if __name__ == "__main__":
     while True:
         # Update task targets
         right_wrist_task.set_target(right_wrist_pose.at(t))
-        _T = np.asarray(right_wrist_pose.at(t).np)
+        _T = right_wrist_pose.at(t).toarray()
         wrist_frame.position = _T[:3, 3]
         wrist_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 

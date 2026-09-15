@@ -127,7 +127,7 @@ class TestFloatingBaseVelocityLimitFreeFlyer(unittest.TestCase):
         self.assertEqual(h.shape[0], expected_rows)
 
     def test_velocity_within_limits_satisfies_constraints(self):
-        """A displacement matching the limit should satisfy the inequalities."""
+        """A displacement matching the limit satisfies the inequalities."""
         result = self.limit.compute_qp_inequalities(
             self.configuration, self.dt
         )
@@ -144,7 +144,7 @@ class TestFloatingBaseVelocityLimitFreeFlyer(unittest.TestCase):
         self.assertTrue(np.all(G @ dq <= h + 1e-12))
 
     def test_missing_root_joint_raises(self):
-        """Manipulator only robots should fail fast when no floating base exists."""
+        """Manipulator-only robots fail fast when no floating base exists."""
         model = kin.Model()
         with self.assertRaises(ValueError):
             FloatingBaseVelocityLimit(

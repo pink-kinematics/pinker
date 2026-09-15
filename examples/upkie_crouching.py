@@ -18,8 +18,8 @@ from loop_rate_limiters import RateLimiter
 
 import pinker
 from pinker import solve_ik
-from pinker.tasks import FrameTask, PostureTask
 from pinker.kinematics import custom_configuration
+from pinker.tasks import FrameTask, PostureTask
 from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
@@ -95,19 +95,17 @@ if __name__ == "__main__":
         right_contact_target.translation[2] += 0.1 * np.sin(t) * dt
 
         # Update visualization frames
-        _T = np.asarray(left_contact_target.np)
+        _T = left_contact_target.toarray()
         left_contact_target_frame.position = _T[:3, 3]
         left_contact_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
-        _T = np.asarray(right_contact_target.np)
+        _T = right_contact_target.toarray()
         right_contact_target_frame.position = _T[:3, 3]
         right_contact_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
         for body_frame, body in (
             (left_contact_frame, "left_contact"),
             (right_contact_frame, "right_contact"),
         ):
-            _T = np.asarray(
-                configuration.get_transform_frame_to_world(body).np
-            )
+            _T = configuration.get_transform_frame_to_world(body).toarray()
             body_frame.position = _T[:3, 3]
             body_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 

@@ -20,9 +20,9 @@ from loop_rate_limiters import RateLimiter
 
 import pinker
 from pinker import solve_ik
+from pinker.kinematics import custom_configuration
 from pinker.limits import AccelerationLimit
 from pinker.tasks import DampingTask, FrameTask, PostureTask
-from pinker.kinematics import custom_configuration
 from pinker.visualizer import start_viser_visualizer
 
 NB_STEPS = 3000  # number of steps to run the example for
@@ -89,14 +89,12 @@ if __name__ == "__main__":
         end_effector_target.translation[2] = 0.2
 
         # Update visualization frames
-        _T = np.asarray(end_effector_target.np)
+        _T = end_effector_target.toarray()
         end_effector_target_frame.position = _T[:3, 3]
         end_effector_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
-        _T = np.asarray(
-            configuration.get_transform_frame_to_world(
-                end_effector_task.frame
-            ).np
-        )
+        _T = configuration.get_transform_frame_to_world(
+            end_effector_task.frame
+        ).toarray()
         end_effector_frame.position = _T[:3, 3]
         end_effector_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 

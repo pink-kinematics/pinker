@@ -2,8 +2,8 @@
 #
 # /// script
 # requires-python = ">=3.10"
-# dependencies = ["clarabel", "loop-rate-limiters", "pinker", "pycollada",
-# "qpsolvers", "robot_descriptions >=3.1.0", "trimesh", "typing-extensions",
+# dependencies = ["loop-rate-limiters", "pinker", "pycollada", "qpsolvers",
+# "quadprog", "robot_descriptions >=3.1.0", "trimesh", "typing-extensions",
 # "viser"]
 #
 # [tool.uv.sources]
@@ -53,7 +53,9 @@ class WavingPose:
 
 
 if __name__ == "__main__":
-    robot = pinker.load_robot_description("jvrc_description", root_joint="free_flyer")
+    robot = pinker.load_robot_description(
+        "jvrc_description", root_joint="free_flyer"
+    )
 
     # Initialize visualization
     viz = start_viser_visualizer(robot)
@@ -84,7 +86,7 @@ if __name__ == "__main__":
 
     pelvis_pose = configuration.get_transform_frame_to_world("PELVIS_S").copy()
     pelvis_pose.translation[0] += 0.05
-    _T = np.asarray(pelvis_pose.np)
+    _T = pelvis_pose.toarray()
     pelvis_pose_frame.position = _T[:3, 3]
     pelvis_pose_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
     pelvis_task.set_target(pelvis_pose)
@@ -112,10 +114,11 @@ if __name__ == "__main__":
         configuration.get_transform_frame_to_world("r_wrist")
     )
 
-    # Select QP solver
+    # Select QP solver. The four frame tasks of this example leave the QP
+    # singular, which only quadprog solves reliably here.
     solver = qpsolvers.available_solvers[0]
-    if "proxqp" in qpsolvers.available_solvers:
-        solver = "proxqp"
+    if "quadprog" in qpsolvers.available_solvers:
+        solver = "quadprog"
 
     rate = RateLimiter(frequency=200.0, warn=False)
     dt = rate.period
@@ -123,7 +126,7 @@ if __name__ == "__main__":
     while True:
         # Update task targets
         right_wrist_task.set_target(right_wrist_pose.at(t))
-        _T = np.asarray(right_wrist_pose.at(t).np)
+        _T = right_wrist_pose.at(t).toarray()
         wrist_frame.position = _T[:3, 3]
         wrist_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 

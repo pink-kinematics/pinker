@@ -68,7 +68,7 @@ if __name__ == "__main__":
         np.array([0.1, 0.2, 0.3]) if hit_limit else np.array([0.0, 0.2, 0.6])
     )
     target.rotation = Rotation.from_euler("xyz", [0, 0, 0]).as_matrix()
-    _T = np.asarray(target.np)
+    _T = target.toarray()
     end_effector_target_frame.position = _T[:3, 3]
     end_effector_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
     ee_task.set_target(target)
@@ -96,9 +96,9 @@ if __name__ == "__main__":
         q_out = np.clip(q_out, low, high)
         configuration = pinker.Configuration(model, data, q_out)
         kin.update_frame_placements(model, data)
-        _T = np.asarray(
-            configuration.get_transform_frame_to_world(ee_task.frame).np
-        )
+        _T = configuration.get_transform_frame_to_world(
+            ee_task.frame
+        ).toarray()
         end_effector_frame.position = _T[:3, 3]
         end_effector_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
         viz.display(configuration.q)
