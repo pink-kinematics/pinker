@@ -1,0 +1,12 @@
+---
+# Formatting rules for the pinker.kinematics C extension.
+#
+# The base style is LLVM (2-space indent, 80 columns, attached braces), with
+# two additional settings: IndentCaseLabels, and InsertBraces, so that
+# single-statement if/for bodies get their braces.
+#
+# Check with `pixi run -e dev dev-lint`, apply with `pixi run -e dev dev-format`.
+Language: Cpp
+BasedOnStyle: LLVM
+IndentCaseLabels: true
+InsertBraces: true
