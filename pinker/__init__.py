@@ -5,6 +5,7 @@
 from .configuration import Configuration
 from .exceptions import PinkerError
 from .kinematics import custom_configuration
+from .load_robot import load_robot
 from .solve_ik import build_ik, solve_ik
 from .tasks import (
     FrameTask,
@@ -28,5 +29,6 @@ __all__ = [
     "Task",
     "build_ik",
     "custom_configuration",
+    "load_robot",
     "solve_ik",
 ]

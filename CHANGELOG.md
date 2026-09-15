@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `load_robot` function, loading a model from a URDF file or from a robot
+  description
 - Configuration: `copy` function, sharing the model, default limits and
   tangent space of the configuration it copies
 - Configuration: `default_limits` attribute and constructor argument, holding
