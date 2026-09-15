@@ -203,7 +203,9 @@ static void quat_log3(double *w, double *theta_out, const double *q) {
     w[1] = c * v[1];
     w[2] = c * v[2];
   }
-  if (theta_out) *theta_out = theta;
+  if (theta_out) {
+    *theta_out = theta;
+  }
 }
 
 /*
@@ -250,16 +252,24 @@ static void log3(double *w, double *theta_out, const double *R_in) {
     w[0] = t * antisym[0];
     w[1] = t * antisym[1];
     w[2] = t * antisym[2];
-    if (theta_out) *theta_out = theta;
+    if (theta_out) {
+      *theta_out = theta;
+    }
     return;
   }
 
   /* Singular case, theta close to pi: pick the largest diagonal term. */
   double val[3];
-  for (int i = 0; i < 3; i++) val[i] = 2.0 * R[4 * i] - tr + 1.0;
+  for (int i = 0; i < 3; i++) {
+    val[i] = 2.0 * R[4 * i] - tr + 1.0;
+  }
   int i0 = 0;
-  if (val[1] > val[i0]) i0 = 1;
-  if (val[2] > val[i0]) i0 = 2;
+  if (val[1] > val[i0]) {
+    i0 = 1;
+  }
+  if (val[2] > val[i0]) {
+    i0 = 2;
+  }
   int i1 = (i0 + 1) % 3, i2 = (i0 + 2) % 3;
   double sign = (R[3 * i2 + i1] >= R[3 * i1 + i2]) ? 1.0 : -1.0;
   double s = sqrt(val[i0] + DBL_EPS + DBL_EPS * DBL_EPS) * sign;
@@ -270,8 +280,12 @@ static void log3(double *w, double *theta_out, const double *R_in) {
   double qw = (R[3 * i2 + i1] - R[3 * i1 + i2]) / (2.0 * s);
   double axis_norm = sqrt(dot3(axis, axis));
   double theta = 2.0 * atan2(axis_norm, qw);
-  for (int i = 0; i < 3; i++) w[i] = theta * axis[i] / axis_norm;
-  if (theta_out) *theta_out = theta;
+  for (int i = 0; i < 3; i++) {
+    w[i] = theta * axis[i] / axis_norm;
+  }
+  if (theta_out) {
+    *theta_out = theta;
+  }
 }
 
 /* Jlog3 as a function of theta = |w| and w = log3(R). */
@@ -286,8 +300,11 @@ static void jlog3(double *J, double theta, const double *w) {
     alpha = 1.0 / (theta * theta) - st_1mct / (2.0 * theta);
     diag_value = 0.5 * (theta * st_1mct);
   }
-  for (int i = 0; i < 3; i++)
-    for (int j = 0; j < 3; j++) J[3 * i + j] = alpha * w[i] * w[j];
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      J[3 * i + j] = alpha * w[i] * w[j];
+    }
+  }
   J[0] += diag_value;
   J[4] += diag_value;
   J[8] += diag_value;
@@ -323,7 +340,9 @@ static void exp6_quat(double *q, double *p, const double *v, const double *w) {
   double wxv[3], wxwxv[3];
   cross3(wxv, w, v);
   cross3(wxwxv, w, wxv);
-  for (int i = 0; i < 3; i++) p[i] = v[i] + a * wxv[i] + b * wxwxv[i];
+  for (int i = 0; i < 3; i++) {
+    p[i] = v[i] + a * wxv[i] + b * wxwxv[i];
+  }
 }
 
 /*
@@ -351,8 +370,9 @@ static void log6(double *out, const double *R, const double *p) {
   double wxp[3];
   cross3(wxp, w, p);
   double wdp = dot3(w, p);
-  for (int i = 0; i < 3; i++)
+  for (int i = 0; i < 3; i++) {
     out[i] = alpha * p[i] - 0.5 * wxp[i] + beta * wdp * w[i];
+  }
   out[3] = w[0];
   out[4] = w[1];
   out[5] = w[2];
@@ -385,15 +405,18 @@ static void jlog6(double *J, const double *R, const double *p) {
 
   double wTp = dot3(w, p);
   double v3_tmp[3];
-  for (int i = 0; i < 3; i++)
+  for (int i = 0; i < 3; i++) {
     v3_tmp[i] = beta_dot_over_theta * wTp * w[i] -
                 (t2 * beta_dot_over_theta + 2.0 * beta) * p[i];
+  }
 
   /* C = v3_tmp w^T + beta w p^T + wTp beta I + skew(p / 2) */
   double C[9];
-  for (int i = 0; i < 3; i++)
-    for (int j = 0; j < 3; j++)
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
       C[3 * i + j] = v3_tmp[i] * w[j] + beta * w[i] * p[j];
+    }
+  }
   C[0] += wTp * beta;
   C[4] += wTp * beta;
   C[8] += wTp * beta;
@@ -424,9 +447,15 @@ static void jlog6(double *J, const double *R, const double *p) {
 /* Angle of a 2D rotation given by (c, s). Ported from Pinocchio SO2 log. */
 static double so2_log(double c, double s) {
   double tr = 2.0 * c;
-  if (tr > 2.0) return 0.0;
-  if (tr < -2.0) return (s >= 0.0) ? M_PI : -M_PI;
-  if (tr > 2.0 - 1e-2) return asin(s);
+  if (tr > 2.0) {
+    return 0.0;
+  }
+  if (tr < -2.0) {
+    return (s >= 0.0) ? M_PI : -M_PI;
+  }
+  if (tr > 2.0 - 1e-2) {
+    return asin(s);
+  }
   return (s >= 0.0) ? acos(c) : -acos(c);
 }
 
@@ -686,11 +715,14 @@ static PyObject *py_forward_kinematics(PyObject *self, PyObject *args) {
       *o_rot, *o_trans;
   if (!PyArg_ParseTuple(args, "OOOOOOOOO", &o_jtype, &o_parent, &o_idx_q,
                         &o_axis, &o_jp_rot, &o_jp_trans, &o_q, &o_rot,
-                        &o_trans))
+                        &o_trans)) {
     return NULL;
+  }
 
   int32_t *jtype = as_i32(o_jtype, -1, "jtype");
-  if (!jtype) return NULL;
+  if (!jtype) {
+    return NULL;
+  }
   npy_intp nj = PyArray_SIZE((PyArrayObject *)o_jtype);
   int32_t *parent = as_i32(o_parent, nj, "parent");
   int32_t *idx_q = as_i32(o_idx_q, nj, "idx_q");
@@ -701,8 +733,9 @@ static PyObject *py_forward_kinematics(PyObject *self, PyObject *args) {
   double *oMi_rot = as_f64(o_rot, 9 * nj, "oMi_rot");
   double *oMi_trans = as_f64(o_trans, 3 * nj, "oMi_trans");
   if (!parent || !idx_q || !axis || !jp_rot || !jp_trans || !q || !oMi_rot ||
-      !oMi_trans)
+      !oMi_trans) {
     return NULL;
+  }
 
   mat_eye(oMi_rot);
   oMi_trans[0] = 0.0;
@@ -717,14 +750,18 @@ static PyObject *py_forward_kinematics(PyObject *self, PyObject *args) {
     double R_pc[9], p_pc[3], tmp[3];
     mat_mul(R_pc, jp_rot + 9 * j, Rj);
     mat_vec(tmp, jp_rot + 9 * j, pj);
-    for (int i = 0; i < 3; i++) p_pc[i] = jp_trans[3 * j + i] + tmp[i];
+    for (int i = 0; i < 3; i++) {
+      p_pc[i] = jp_trans[3 * j + i] + tmp[i];
+    }
 
     /* World placement: oMi[parent] * (R_pc, p_pc) */
     const double *Rp = oMi_rot + 9 * parent[j];
     const double *pp = oMi_trans + 3 * parent[j];
     mat_mul(oMi_rot + 9 * j, Rp, R_pc);
     mat_vec(tmp, Rp, p_pc);
-    for (int i = 0; i < 3; i++) oMi_trans[3 * j + i] = pp[i] + tmp[i];
+    for (int i = 0; i < 3; i++) {
+      oMi_trans[3 * j + i] = pp[i] + tmp[i];
+    }
   }
   Py_RETURN_NONE;
 }
@@ -739,22 +776,28 @@ static PyObject *py_joint_jacobians(PyObject *self, PyObject *args) {
   PyObject *o_jtype, *o_idx_v, *o_axis, *o_rot, *o_trans, *o_J;
   int nv;
   if (!PyArg_ParseTuple(args, "OOOOOOi", &o_jtype, &o_idx_v, &o_axis, &o_rot,
-                        &o_trans, &o_J, &nv))
+                        &o_trans, &o_J, &nv)) {
     return NULL;
+  }
 
   int32_t *jtype = as_i32(o_jtype, -1, "jtype");
-  if (!jtype) return NULL;
+  if (!jtype) {
+    return NULL;
+  }
   npy_intp nj = PyArray_SIZE((PyArrayObject *)o_jtype);
   int32_t *idx_v = as_i32(o_idx_v, nj, "idx_v");
   double *axis = as_f64(o_axis, 3 * nj, "axis");
   double *oMi_rot = as_f64(o_rot, 9 * nj, "oMi_rot");
   double *oMi_trans = as_f64(o_trans, 3 * nj, "oMi_trans");
   double *J = as_f64(o_J, 6 * (npy_intp)nv, "J");
-  if (!idx_v || !axis || !oMi_rot || !oMi_trans || !J) return NULL;
+  if (!idx_v || !axis || !oMi_rot || !oMi_trans || !J) {
+    return NULL;
+  }
 
-  for (npy_intp j = 1; j < nj; j++)
+  for (npy_intp j = 1; j < nj; j++) {
     joint_jacobian_cols(jtype[j], axis + 3 * j, oMi_rot + 9 * j,
                         oMi_trans + 3 * j, idx_v[j], J, nv);
+  }
   Py_RETURN_NONE;
 }
 
@@ -769,11 +812,14 @@ static PyObject *py_frame_placements(PyObject *self, PyObject *args) {
   PyObject *o_fparent, *o_fp_rot, *o_fp_trans, *o_rot, *o_trans, *o_frot,
       *o_ftrans;
   if (!PyArg_ParseTuple(args, "OOOOOOO", &o_fparent, &o_fp_rot, &o_fp_trans,
-                        &o_rot, &o_trans, &o_frot, &o_ftrans))
+                        &o_rot, &o_trans, &o_frot, &o_ftrans)) {
     return NULL;
+  }
 
   int32_t *fparent = as_i32(o_fparent, -1, "fparent");
-  if (!fparent) return NULL;
+  if (!fparent) {
+    return NULL;
+  }
   npy_intp nf = PyArray_SIZE((PyArrayObject *)o_fparent);
   double *fp_rot = as_f64(o_fp_rot, 9 * nf, "fp_rot");
   double *fp_trans = as_f64(o_fp_trans, 3 * nf, "fp_trans");
@@ -781,8 +827,10 @@ static PyObject *py_frame_placements(PyObject *self, PyObject *args) {
   double *oMi_trans = as_f64(o_trans, -1, "oMi_trans");
   double *oMf_rot = as_f64(o_frot, 9 * nf, "oMf_rot");
   double *oMf_trans = as_f64(o_ftrans, 3 * nf, "oMf_trans");
-  if (!fp_rot || !fp_trans || !oMi_rot || !oMi_trans || !oMf_rot || !oMf_trans)
+  if (!fp_rot || !fp_trans || !oMi_rot || !oMi_trans || !oMf_rot ||
+      !oMf_trans) {
     return NULL;
+  }
 
   for (npy_intp f = 0; f < nf; f++) {
     const double *Rp = oMi_rot + 9 * fparent[f];
@@ -790,7 +838,9 @@ static PyObject *py_frame_placements(PyObject *self, PyObject *args) {
     double tmp[3];
     mat_mul(oMf_rot + 9 * f, Rp, fp_rot + 9 * f);
     mat_vec(tmp, Rp, fp_trans + 3 * f);
-    for (int i = 0; i < 3; i++) oMf_trans[3 * f + i] = pp[i] + tmp[i];
+    for (int i = 0; i < 3; i++) {
+      oMf_trans[3 * f + i] = pp[i] + tmp[i];
+    }
   }
   Py_RETURN_NONE;
 }
@@ -809,15 +859,18 @@ static PyObject *py_frame_jacobian(PyObject *self, PyObject *args) {
   PyObject *o_J, *o_Rf, *o_pf, *o_support, *o_out;
   int rf, nv;
   if (!PyArg_ParseTuple(args, "OOOOiOi", &o_J, &o_Rf, &o_pf, &o_support, &rf,
-                        &o_out, &nv))
+                        &o_out, &nv)) {
     return NULL;
+  }
 
   double *J = as_f64(o_J, 6 * (npy_intp)nv, "J");
   double *Rf = as_f64(o_Rf, 9, "R_f");
   double *pf = as_f64(o_pf, 3, "p_f");
   int32_t *support = as_i32(o_support, -1, "support");
   double *out = as_f64(o_out, 6 * (npy_intp)nv, "out");
-  if (!J || !Rf || !pf || !support || !out) return NULL;
+  if (!J || !Rf || !pf || !support || !out) {
+    return NULL;
+  }
   npy_intp ns = PyArray_SIZE((PyArrayObject *)o_support);
 
   memset(out, 0, 6 * (size_t)nv * sizeof(double));
@@ -830,7 +883,9 @@ static PyObject *py_frame_jacobian(PyObject *self, PyObject *args) {
     }
     double vf[3], wxpf[3];
     cross3(wxpf, w, pf);
-    for (int r = 0; r < 3; r++) vf[r] = v0[r] + wxpf[r];
+    for (int r = 0; r < 3; r++) {
+      vf[r] = v0[r] + wxpf[r];
+    }
     switch (rf) {
       case RF_WORLD:
         for (int r = 0; r < 3; r++) {
@@ -874,18 +929,23 @@ static PyObject *py_frame_jacobian(PyObject *self, PyObject *args) {
 static PyObject *py_integrate(PyObject *self, PyObject *args) {
   PyObject *o_jtype, *o_idx_q, *o_idx_v, *o_q, *o_v, *o_qout;
   if (!PyArg_ParseTuple(args, "OOOOOO", &o_jtype, &o_idx_q, &o_idx_v, &o_q,
-                        &o_v, &o_qout))
+                        &o_v, &o_qout)) {
     return NULL;
+  }
 
   int32_t *jtype = as_i32(o_jtype, -1, "jtype");
-  if (!jtype) return NULL;
+  if (!jtype) {
+    return NULL;
+  }
   npy_intp nj = PyArray_SIZE((PyArrayObject *)o_jtype);
   int32_t *idx_q = as_i32(o_idx_q, nj, "idx_q");
   int32_t *idx_v = as_i32(o_idx_v, nj, "idx_v");
   double *q = as_f64(o_q, -1, "q");
   double *v = as_f64(o_v, -1, "v");
   double *qout = as_f64(o_qout, PyArray_SIZE((PyArrayObject *)o_q), "qout");
-  if (!idx_q || !idx_v || !q || !v || !qout) return NULL;
+  if (!idx_q || !idx_v || !q || !v || !qout) {
+    return NULL;
+  }
 
   for (npy_intp j = 1; j < nj; j++) {
     const double *qj = q + idx_q[j];
@@ -908,10 +968,15 @@ static PyObject *py_integrate(PyObject *self, PyObject *args) {
         quat_mul(res, qj, eq);
         double dp =
             res[0] * qj[0] + res[1] * qj[1] + res[2] * qj[2] + res[3] * qj[3];
-        if (dp < 0.0)
-          for (int i = 0; i < 4; i++) res[i] = -res[i];
+        if (dp < 0.0) {
+          for (int i = 0; i < 4; i++) {
+            res[i] = -res[i];
+          }
+        }
         quat_normalize(res);
-        for (int i = 0; i < 4; i++) oj[i] = res[i];
+        for (int i = 0; i < 4; i++) {
+          oj[i] = res[i];
+        }
         break;
       }
       case JT_PLANAR: {
@@ -935,10 +1000,15 @@ static PyObject *py_integrate(PyObject *self, PyObject *args) {
         quat_mul(res, qj + 3, eq);
         double dp =
             res[0] * qj[3] + res[1] * qj[4] + res[2] * qj[5] + res[3] * qj[6];
-        if (dp < 0.0)
-          for (int i = 0; i < 4; i++) res[i] = -res[i];
+        if (dp < 0.0) {
+          for (int i = 0; i < 4; i++) {
+            res[i] = -res[i];
+          }
+        }
         quat_normalize(res);
-        for (int i = 0; i < 4; i++) oj[3 + i] = res[i];
+        for (int i = 0; i < 4; i++) {
+          oj[3 + i] = res[i];
+        }
         break;
       }
       default:
@@ -956,18 +1026,23 @@ static PyObject *py_integrate(PyObject *self, PyObject *args) {
 static PyObject *py_difference(PyObject *self, PyObject *args) {
   PyObject *o_jtype, *o_idx_q, *o_idx_v, *o_q0, *o_q1, *o_d;
   if (!PyArg_ParseTuple(args, "OOOOOO", &o_jtype, &o_idx_q, &o_idx_v, &o_q0,
-                        &o_q1, &o_d))
+                        &o_q1, &o_d)) {
     return NULL;
+  }
 
   int32_t *jtype = as_i32(o_jtype, -1, "jtype");
-  if (!jtype) return NULL;
+  if (!jtype) {
+    return NULL;
+  }
   npy_intp nj = PyArray_SIZE((PyArrayObject *)o_jtype);
   int32_t *idx_q = as_i32(o_idx_q, nj, "idx_q");
   int32_t *idx_v = as_i32(o_idx_v, nj, "idx_v");
   double *q0 = as_f64(o_q0, -1, "q0");
   double *q1 = as_f64(o_q1, PyArray_SIZE((PyArrayObject *)o_q0), "q1");
   double *d = as_f64(o_d, -1, "dout");
-  if (!idx_q || !idx_v || !q0 || !q1 || !d) return NULL;
+  if (!idx_q || !idx_v || !q0 || !q1 || !d) {
+    return NULL;
+  }
 
   for (npy_intp j = 1; j < nj; j++) {
     const double *a = q0 + idx_q[j];
@@ -1004,7 +1079,9 @@ static PyObject *py_difference(PyObject *self, PyObject *args) {
         double ainv[4], rel[4], dv_pre[3], dv[3], R[9];
         quat_conj(ainv, a + 3);
         quat_mul(rel, ainv, b + 3);
-        for (int i = 0; i < 3; i++) dv_pre[i] = b[i] - a[i];
+        for (int i = 0; i < 3; i++) {
+          dv_pre[i] = b[i] - a[i];
+        }
         quat_rotate(dv, ainv, dv_pre);
         quat_to_mat(R, rel);
         log6(dj, R, dv);
@@ -1027,18 +1104,23 @@ static PyObject *py_d_difference(PyObject *self, PyObject *args) {
   PyObject *o_jtype, *o_idx_q, *o_idx_v, *o_q0, *o_q1, *o_J;
   int arg, nv;
   if (!PyArg_ParseTuple(args, "OOOOOiOi", &o_jtype, &o_idx_q, &o_idx_v, &o_q0,
-                        &o_q1, &arg, &o_J, &nv))
+                        &o_q1, &arg, &o_J, &nv)) {
     return NULL;
+  }
 
   int32_t *jtype = as_i32(o_jtype, -1, "jtype");
-  if (!jtype) return NULL;
+  if (!jtype) {
+    return NULL;
+  }
   npy_intp nj = PyArray_SIZE((PyArrayObject *)o_jtype);
   int32_t *idx_q = as_i32(o_idx_q, nj, "idx_q");
   int32_t *idx_v = as_i32(o_idx_v, nj, "idx_v");
   double *q0 = as_f64(o_q0, -1, "q0");
   double *q1 = as_f64(o_q1, PyArray_SIZE((PyArrayObject *)o_q0), "q1");
   double *J = as_f64(o_J, (npy_intp)nv * nv, "Jout");
-  if (!idx_q || !idx_v || !q0 || !q1 || !J) return NULL;
+  if (!idx_q || !idx_v || !q0 || !q1 || !J) {
+    return NULL;
+  }
 
   memset(J, 0, (size_t)nv * nv * sizeof(double));
 
@@ -1061,16 +1143,22 @@ static PyObject *py_d_difference(PyObject *self, PyObject *args) {
         log3(w, &theta, R);
         jlog3(Jl, theta, w);
         if (arg == 1) {
-          for (int r = 0; r < 3; r++)
-            for (int c = 0; c < 3; c++) JBLOCK(r, c) = Jl[3 * r + c];
+          for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 3; c++) {
+              JBLOCK(r, c) = Jl[3 * r + c];
+            }
+          }
         } else {
           /* -Jlog3(R) R^T */
-          for (int r = 0; r < 3; r++)
+          for (int r = 0; r < 3; r++) {
             for (int c = 0; c < 3; c++) {
               double acc = 0.0;
-              for (int k = 0; k < 3; k++) acc += Jl[3 * r + k] * R[3 * c + k];
+              for (int k = 0; k < 3; k++) {
+                acc += Jl[3 * r + k] * R[3 * c + k];
+              }
               JBLOCK(r, c) = -acc;
             }
+          }
         }
         break;
       }
@@ -1082,8 +1170,11 @@ static PyObject *py_d_difference(PyObject *self, PyObject *args) {
         double J1[9];
         se2_jlog(J1, c, s, p);
         if (arg == 1) {
-          for (int r = 0; r < 3; r++)
-            for (int cc = 0; cc < 3; cc++) JBLOCK(r, cc) = J1[3 * r + cc];
+          for (int r = 0; r < 3; r++) {
+            for (int cc = 0; cc < 3; cc++) {
+              JBLOCK(r, cc) = J1[3 * r + cc];
+            }
+          }
         } else {
           /*
            * J0 = [[-R^T, R1^T pcross], [0, -1]] then J = J1 J0,
@@ -1103,8 +1194,11 @@ static PyObject *py_d_difference(PyObject *self, PyObject *args) {
           J0[8] = -1.0;
           double Jf[9];
           mat_mul(Jf, J1, J0);
-          for (int r = 0; r < 3; r++)
-            for (int cc = 0; cc < 3; cc++) JBLOCK(r, cc) = Jf[3 * r + cc];
+          for (int r = 0; r < 3; r++) {
+            for (int cc = 0; cc < 3; cc++) {
+              JBLOCK(r, cc) = Jf[3 * r + cc];
+            }
+          }
         }
         break;
       }
@@ -1112,13 +1206,18 @@ static PyObject *py_d_difference(PyObject *self, PyObject *args) {
         double ainv[4], rel[4], dv_pre[3], t[3], R[9], J1[36];
         quat_conj(ainv, a + 3);
         quat_mul(rel, ainv, b + 3);
-        for (int i = 0; i < 3; i++) dv_pre[i] = b[i] - a[i];
+        for (int i = 0; i < 3; i++) {
+          dv_pre[i] = b[i] - a[i];
+        }
         quat_rotate(t, ainv, dv_pre);
         quat_to_mat(R, rel);
         jlog6(J1, R, t);
         if (arg == 1) {
-          for (int r = 0; r < 6; r++)
-            for (int c = 0; c < 6; c++) JBLOCK(r, c) = J1[6 * r + c];
+          for (int r = 0; r < 6; r++) {
+            for (int c = 0; c < 6; c++) {
+              JBLOCK(r, c) = J1[6 * r + c];
+            }
+          }
         } else {
           /*
            * J0 = [[-R^T, skew(p1_p0) R^T], [0, -R^T]] with
@@ -1132,26 +1231,36 @@ static PyObject *py_d_difference(PyObject *self, PyObject *args) {
                           -p1_p0[0], -p1_p0[1], p1_p0[0], 0.0};
           double skRt[9];
           /* skRt = sk * R^T */
-          for (int r = 0; r < 3; r++)
+          for (int r = 0; r < 3; r++) {
             for (int c = 0; c < 3; c++) {
               double acc = 0.0;
-              for (int k = 0; k < 3; k++) acc += sk[3 * r + k] * R[3 * c + k];
+              for (int k = 0; k < 3; k++) {
+                acc += sk[3 * r + k] * R[3 * c + k];
+              }
               skRt[3 * r + c] = acc;
             }
-          for (int r = 0; r < 3; r++)
+          }
+          for (int r = 0; r < 3; r++) {
             for (int c = 0; c < 3; c++) {
               J0[6 * r + c] = -R[3 * c + r];
               J0[6 * r + c + 3] = skRt[3 * r + c];
               J0[6 * (r + 3) + c + 3] = -R[3 * c + r];
             }
-          for (int r = 0; r < 6; r++)
+          }
+          for (int r = 0; r < 6; r++) {
             for (int c = 0; c < 6; c++) {
               double acc = 0.0;
-              for (int k = 0; k < 6; k++) acc += J1[6 * r + k] * J0[6 * k + c];
+              for (int k = 0; k < 6; k++) {
+                acc += J1[6 * r + k] * J0[6 * k + c];
+              }
               Jf[6 * r + c] = acc;
             }
-          for (int r = 0; r < 6; r++)
-            for (int c = 0; c < 6; c++) JBLOCK(r, c) = Jf[6 * r + c];
+          }
+          for (int r = 0; r < 6; r++) {
+            for (int c = 0; c < 6; c++) {
+              JBLOCK(r, c) = Jf[6 * r + c];
+            }
+          }
         }
         break;
       }
@@ -1177,18 +1286,23 @@ static PyObject *py_d_difference(PyObject *self, PyObject *args) {
 static PyObject *py_center_of_mass(PyObject *self, PyObject *args) {
   PyObject *o_parent, *o_mass, *o_lever, *o_rot, *o_trans, *o_com;
   if (!PyArg_ParseTuple(args, "OOOOOO", &o_parent, &o_mass, &o_lever, &o_rot,
-                        &o_trans, &o_com))
+                        &o_trans, &o_com)) {
     return NULL;
+  }
 
   int32_t *parent = as_i32(o_parent, -1, "parent");
-  if (!parent) return NULL;
+  if (!parent) {
+    return NULL;
+  }
   npy_intp nj = PyArray_SIZE((PyArrayObject *)o_parent);
   double *mass = as_f64(o_mass, nj, "mass");
   double *lever = as_f64(o_lever, 3 * nj, "lever");
   double *oMi_rot = as_f64(o_rot, 9 * nj, "oMi_rot");
   double *oMi_trans = as_f64(o_trans, 3 * nj, "oMi_trans");
   double *com = as_f64(o_com, 3, "com_out");
-  if (!mass || !lever || !oMi_rot || !oMi_trans || !com) return NULL;
+  if (!mass || !lever || !oMi_rot || !oMi_trans || !com) {
+    return NULL;
+  }
 
   double total_mass = 0.0;
   com[0] = 0.0;
@@ -1197,12 +1311,16 @@ static PyObject *py_center_of_mass(PyObject *self, PyObject *args) {
   for (npy_intp j = 1; j < nj; j++) {
     double x[3];
     mat_vec(x, oMi_rot + 9 * j, lever + 3 * j);
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) {
       com[i] += mass[j] * (x[i] + oMi_trans[3 * j + i]);
+    }
     total_mass += mass[j];
   }
-  if (total_mass > 0.0)
-    for (int i = 0; i < 3; i++) com[i] /= total_mass;
+  if (total_mass > 0.0) {
+    for (int i = 0; i < 3; i++) {
+      com[i] /= total_mass;
+    }
+  }
   return PyFloat_FromDouble(total_mass);
 }
 
@@ -1219,11 +1337,14 @@ static PyObject *py_com_jacobian(PyObject *self, PyObject *args) {
   int nv;
   if (!PyArg_ParseTuple(args, "OOOOOOOOOOi", &o_jtype, &o_parent, &o_idx_v,
                         &o_mass, &o_lever, &o_rot, &o_trans, &o_J, &o_Jcom,
-                        &o_com, &nv))
+                        &o_com, &nv)) {
     return NULL;
+  }
 
   int32_t *jtype = as_i32(o_jtype, -1, "jtype");
-  if (!jtype) return NULL;
+  if (!jtype) {
+    return NULL;
+  }
   npy_intp nj = PyArray_SIZE((PyArrayObject *)o_jtype);
   int32_t *parent = as_i32(o_parent, nj, "parent");
   int32_t *idx_v = as_i32(o_idx_v, nj, "idx_v");
@@ -1235,8 +1356,9 @@ static PyObject *py_com_jacobian(PyObject *self, PyObject *args) {
   double *Jcom = as_f64(o_Jcom, 3 * (npy_intp)nv, "Jcom");
   double *com = as_f64(o_com, 3, "com_out");
   if (!parent || !idx_v || !mass || !lever || !oMi_rot || !oMi_trans || !J ||
-      !Jcom || !com)
+      !Jcom || !com) {
     return NULL;
+  }
 
   /* Subtree mass and mass-weighted center, in world coordinates. */
   double *sub_mass = (double *)calloc((size_t)nj, sizeof(double));
@@ -1250,13 +1372,15 @@ static PyObject *py_com_jacobian(PyObject *self, PyObject *args) {
     double x[3];
     mat_vec(x, oMi_rot + 9 * j, lever + 3 * j);
     sub_mass[j] = mass[j];
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) {
       sub_mcom[3 * j + i] = mass[j] * (x[i] + oMi_trans[3 * j + i]);
+    }
   }
   for (npy_intp j = nj - 1; j >= 1; j--) {
     sub_mass[parent[j]] += sub_mass[j];
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) {
       sub_mcom[3 * parent[j] + i] += sub_mcom[3 * j + i];
+    }
   }
   double total_mass = sub_mass[0];
 
@@ -1271,11 +1395,14 @@ static PyObject *py_com_jacobian(PyObject *self, PyObject *args) {
         w[r] = J[(r + 3) * nv + c];
       }
       cross3(wxm, w, sub_mcom + 3 * j);
-      for (int r = 0; r < 3; r++)
+      for (int r = 0; r < 3; r++) {
         Jcom[r * nv + c] = (sub_mass[j] * v0[r] + wxm[r]) / total_mass;
+      }
     }
   }
-  for (int i = 0; i < 3; i++) com[i] = sub_mcom[i] / total_mass;
+  for (int i = 0; i < 3; i++) {
+    com[i] = sub_mcom[i] / total_mass;
+  }
   free(sub_mass);
   free(sub_mcom);
   return PyFloat_FromDouble(total_mass);
@@ -1288,13 +1415,19 @@ static PyObject *py_com_jacobian(PyObject *self, PyObject *args) {
 /* log6(R, p): twist of the transform (R, p), as (linear, angular) */
 static PyObject *py_log6(PyObject *self, PyObject *args) {
   PyObject *o_R, *o_p;
-  if (!PyArg_ParseTuple(args, "OO", &o_R, &o_p)) return NULL;
+  if (!PyArg_ParseTuple(args, "OO", &o_R, &o_p)) {
+    return NULL;
+  }
   double *R = as_f64(o_R, 9, "R");
   double *p = as_f64(o_p, 3, "p");
-  if (!R || !p) return NULL;
+  if (!R || !p) {
+    return NULL;
+  }
   npy_intp dims[1] = {6};
   PyObject *out = new_f64(1, dims);
-  if (!out) return NULL;
+  if (!out) {
+    return NULL;
+  }
   log6((double *)PyArray_DATA((PyArrayObject *)out), R, p);
   return out;
 }
@@ -1302,13 +1435,19 @@ static PyObject *py_log6(PyObject *self, PyObject *args) {
 /* Jlog6(R, p): Jacobian of log6 at the transform (R, p), as a 6x6 array */
 static PyObject *py_jlog6(PyObject *self, PyObject *args) {
   PyObject *o_R, *o_p;
-  if (!PyArg_ParseTuple(args, "OO", &o_R, &o_p)) return NULL;
+  if (!PyArg_ParseTuple(args, "OO", &o_R, &o_p)) {
+    return NULL;
+  }
   double *R = as_f64(o_R, 9, "R");
   double *p = as_f64(o_p, 3, "p");
-  if (!R || !p) return NULL;
+  if (!R || !p) {
+    return NULL;
+  }
   npy_intp dims[2] = {6, 6};
   PyObject *out = new_f64(2, dims);
-  if (!out) return NULL;
+  if (!out) {
+    return NULL;
+  }
   jlog6((double *)PyArray_DATA((PyArrayObject *)out), R, p);
   return out;
 }
@@ -1316,9 +1455,13 @@ static PyObject *py_jlog6(PyObject *self, PyObject *args) {
 /* exp6(v): transform (R, p) of the twist v = (linear, angular) */
 static PyObject *py_exp6(PyObject *self, PyObject *args) {
   PyObject *o_v;
-  if (!PyArg_ParseTuple(args, "O", &o_v)) return NULL;
+  if (!PyArg_ParseTuple(args, "O", &o_v)) {
+    return NULL;
+  }
   double *v = as_f64(o_v, 6, "v");
-  if (!v) return NULL;
+  if (!v) {
+    return NULL;
+  }
   double q[4], p[3], R[9];
   exp6_quat(q, p, v, v + 3);
   quat_to_mat(R, q);
@@ -1339,12 +1482,18 @@ static PyObject *py_exp6(PyObject *self, PyObject *args) {
 /* log3(R): rotation vector of the rotation matrix R */
 static PyObject *py_log3(PyObject *self, PyObject *args) {
   PyObject *o_R;
-  if (!PyArg_ParseTuple(args, "O", &o_R)) return NULL;
+  if (!PyArg_ParseTuple(args, "O", &o_R)) {
+    return NULL;
+  }
   double *R = as_f64(o_R, 9, "R");
-  if (!R) return NULL;
+  if (!R) {
+    return NULL;
+  }
   npy_intp dims[1] = {3};
   PyObject *out = new_f64(1, dims);
-  if (!out) return NULL;
+  if (!out) {
+    return NULL;
+  }
   double theta;
   log3((double *)PyArray_DATA((PyArrayObject *)out), &theta, R);
   return out;
@@ -1353,15 +1502,21 @@ static PyObject *py_log3(PyObject *self, PyObject *args) {
 /* exp3(w): rotation matrix of the rotation vector w */
 static PyObject *py_exp3(PyObject *self, PyObject *args) {
   PyObject *o_w;
-  if (!PyArg_ParseTuple(args, "O", &o_w)) return NULL;
+  if (!PyArg_ParseTuple(args, "O", &o_w)) {
+    return NULL;
+  }
   double *w = as_f64(o_w, 3, "w");
-  if (!w) return NULL;
+  if (!w) {
+    return NULL;
+  }
   double q[4], R[9];
   exp3_quat(q, w);
   quat_to_mat(R, q);
   npy_intp dims[2] = {3, 3};
   PyObject *out = new_f64(2, dims);
-  if (!out) return NULL;
+  if (!out) {
+    return NULL;
+  }
   memcpy(PyArray_DATA((PyArrayObject *)out), R, sizeof(R));
   return out;
 }
