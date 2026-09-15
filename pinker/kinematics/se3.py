@@ -2,12 +2,6 @@
 
 """Rigid transforms, spatial vectors and inertias."""
 
-# Deferred annotations: SE3 and Motion expose an ``np`` property, which shadows
-# the numpy module in their class bodies. Without this, the annotations that
-# follow it are evaluated against the property and raise at import time on
-# Python < 3.14 (before PEP 649 made them lazy).
-from __future__ import annotations
-
 from typing import Optional, Union
 
 import numpy as np
@@ -167,9 +161,12 @@ class SE3:
         H[:3, 3] = self.translation
         return H
 
-    @property
-    def np(self) -> np.ndarray:
-        """Homogeneous 4x4 matrix of the transform.
+    def toarray(self) -> np.ndarray:
+        """Convert to a NumPy array as the homogeneous 4x4 matrix.
+
+        The transform stores its rotation and translation separately, so the
+        array returned by this function is a copy and modifying it won't affect
+        the transform.
 
         Returns:
             Homogeneous matrix of the transform.
