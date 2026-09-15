@@ -1,74 +1,65 @@
 name: CI
 
 on:
-    push:
-        branches: [ main ]
-    pull_request:
-        branches: [ main ]
-    workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-    coverage:
-        name: "Code coverage"
-        runs-on: ubuntu-latest
-        steps:
-            - name: "Checkout sources"
-              uses: actions/checkout@v4
-              with:
-                  submodules: recursive
+  coverage:
+    name: "Code coverage"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.9.1
+        with:
+          environments: coverage
+          cache: true
+      - name: Cache robot descriptions
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/robot_descriptions
+          key: robot-descriptions-${{ hashFiles('pixi.lock') }}
+          restore-keys: robot-descriptions-
+      - run: pixi run -e coverage coverage-run
 
-            - name: "Set up Pixi"
-              uses: prefix-dev/setup-pixi@v0.8.10
-              with:
-                  pixi-version: v0.72.2
-                  cache: true
+  lint:
+    name: "Code style"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.9.1
+        with:
+          environments: dev
+          cache: true
+      - run: pixi run -e dev dev-lint
 
-            - name: "Run coverage tests"
-              run: |
-                  pixi run -e coverage coverage-run
+  test:
+    name: "Test with ${{ matrix.pyenv }} on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm]
+        pyenv: [py310, py311, py312, py313, py314]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: prefix-dev/setup-pixi@v0.9.1
+        with:
+          environments: test-${{ matrix.pyenv }}
+          cache: true
+      - name: Cache robot descriptions
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/robot_descriptions
+          key: robot-descriptions-${{ hashFiles('pixi.lock') }}
+          restore-keys: robot-descriptions-
+      - run: pixi run -e test-${{ matrix.pyenv }} test
 
-    lint:
-        name: "Code style"
-        runs-on: ubuntu-latest
-        steps:
-            - name: "Checkout sources"
-              uses: actions/checkout@v4
-
-            - name: "Set up Pixi"
-              uses: prefix-dev/setup-pixi@v0.8.10
-              with:
-                  pixi-version: v0.72.2
-                  cache: true
-
-            - name: "Check code format"
-              run: |
-                  pixi run lint
-
-    test:
-        name: "Test with ${{ matrix.pyenv }} on ${{ matrix.os }}"
-        runs-on: ${{ matrix.os }}
-        strategy:
-            matrix:
-                os: [ubuntu-latest, macos-latest]
-                pyenv: [py310, py311, py312, py313, py314]
-        steps:
-            - name: "Checkout sources"
-              uses: actions/checkout@v4
-
-            - name: "Set up Pixi"
-              uses: prefix-dev/setup-pixi@v0.8.10
-              with:
-                  pixi-version: v0.72.2
-                  environments: test-${{ matrix.pyenv }}
-                  cache: true
-
-            - name: "Run unit tests"
-              run: |
-                  pixi run -e test-${{ matrix.pyenv }} test
-
-    ci_success:
-        name: "CI success"
-        runs-on: ubuntu-latest
-        needs: [coverage, lint, test]
-        steps:
-            - run: echo "CI workflow completed successfully"
+  ci_success:
+    name: "CI success"
+    runs-on: ubuntu-latest
+    needs: [coverage, lint, test]
+    steps:
+      - run: echo "CI workflow completed successfully"
