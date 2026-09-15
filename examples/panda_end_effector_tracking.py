@@ -9,7 +9,7 @@
 # pinker = { path = "..", editable = true }
 # ///
 
-"""A 7-dof robot manipulator with visualization to tune its task costs."""
+"""Panda 7-dof manipulator with a Viser GUI for tuning the task costs."""
 
 import qpsolvers
 import viser
