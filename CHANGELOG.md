@@ -30,6 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Kinematics: Model getters raise when a name is not found, where Pinocchio
   returns a sentinel index
 - docs: Move the documentation from `doc/` to `docs/`
+- examples: Name examples `<robot_description>_<task>.py`, after the robot
+  description they load and what they do with it
+- pixi: Add `examples` and `dist` environments
 - docs: Switch to the Material theme, in the colors of the project
 - pixi: Rename lint and format tasks to `dev-lint` and `dev-format`
 
@@ -47,6 +50,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `Model.get_joint_tangent_id`
 - Clean up unnecessary shebangs from source file headers
 - Clean up unnecessary source encoding lines from source file headers
+- examples: MeshCat shapes helper, superseded by the Viser visualizer
+- examples: Panda manipulability comparison
+- examples: Visualization in yourdfpy, Pinker focusing on Viser
 - examples: Flying dual-arm UR3
 - examples: Iiwa whole-body self-collision avoidance
 - examples: Yumi end-effector self-collision avoidance
