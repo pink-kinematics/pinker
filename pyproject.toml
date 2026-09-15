@@ -17,7 +17,7 @@ maintainers = [
 ]
 requires-python = ">=3.10"
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Framework :: Robot Framework :: Library",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
@@ -190,8 +190,14 @@ python-build = "*"
 twine = "*"
 
 [tool.pixi.feature.dist.tasks]
-sdist = "python -m build --sdist"
-check-dist = { cmd = "twine check dist/*.tar.gz", depends-on = ["sdist"] }
+_dist-clean = "rm -rf build dist pinker.egg-info"
+dist-build = { cmd = "python -m build --sdist", depends-on = ["_dist-clean"] }
+dist-check = { cmd = "twine check dist/*.tar.gz", depends-on = ["dist-build"] }
+
+[tool.pixi.feature.dist.tasks.dist-upload]
+args = ["repository", "version"]
+depends-on = ["dist-check"]
+cmd = "twine upload --repository {{ repository }} dist/pinker-{{ version }}.tar.gz"
 
 [tool.pixi.environments]
 coverage = { features = ["py312", "coverage"], solve-group = "py312" }
