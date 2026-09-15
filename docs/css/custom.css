@@ -1,86 +1,190 @@
-a, a:visited, a:focus {
-  color: rgb(240, 110, 163);
-  text-decoration: none;
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Pinker palette. We keep the theme's "pink" primary and accent colors, whose
+ * Material shades (#e91e63 and #f50057) lean red, and re-shade them to the
+ * project's own pink:
+ *
+ *   #d4619c  surfaces (header, hero, tabs, navigation title)
+ *   #c83781  active navigation entries (4.9:1 on white)
+ *   #b83277  hover, focus and other accented states (5.6:1)
+ *
+ * Hypertext links get a secondary color, so that pink stays the color of the
+ * chrome rather than of every other word. It is the triad of the pink, same
+ * saturation and a hue 120 degrees away:
+ *
+ *   #3277b8  links (4.7:1 on white)
+ *   #2e6da8  links being hovered or activated (5.4:1)
+ *
+ * Text colors clear the 4.5:1 contrast ratio that WCAG AA asks for.
+ */
+
+button[data-md-color-primary="pink"] {
+    background-color: #d4619c;
 }
 
-a:hover, a:active {
-  color: rgb(204, 94, 139);
-  text-decoration: none;
+[data-md-color-primary="pink"] .md-header,
+[data-md-color-primary="pink"] .md-hero {
+    background-color: #d4619c;
 }
 
-.wy-menu-vertical header, .wy-menu-vertical p.caption {
-    color: white;
-    font-weight: 600;
+[data-md-color-primary="pink"] .md-typeset a {
+    color: #3277b8;
 }
 
-.wy-menu-vertical a {
-    color: rgb(200, 178, 188);
+[data-md-color-primary="pink"] .md-nav__link--active,
+[data-md-color-primary="pink"] .md-nav__link:active {
+    color: #c83781;
 }
 
-.wy-menu-vertical a:hover {
-    background: rgb(240, 110, 163);
-    color: white;
+@media only screen and (max-width: 59.9375em) {
+    [data-md-color-primary="pink"] .md-nav__source {
+        background-color: rgba(184, 50, 119, 0.9675);
+    }
 }
 
-.wy-menu-vertical header, .wy-menu-vertical p.caption {
-    color: black;
-    font-weight: 600;
+@media only screen and (max-width: 76.1875em) {
+    html [data-md-color-primary="pink"] .md-nav--primary .md-nav__title--site {
+        background-color: #d4619c;
+    }
 }
 
-.wy-menu-vertical a{
-    color: black;
-}
-.wy-nav-content-wrap, .wy-menu li.current > a {
-    background-color: white;
-}
-
-.wy-nav-side {
-    background: rgb(255, 200, 225);
+@media only screen and (min-width: 76.25em) {
+    [data-md-color-primary="pink"] .md-tabs {
+        background-color: #d4619c;
+    }
 }
 
-.wy-nav-top {
-    background: rgb(250, 231, 242);
+button[data-md-color-accent="pink"] {
+    background-color: #b83277;
 }
 
-.wy-nav-top a {
-    color: black;
+[data-md-color-accent="pink"] .md-typeset a:active,
+[data-md-color-accent="pink"] .md-typeset a:hover {
+    color: #2e6da8;
 }
 
-.wy-nav-top i {
-    color: rgb(176, 46, 118);
+[data-md-color-accent="pink"] .md-typeset .codehilite pre::-webkit-scrollbar-thumb:hover,
+[data-md-color-accent="pink"] .md-typeset pre code::-webkit-scrollbar-thumb:hover {
+    background-color: #b83277;
 }
 
-.wy-side-nav-search {
-    background: rgb(240, 110, 163);
+[data-md-color-accent="pink"] .md-nav__link:focus,
+[data-md-color-accent="pink"] .md-nav__link:hover,
+[data-md-color-accent="pink"] .md-typeset .footnote li:hover .footnote-backref:hover,
+[data-md-color-accent="pink"] .md-typeset .footnote li:target .footnote-backref,
+[data-md-color-accent="pink"] .md-typeset .md-clipboard:active:before,
+[data-md-color-accent="pink"] .md-typeset .md-clipboard:hover:before,
+[data-md-color-accent="pink"] .md-typeset [id] .headerlink:focus,
+[data-md-color-accent="pink"] .md-typeset [id]:hover .headerlink:hover,
+[data-md-color-accent="pink"] .md-typeset [id]:target .headerlink {
+    color: #b83277;
 }
 
-.wy-side-nav-search > div.version {
-    color: white;
+[data-md-color-accent="pink"] .md-search__scrollwrap::-webkit-scrollbar-thumb:hover {
+    background-color: #b83277;
 }
 
-.wy-side-nav-search > a {
-    color: white;
+[data-md-color-accent="pink"] .md-search-result__link:hover,
+[data-md-color-accent="pink"] .md-search-result__link[data-md-state="active"] {
+    background-color: rgba(200, 55, 129, 0.1);
 }
 
-pre {
-    background: rgb(255, 230, 240);
+[data-md-color-accent="pink"] .md-sidebar__scrollwrap::-webkit-scrollbar-thumb:hover {
+    background-color: #b83277;
 }
 
-html.writer-html4 .rst-content dl:not(.docutils) > dt,
-html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.citation):not(.glossary):not(.simple) > dt {
-    background: rgb(255, 230, 240);
-    border-top: 3px solid #de6a98;
-    color: rgb(240, 110, 163);
+[data-md-color-accent="pink"] .md-source-file:hover:before {
+    background-color: #b83277;
 }
 
-.rst-content .note {
-    background: rgb(255, 230, 240);
+/* Signatures of documented classes, methods and attributes */
+
+.md-typeset dl.py {
+    margin: 1.2rem 0;
 }
 
-.rst-content .note .admonition-title {
-    background: rgb(240, 110, 163);
+.md-typeset dl.py > dd {
+    margin: 0.5rem 0 0 1.2rem;
 }
 
-.rst-content code.literal {
-    color: rgb(220, 40, 115);
+.md-typeset dt.sig-object {
+    background-color: rgba(212, 97, 156, 0.14);
+    border-left: 0.15rem solid #d4619c;
+    /* Hanging indent, so that wrapped signatures stay readable */
+    padding: 0.25rem 0.4rem 0.25rem 1.4rem;
+    text-indent: -1rem;
+    font-family: "Roboto Mono", "Courier New", Courier, monospace;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    /* The theme's fixed header would otherwise hide anchored signatures */
+    scroll-margin-top: 3.6rem;
+}
+
+.md-typeset dt.sig-object .sig-name {
+    font-weight: 700;
+}
+
+.md-typeset dt.sig-object .property,
+.md-typeset dt.sig-object .sig-prename {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+/*
+ * The theme scrolls anchored terms clear of the header with
+ * "dt:target { margin-top: -3.55rem; padding-top: 3.45rem }", which inflates a
+ * signature that has a box of its own. scroll-margin-top does it without
+ * touching the box.
+ */
+
+.md-typeset dt:target {
+    margin-top: 0;
+    padding-top: 0;
+    scroll-margin-top: 3.6rem;
+}
+
+.md-typeset dt.sig-object:target {
+    padding-top: 0.25rem;
+    background-color: rgba(212, 97, 156, 0.16);
+}
+
+/* Permalinks are hidden by the theme except on h1-h6 headings */
+
+.md-typeset dt.sig-object .headerlink:focus,
+.md-typeset dt.sig-object:hover .headerlink {
+    -webkit-transform: translate(0);
+    transform: translate(0);
+    opacity: 1;
+}
+
+/* Parameters, returns and other field lists, as a two-column grid */
+
+.md-typeset dl.field-list {
+    display: grid;
+    grid-template-columns: fit-content(30%) auto;
+    margin: 0.8rem 0;
+}
+
+.md-typeset dl.field-list > dd {
+    margin: 0 0 0.4rem;
+}
+
+.md-typeset dl.field-list > dd > :first-child {
+    margin-top: 0;
+}
+
+.md-typeset dl.field-list > dd > :last-child {
+    margin-bottom: 0;
+}
+
+/* Inline literals, letting cross-references keep their link color */
+
+.md-typeset code.literal {
+    color: #b83277;
+    background-color: rgba(212, 97, 156, 0.08);
+}
+
+.md-typeset a code.literal {
+    color: inherit;
+    background-color: transparent;
 }
