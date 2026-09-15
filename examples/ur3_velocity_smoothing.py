@@ -1,8 +1,13 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pinker",
-# "qpsolvers", "robot_descriptions", "xacrodoc"]
+# requires-python = ">=3.10"
+# dependencies = ["daqp", "loop-rate-limiters", "matplotlib", "pinker",
+# "pycollada", "qpsolvers", "robot_descriptions >=3.1.0", "trimesh", "viser",
+# "xacrodoc"]
+#
+# [tool.uv.sources]
+# pinker = { path = "..", editable = true }
 # ///
 
 """UR3 arm tracking a target, first without then with velocity smoothing."""

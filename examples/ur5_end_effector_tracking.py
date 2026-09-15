@@ -1,8 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pinker",
-# "qpsolvers", "robot_descriptions", "xacrodoc"]
+# requires-python = ">=3.10"
+# dependencies = ["daqp", "loop-rate-limiters", "pinker", "pycollada",
+# "qpsolvers", "robot_descriptions >=3.1.0", "trimesh", "viser", "xacrodoc"]
+#
+# [tool.uv.sources]
+# pinker = { path = "..", editable = true }
 # ///
 
 """Universal Robots UR5 arm tracking a moving target."""

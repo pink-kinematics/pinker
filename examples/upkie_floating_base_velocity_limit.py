@@ -1,7 +1,11 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["daqp", "pinker", "qpsolvers", "robot_descriptions"]
+# requires-python = ">=3.10"
+# dependencies = ["daqp", "pinker", "qpsolvers", "robot_descriptions >=3.1.0"]
+#
+# [tool.uv.sources]
+# pinker = { path = "..", editable = true }
 # ///
 
 """Clamp floating-base velocities with FloatingBaseVelocityLimit."""

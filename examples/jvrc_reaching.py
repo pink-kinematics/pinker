@@ -1,8 +1,13 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["clarabel", "loop-rate-limiters", "meshcat", "pinker",
-# "qpsolvers", "robot_descriptions", "typing-extensions"]
+# requires-python = ">=3.10"
+# dependencies = ["clarabel", "loop-rate-limiters", "pinker", "pycollada",
+# "qpsolvers", "robot_descriptions >=3.1.0", "trimesh", "typing-extensions",
+# "viser"]
+#
+# [tool.uv.sources]
+# pinker = { path = "..", editable = true }
 # ///
 
 """JVRC-1 humanoid standing on two feet and reaching with a hand."""

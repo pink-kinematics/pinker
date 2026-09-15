@@ -1,8 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["daqp", "loop-rate-limiters", "viser", "pinker",
-# "qpsolvers", "robot_descriptions"]
+# requires-python = ">=3.10"
+# dependencies = ["daqp", "loop-rate-limiters", "pinker", "pycollada",
+# "qpsolvers", "robot_descriptions >=3.1.0", "scipy", "trimesh", "viser"]
+#
+# [tool.uv.sources]
+# pinker = { path = "..", editable = true }
 # ///
 
 """A 7-dof robot manipulator with visualization to tune its task costs."""
@@ -14,8 +18,8 @@ from scipy.spatial.transform import Rotation
 
 import pinker
 from pinker import solve_ik
-from pinker.tasks import DampingTask, FrameTask, PostureTask
 from pinker.kinematics import custom_configuration
+from pinker.tasks import DampingTask, FrameTask, PostureTask
 from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":

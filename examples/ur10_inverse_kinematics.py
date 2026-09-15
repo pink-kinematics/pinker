@@ -1,13 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = [
-#     "daqp",
-#     "pinker",
-#     "qpsolvers",
-#     "robot_descriptions",
-#     "xacrodoc",
-# ]
+# requires-python = ">=3.10"
+# dependencies = ["daqp", "pinker", "qpsolvers", "robot_descriptions >=3.1.0",
+# "xacrodoc"]
+#
+# [tool.uv.sources]
+# pinker = { path = "..", editable = true }
 # ///
 
 """Solve IK with the UR10 arm end-effector at a prescribed target."""

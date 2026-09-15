@@ -1,8 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["daqp", "loop-rate-limiters", "meshcat", "pinker",
-# "qpsolvers", "robot_descriptions"]
+# requires-python = ">=3.10"
+# dependencies = ["daqp", "loop-rate-limiters", "pinker", "pycollada",
+# "qpsolvers", "robot_descriptions >=3.1.0", "trimesh", "viser"]
+#
+# [tool.uv.sources]
+# pinker = { path = "..", editable = true }
 # ///
 
 """Upkie wheeled biped bending its knees."""

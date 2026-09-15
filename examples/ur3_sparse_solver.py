@@ -1,8 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["clarabel", "loop-rate-limiters", "meshcat", "pinker",
-# "qpsolvers", "robot_descriptions", "xacrodoc"]
+# requires-python = ">=3.10"
+# dependencies = ["clarabel", "loop-rate-limiters", "pinker", "pycollada",
+# "qpsolvers", "robot_descriptions >=3.1.0", "trimesh", "viser", "xacrodoc"]
+#
+# [tool.uv.sources]
+# pinker = { path = "..", editable = true }
 # ///
 
 """Arm tracking a circular end-effector motion, use a sparse QP solver."""
