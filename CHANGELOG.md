@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Pinocchio's `getFrameId` and `lowerPositionLimit`
 - Kinematics: Model getters raise when a name is not found, where Pinocchio
   returns a sentinel index
+- docs: Move the documentation from `doc/` to `docs/`
+- docs: Switch to the Material theme, in the colors of the project
 - pixi: Rename lint and format tasks to `dev-lint` and `dev-format`
 
 ### Removed

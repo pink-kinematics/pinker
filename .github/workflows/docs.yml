@@ -26,7 +26,7 @@ jobs:
 
             - name: "Build documentation"
               run: |
-                  pixi run docs-build
+                  pixi run -e docs docs-build
 
             - name: "Deploy to GitHub Pages"
               uses: peaceiris/actions-gh-pages@v3
@@ -34,5 +34,5 @@ jobs:
               with:
                   publish_branch: gh-pages
                   github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: _build/
+                  publish_dir: docs/_build/
                   force_orphan: true
