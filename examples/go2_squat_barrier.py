@@ -7,24 +7,20 @@
 
 """Go2 squat with z-axis barrier."""
 
-import meshcat_shapes
 import numpy as np
-import pinocchio as pin
 import qpsolvers
+import viser.transforms as vtf
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
 from pinker import solve_ik
 from pinker.barriers import PositionBarrier
 from pinker.tasks import FrameTask, PostureTask
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = load_robot_description(
-        "go2_description", root_joint=pin.JointModelFreeFlyer()
-    )
-    viz = start_meshcat_visualizer(robot)
+    robot = pinker.load_robot_description("go2_description", root_joint="free_flyer")
+    viz = start_viser_visualizer(robot)
 
     q_ref = np.array(
         [
@@ -87,8 +83,12 @@ if __name__ == "__main__":
     viewer = viz.viewer
     opacity = 0.5  # Set the desired opacity level (0 transparent, 1 opaque)
 
-    meshcat_shapes.frame(viewer["base_target"], opacity=1.0)
-    meshcat_shapes.frame(viewer["base"], opacity=1.0)
+    base_target_frame = viewer.scene.add_frame(
+        "/base_target", axes_length=0.1, axes_radius=0.005
+    )
+    base_frame = viewer.scene.add_frame(
+        "/base", axes_length=0.1, axes_radius=0.005
+    )
 
     # Select QP solver
     solver = qpsolvers.available_solvers[0]
@@ -111,10 +111,14 @@ if __name__ == "__main__":
         end_effector_target.translation[2] = 0.3 + Az * np.sin(omega * t)
 
         # Update visualization frames
-        viewer["base_target"].set_transform(end_effector_target.np)
-        viewer["base"].set_transform(
+        _T = np.asarray(end_effector_target.np)
+        base_target_frame.position = _T[:3, 3]
+        base_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        _T = np.asarray(
             configuration.get_transform_frame_to_world(base_task.frame).np
         )
+        base_frame.position = _T[:3, 3]
+        base_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 
         velocity = solve_ik(
             configuration,

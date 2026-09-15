@@ -7,35 +7,42 @@
 
 """Upkie wheeled biped bending its knees."""
 
-import meshcat_shapes
 import numpy as np
 import qpsolvers
+import viser.transforms as vtf
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
 from pinker import solve_ik
 from pinker.tasks import FrameTask, PostureTask
 from pinker.kinematics import custom_configuration
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = load_robot_description("upkie_description", root_joint=None)
+    robot = pinker.load_robot_description("upkie_description")
 
     # A large posture cost on the wheels keeps them locked in place, as this
     # example only bends the knees. Other joints are only regularized.
     posture_cost = np.full(robot.model.nv, 1e-3)  # [cost] / [rad]
     for wheel in ("left_wheel", "right_wheel"):
-        joint = robot.model.joints[robot.model.getJointId(wheel)]
+        joint = robot.model.joints[robot.model.get_joint_id(wheel)]
         posture_cost[joint.idx_v] = 1.0
 
     # Initialize visualization
-    viz = start_meshcat_visualizer(robot)
+    viz = start_viser_visualizer(robot)
     viewer = viz.viewer
-    meshcat_shapes.frame(viewer["left_contact_target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["right_contact_target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["left_contact"], opacity=1.0)
-    meshcat_shapes.frame(viewer["right_contact"], opacity=1.0)
+    left_contact_target_frame = viewer.scene.add_frame(
+        "/left_contact_target", axes_length=0.1, axes_radius=0.005
+    )
+    right_contact_target_frame = viewer.scene.add_frame(
+        "/right_contact_target", axes_length=0.1, axes_radius=0.005
+    )
+    left_contact_frame = viewer.scene.add_frame(
+        "/left_contact", axes_length=0.1, axes_radius=0.005
+    )
+    right_contact_frame = viewer.scene.add_frame(
+        "/right_contact", axes_length=0.1, axes_radius=0.005
+    )
 
     tasks = {
         "left_contact": FrameTask(
@@ -54,7 +61,11 @@ if __name__ == "__main__":
     }
 
     q_ref = custom_configuration(
-        robot, left_hip=-0.2, left_knee=0.4, right_hip=0.2, right_knee=-0.4
+        robot.model,
+        left_hip=-0.2,
+        left_knee=0.4,
+        right_hip=0.2,
+        right_knee=-0.4,
     )
     configuration = pinker.Configuration(robot.model, robot.data, q_ref)
     for body, task in tasks.items():
@@ -80,12 +91,21 @@ if __name__ == "__main__":
         right_contact_target.translation[2] += 0.1 * np.sin(t) * dt
 
         # Update visualization frames
-        viewer["left_contact_target"].set_transform(left_contact_target.np)
-        viewer["right_contact_target"].set_transform(right_contact_target.np)
-        for body in ["left_contact", "right_contact"]:
-            viewer[body].set_transform(
+        _T = np.asarray(left_contact_target.np)
+        left_contact_target_frame.position = _T[:3, 3]
+        left_contact_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        _T = np.asarray(right_contact_target.np)
+        right_contact_target_frame.position = _T[:3, 3]
+        right_contact_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        for body_frame, body in (
+            (left_contact_frame, "left_contact"),
+            (right_contact_frame, "right_contact"),
+        ):
+            _T = np.asarray(
                 configuration.get_transform_frame_to_world(body).np
             )
+            body_frame.position = _T[:3, 3]
+            body_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 
         # Compute velocity and integrate it into next configuration
         velocity = solve_ik(configuration, tasks.values(), dt, solver=solver)

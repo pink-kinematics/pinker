@@ -9,16 +9,15 @@
 
 import warnings
 
-import meshcat_shapes
 import numpy as np
 import qpsolvers
+import viser.transforms as vtf
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
 from pinker import solve_ik
 from pinker.tasks import FrameTask, PostureTask
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 # Target circle parameters
 CENTER = np.array([0.3, 0.0, 0.5])  # m, in the world frame
@@ -26,13 +25,17 @@ RADIUS = 0.15  # m
 
 
 if __name__ == "__main__":
-    robot = load_robot_description("ur3_official_description", root_joint=None)
+    robot = pinker.load_robot_description("ur3_official_description")
 
     # Initialize visualization
-    viz = start_meshcat_visualizer(robot)
+    viz = start_viser_visualizer(robot)
     viewer = viz.viewer
-    meshcat_shapes.frame(viewer["target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["end_effector"], opacity=1.0)
+    target_frame = viewer.scene.add_frame(
+        "/target", axes_length=0.1, axes_radius=0.005
+    )
+    end_effector_frame = viewer.scene.add_frame(
+        "/end_effector", axes_length=0.1, axes_radius=0.005
+    )
 
     # Define differential IK tasks
     end_effector_task = FrameTask(
@@ -77,14 +80,16 @@ if __name__ == "__main__":
         end_effector_task.transform_target_to_world.translation = target_pos
 
         # Update visualization frames
-        viewer["target"].set_transform(
-            end_effector_task.transform_target_to_world.np
-        )
-        viewer["end_effector"].set_transform(
+        _T = np.asarray(end_effector_task.transform_target_to_world.np)
+        target_frame.position = _T[:3, 3]
+        target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        _T = np.asarray(
             configuration.get_transform_frame_to_world(
                 end_effector_task.frame
             ).np
         )
+        end_effector_frame.position = _T[:3, 3]
+        end_effector_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 
         # Solve inverse kinematics
         velocity = solve_ik(configuration, tasks, dt, solver=sparse_solver)

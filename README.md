@@ -19,7 +19,7 @@ You can also clone the repository and run it locally:
 
 ```bash
 git clone https://github.com/pink-kinematics/pinker.git && cd pinker
-uv run examples/humanoid_g1_com.py
+uv run examples/g1_com_tracking.py
 ```
 
 ## Usage
@@ -130,24 +130,24 @@ Pinker is a standalone replacement for Pink where kinematics are carried out by 
 
 ## Examples
 
-The `examples/` directory mirrors Pink's examples, ported to the `pinker.kinematics` backend with [Viser](https://viser.studio) visualization:
+The `examples/` directory mirrors Pink's examples, ported to the `pinker.kinematics` backend with [Viser](https://viser.studio) visualization. Each one is named `<robot>_<task>.py`, after the robot description it loads and what it does with it:
 
 ```console
-pixi run -e examples python examples/arm_ur3.py
+pixi run -e examples python examples/ur3_end_effector_tracking.py
 ```
 
 Each example can also be run standalone with [uv](https://docs.astral.sh/uv/):
 
 ```console
-uv run examples/arm_ur3.py
+uv run examples/ur3_end_effector_tracking.py
 ```
 
-- **Single arms:** [Panda](https://github.com/pink-kinematics/pinker/tree/main/examples#arm-panda), [UR5](https://github.com/pink-kinematics/pinker/tree/main/examples#arm-ur5), [UR5 with end-effector limits](https://github.com/pink-kinematics/pinker/tree/main/examples#barrier-arm-ur5)
-- **Humanoid:** [Draco 3](https://github.com/pink-kinematics/pinker/tree/main/examples#humanoid-draco-3)
-- **Mobile base:** [Stretch R1](https://github.com/pink-kinematics/pinker/tree/main/examples#mobile-stretch)
-- **Quadruped:** [Go2 squatting with floating-base limits](https://github.com/pink-kinematics/pinker/tree/main/examples#barrier-quadruped-go2)
-- **Floating base:** [Clamp free-flyer velocities](https://github.com/pink-kinematics/pinker/blob/main/examples/floating_base_velocity_limit.py)
-- **Wheeled biped:** [Upkie rolling without slipping](https://github.com/pink-kinematics/pinker/tree/main/examples#wheeled-biped-upkie)
+- **Single arms:** [Panda](https://github.com/pink-kinematics/pinker/tree/main/examples#panda-end-effector-tracking), [UR5](https://github.com/pink-kinematics/pinker/tree/main/examples#ur5-end-effector-tracking), [UR5 with end-effector limits](https://github.com/pink-kinematics/pinker/tree/main/examples#ur5-position-barrier)
+- **Humanoid:** [Draco 3](https://github.com/pink-kinematics/pinker/tree/main/examples#draco-3-reaching)
+- **Mobile base:** [Stretch R1](https://github.com/pink-kinematics/pinker/tree/main/examples#stretch-mobile-manipulation)
+- **Quadruped:** [Go2 squatting with floating-base limits](https://github.com/pink-kinematics/pinker/tree/main/examples#go2-squat-barrier)
+- **Floating base:** [Clamp free-flyer velocities](https://github.com/pink-kinematics/pinker/blob/main/examples/upkie_floating_base_velocity_limit.py)
+- **Wheeled biped:** [Upkie rolling without slipping](https://github.com/pink-kinematics/pinker/tree/main/examples#upkie-rolling)
 
 Check out the [examples](https://github.com/pink-kinematics/pinker/tree/main/examples) directory for more.
 

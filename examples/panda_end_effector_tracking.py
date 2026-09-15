@@ -10,17 +10,16 @@
 import qpsolvers
 import viser
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 from scipy.spatial.transform import Rotation
 
 import pinker
 from pinker import solve_ik
-from pinker.kinematics import custom_configuration
 from pinker.tasks import DampingTask, FrameTask, PostureTask
-from pinker.visualization import start_viser_visualizer
+from pinker.kinematics import custom_configuration
+from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = load_robot_description("panda_description", root_joint=None)
+    robot = pinker.load_robot_description("panda_description")
 
     viz = start_viser_visualizer(robot)
     viewer = viz.viewer
@@ -41,7 +40,7 @@ if __name__ == "__main__":
     tasks = [end_effector_task, posture_task, damping_task]
 
     q_ref = custom_configuration(
-        robot,
+        robot.model,
         panda_joint1=0.0,
         panda_joint2=-0.785398,
         panda_joint3=0.0,

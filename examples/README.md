@@ -1,24 +1,24 @@
 # Examples
 
-The following examples include *tasks* and *limits*:
+Examples are named `<robot>_<task>.py`, after the robot description they load
+and what they do with it. The following ones include *tasks* and *limits*:
 
-- [Arm: UR5](#arm-ur5)
-- [Arm: Panda](#arm-panda)
-- [Humanoid: Draco 3](#humanoid-draco-3)
-- [Inverse kinematics of a UR10 arm](#inverse-kinematics-of-a-ur10-arm)
-- [Manipulability](#manipulability)
-- [Mobile: Stretch](#mobile-stretch)
-- [Wheeled biped: Upkie](#wheeled-biped-upkie)
+- [UR5: end-effector tracking](#ur5-end-effector-tracking)
+- [Panda: end-effector tracking](#panda-end-effector-tracking)
+- [Draco 3: reaching](#draco-3-reaching)
+- [UR10: inverse kinematics](#ur10-inverse-kinematics)
+- [Stretch: mobile manipulation](#stretch-mobile-manipulation)
+- [Upkie: rolling](#upkie-rolling)
 
 The following ones include *control barrier functions*, see [this
 note](https://web.archive.org/web/20241125170734/https://simeon-ned.com/blog/2024/cbf/) for an introduction:
 
-- [Barrier: Arm UR5](#barrier-arm-ur5)
-- [Barrier: Quadruped Go2](#barrier-quadruped-go2)
+- [UR5: position barrier](#ur5-position-barrier)
+- [Go2: squat barrier](#go2-squat-barrier)
 
-## Arm: UR5
+## UR5: end-effector tracking
 
-A UR5 arm tracking a moving target:
+In `ur5_end_effector_tracking.py`, a UR5 arm tracks a moving target:
 
 https://github.com/stephane-caron/pink/assets/1189580/d0d6aae9-326b-45fe-8cd3-013f29f7343a
 
@@ -27,15 +27,15 @@ https://github.com/stephane-caron/pink/assets/1189580/d0d6aae9-326b-45fe-8cd3-01
 | End-effector | 1         |
 | Posture      | $10^{-3}$ |
 
-## Arm: Panda
+## Panda: end-effector tracking
 
-A Panda arm tracking an interactive target in Viser:
+In `panda_end_effector_tracking.py`, a Panda arm tracks an interactive target in Viser:
 
 https://github.com/user-attachments/assets/1c4ac222-8e3f-469d-95c3-550f1c0979fa
 
-## Humanoid: Draco 3
+## Draco 3: reaching
 
-A Draco 3 humanoid moving its right hand laterally while standing. This model includes a closed kinematic chain, implemented in the example with a ``JointCouplingTask``:
+In `draco3_reaching.py`, a Draco 3 humanoid moves its right hand laterally while standing. This model includes a closed kinematic chain, implemented in the example with a ``JointCouplingTask``:
 
 https://github.com/stephane-caron/pink/assets/1189580/db6acda8-82a4-4f4d-9acf-1fc3d831e222
 
@@ -49,12 +49,12 @@ https://github.com/stephane-caron/pink/assets/1189580/db6acda8-82a4-4f4d-9acf-1f
 | Right wrist | (4, 4) |
 | Torso | (1, 0) |
 
-## Inverse kinematics of a UR10 arm
+## UR10: inverse kinematics
 
-A UR10 arm solving inverse kinematics (by iterating differential IK) to find a configuration that achieves a given end-effector pose:
+In `ur10_inverse_kinematics.py`, a UR10 arm solves inverse kinematics (by iterating differential IK) to find a configuration that achieves a given end-effector pose:
 
 ```console
-$ uv run inverse_kinematics_ur10.py
+$ uv run ur10_inverse_kinematics.py
 Starting from error_norm = 2.4
 Desired precision is error_norm < 1e-08
 Terminated after 141 steps with error_norm = 1.1e-09
@@ -64,13 +64,9 @@ Terminated after 141 steps with error_norm = 1.1e-09
 |--------------|------|
 | End-effector | 1    |
 
-## Manipulability
+## Stretch: mobile manipulation
 
-The `ManipulabilityTask` is demonstrated by a side-by-side comparison of two Panda arms tracking the same end-effector target: one with `ManipulabilityTask` optimization (full opacity) and one without (gray, 50% opacity).
-
-## Mobile: Stretch
-
-Move a Stretch RE1 with a fixed fingertip target around the origin:
+In `stretch_mobile_manipulation.py`, a Stretch RE1 moves with a fixed fingertip target around the origin:
 
 https://github.com/stephane-caron/pink/assets/1189580/711c4b92-6234-41bd-945b-e6c043f6b2e6
 
@@ -79,9 +75,9 @@ https://github.com/stephane-caron/pink/assets/1189580/711c4b92-6234-41bd-945b-e6
 | Mobile base | $0.1$ | 1 |
 | Fingertip | 1 | $10^{-4}$ |
 
-## Wheeled biped: Upkie
+## Upkie: rolling
 
-An Upkie wheeled biped rolling without slipping:
+In `upkie_rolling.py`, an Upkie wheeled biped rolls without slipping:
 
 https://github.com/user-attachments/assets/18ae0b68-21a2-44ec-af48-1d8ab4a7e658
 
@@ -93,9 +89,9 @@ https://github.com/user-attachments/assets/18ae0b68-21a2-44ec-af48-1d8ab4a7e658
 | Left wheel position | $1$ | $0$ |
 | Right wheel position | $1$ | $0$ |
 
-## Barrier: Arm UR5
+## UR5: position barrier
 
-A UR5 arm tracking a moving target while stopping in front of a virtual wall:
+In `ur5_position_barrier.py`, a UR5 arm tracks a moving target while stopping in front of a virtual wall:
 
 https://github.com/domrachev03/pink/assets/28687492/f30ba7a1-98a3-44cb-ab52-23f99e42714c
 
@@ -108,9 +104,9 @@ https://github.com/domrachev03/pink/assets/28687492/f30ba7a1-98a3-44cb-ab52-23f9
 |---------|------|
 | End-effector position | $10^{2}$ |
 
-## Barrier: Quadruped Go2
+## Go2: squat barrier
 
-A Go2 quadruped squatting, with its base position constrained along the y- and
+In `go2_squat_barrier.py`, a Go2 quadruped squats, with its base position constrained along the y- and
 z-axes:
 
 https://github.com/domrachev03/pink/assets/28687492/78281f44-3676-4d4d-9619-768b951a15a2

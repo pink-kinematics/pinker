@@ -7,33 +7,39 @@
 
 """Move a Stretch RE1 with a fixed fingertip target around the origin."""
 
-import meshcat_shapes
 import numpy as np
-import pinocchio as pin
 import qpsolvers
+import viser.transforms as vtf
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
 from pinker import PinkerError, solve_ik
-from pinker.kinematics import rpy_to_matrix
+from pinker import kinematics as kin
 from pinker.tasks import FrameTask
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 # Trajectory parameters to play with ;)
 CIRCLE_RADIUS = 0.5  # [m]
 FINGERTIP_HEIGHT = 0.7  # [m]
 
 if __name__ == "__main__":
-    robot = load_robot_description(
-        "stretch_description", root_joint=pin.JointModelPlanar()
-    )
+    robot = pinker.load_robot_description("stretch_description", root_joint="planar")
 
     # Initialize visualization
-    viz = start_meshcat_visualizer(robot)
+    viz = start_viser_visualizer(robot)
     viewer = viz.viewer
-    meshcat_shapes.frame(viewer["base_target_frame"], opacity=0.5)
-    meshcat_shapes.frame(viewer["fingertip_target_frame"], opacity=1.0)
+    base_frame = viewer.scene.add_frame(
+        "/base_frame", axes_length=0.1, axes_radius=0.005
+    )
+    fingertip_frame = viewer.scene.add_frame(
+        "/fingertip_frame", axes_length=0.1, axes_radius=0.005
+    )
+    base_target_frame = viewer.scene.add_frame(
+        "/base_target_frame", axes_length=0.1, axes_radius=0.005
+    )
+    fingertip_target_frame = viewer.scene.add_frame(
+        "/fingertip_target_frame", axes_length=0.1, axes_radius=0.005
+    )
 
     # Define tasks
     base_task = FrameTask(
@@ -51,7 +57,7 @@ if __name__ == "__main__":
     # Initialize tasks from the initial configuration
     configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
     base_task.set_target_from_configuration(configuration)
-    transform_fingertip_target_to_world = pin.SE3(
+    transform_fingertip_target_to_world = kin.SE3(
         rotation=np.eye(3), translation=np.array([0.0, 0.0, FINGERTIP_HEIGHT])
     ) * configuration.get_transform_frame_to_world(fingertip_task.frame)
     center_translation = transform_fingertip_target_to_world.translation[:2]
@@ -71,7 +77,7 @@ if __name__ == "__main__":
         T = base_task.transform_target_to_world
         u = np.array([np.cos(t), np.sin(t)])
         T.translation[:2] = center_translation + CIRCLE_RADIUS * u
-        T.rotation = rpy_to_matrix(0.0, 0.0, 0.5 * np.pi * t)
+        T.rotation = kin.rpy_to_matrix(0.0, 0.0, 0.5 * np.pi * t)
 
         # Update fingertip target
         fingertip_task.transform_target_to_world.translation[2] = (
@@ -79,16 +85,22 @@ if __name__ == "__main__":
         )
 
         # Update visualizer frames
-        viewer["base_target_frame"].set_transform(T.np)
-        viewer["fingertip_target_frame"].set_transform(
-            fingertip_task.transform_target_to_world.np
-        )
-        viewer["base_frame"].set_transform(
+        _T = np.asarray(T.np)
+        base_target_frame.position = _T[:3, 3]
+        base_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        _T = np.asarray(fingertip_task.transform_target_to_world.np)
+        fingertip_target_frame.position = _T[:3, 3]
+        fingertip_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        _T = np.asarray(
             configuration.get_transform_frame_to_world(base_task.frame).np
         )
-        viewer["fingertip_frame"].set_transform(
+        base_frame.position = _T[:3, 3]
+        base_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        _T = np.asarray(
             configuration.get_transform_frame_to_world(fingertip_task.frame).np
         )
+        fingertip_frame.position = _T[:3, 3]
+        fingertip_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 
         # Compute velocity and integrate it into next configuration
         try:

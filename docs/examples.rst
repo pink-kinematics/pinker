@@ -7,8 +7,8 @@ Examples
 A first script
 ==============
 
-Let us go through ``examples/arm_ur3.py``, where a UR3 arm tracks a target
-moving back and forth. We first load the robot model:
+Let us go through ``examples/ur3_end_effector_tracking.py``, where a UR3 arm
+tracks a target moving back and forth. We first load the robot model:
 
 .. code:: python
 
@@ -85,7 +85,7 @@ visualizer:
 
 .. code:: python
 
-    from pinker.visualization import start_viser_visualizer
+    from pinker.visualizer import start_viser_visualizer
 
     viz = start_viser_visualizer(robot)
     viz.display(configuration.q)  # in the loop, after integration
@@ -99,7 +99,7 @@ descriptions:
 
 .. code:: bash
 
-    pixi run -e examples example examples/arm_ur3.py
+    pixi run -e examples example examples/ur3_end_effector_tracking.py
 
 The command starts a Viser server and opens the visualization in a new browser
 tab.
@@ -110,7 +110,7 @@ metadata block (`PEP 723 <https://peps.python.org/pep-0723/>`__), so that `uv
 
 .. code:: bash
 
-    uv run examples/arm_ur3.py
+    uv run examples/ur3_end_effector_tracking.py
 
 The block points ``pinker`` at the repository it lives in, so this works from a
 clone (uv compiles the C extension) without installing anything first.
@@ -124,28 +124,39 @@ What the examples cover
 
     * - Example
       - Illustrates
-    * - ``arm_ur3.py``, ``arm_ur5.py``, ``arm_panda.py``
-      - End-effector tracking with a posture regularization
-    * - ``arm_ur3_sparse_solver.py``
-      - Selecting a sparse QP solver
-    * - ``arm_ur3_velocity_smoothing.py``
-      - Smoothing velocities with a task gain, a :class:`.DampingTask` and an
-        :class:`.AccelerationLimit`
-    * - ``arm_z1_joint_velocity_tracking.py``
-      - Tracking joint velocities with :class:`.JointVelocityTask`
-    * - ``barrier_arm_ur5.py``, ``barrier_go2_squat.py``
-      - Control barrier functions (:ref:`Barriers`)
-    * - ``floating_base_velocity_limit.py``
-      - Clamping base velocities with :class:`.FloatingBaseVelocityLimit`
-    * - ``humanoid_draco3.py``
+    * - ``cookie_viser_visualization.py``,
+        ``cookie_yourdfpy_visualization.py``
+      - Displaying a robot description, in Viser and in yourdfpy
+    * - ``draco3_reaching.py``
       - Closed kinematic chains with :class:`.JointCouplingTask`
-    * - ``humanoid_g1_com.py``, ``humanoid_jvrc_com.py``
+    * - ``g1_com_tracking.py``, ``jvrc_com_tracking.py``
       - Center-of-mass tracking with :class:`.ComTask`
-    * - ``inverse_kinematics_ur10.py``
+    * - ``gen2_end_effector_tracking.py``,
+        ``panda_end_effector_tracking.py``, ``ur3_end_effector_tracking.py``,
+        ``ur5_end_effector_tracking.py``
+      - End-effector tracking with a posture regularization
+    * - ``go2_squat_barrier.py``, ``ur5_position_barrier.py``
+      - Control barrier functions (:ref:`Barriers`)
+    * - ``jvrc_reaching.py``, ``sigmaban_standing.py``,
+        ``upkie_crouching.py``
+      - Whole-body inverse kinematics, with the feet in contact
+    * - ``piper_inverse_kinematics.py``, ``ur10_inverse_kinematics.py``
       - Iterating differential IK to reach a prescribed end-effector pose
-    * - ``mobile_stretch.py``, ``stretch_relative_target.py``
+    * - ``stretch_mobile_manipulation.py``, ``stretch_relative_target.py``,
+        ``stretch_world_target.py``
       - Mobile manipulation, with world and mobile-base targets
+    * - ``upkie_floating_base_velocity_limit.py``
+      - Clamping base velocities with :class:`.FloatingBaseVelocityLimit`
     * - ``upkie_rolling.py``
       - Rolling without slipping, with :class:`.RollingTask`
+    * - ``ur3_sparse_solver.py``
+      - Selecting a sparse QP solver
+    * - ``ur3_velocity_smoothing.py``
+      - Smoothing velocities with a task gain, a :class:`.DampingTask` and an
+        :class:`.AccelerationLimit`
+    * - ``z1_joint_velocity_tracking.py``
+      - Tracking joint velocities with :class:`.JointVelocityTask`
 
-Their ``README.md`` has videos of the resulting motions.
+Examples are named ``<robot>_<task>.py``, after the robot description they load
+and what they do with it. Their ``README.md`` has videos of the resulting
+motions.

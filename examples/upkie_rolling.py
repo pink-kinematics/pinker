@@ -11,20 +11,17 @@ import meshcat_shapes
 import numpy as np
 import pinocchio as pin
 import qpsolvers
+import viser.transforms as vtf
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
 from pinker import solve_ik
 from pinker.tasks import FrameTask, RollingTask
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = load_robot_description(
-        "upkie_description",
-        root_joint=pin.JointModelFreeFlyer(),
-    )
-    visualizer = start_meshcat_visualizer(robot)
+    robot = pinker.load_robot_description("upkie_description", root_joint="free_flyer")
+    visualizer = start_viser_visualizer(robot)
 
     base_task = FrameTask(
         "base",
@@ -69,10 +66,18 @@ if __name__ == "__main__":
     right_wheel_target = right_wheel_position.transform_target_to_world
 
     viewer = visualizer.viewer
-    meshcat_shapes.frame(viewer["base"], opacity=1.0)
-    meshcat_shapes.frame(viewer["base_target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["left_wheel_target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["right_wheel_target"], opacity=0.5)
+    base_frame = viewer.scene.add_frame(
+        "/base", axes_length=0.1, axes_radius=0.005
+    )
+    base_target_frame = viewer.scene.add_frame(
+        "/base_target", axes_length=0.1, axes_radius=0.005
+    )
+    left_wheel_target_frame = viewer.scene.add_frame(
+        "/left_wheel_target", axes_length=0.1, axes_radius=0.005
+    )
+    right_wheel_target_frame = viewer.scene.add_frame(
+        "/right_wheel_target", axes_length=0.1, axes_radius=0.005
+    )
 
     # Select QP solver
     solver = qpsolvers.available_solvers[0]
@@ -91,12 +96,18 @@ if __name__ == "__main__":
         right_wheel_target.translation[0] = base_x - 0.1 * np.sin(t)
 
         # Update visualization frames
-        viewer["base_target"].set_transform(base_target.np)
-        viewer["left_wheel_target"].set_transform(left_wheel_target.np)
-        viewer["right_wheel_target"].set_transform(right_wheel_target.np)
-        viewer["base"].set_transform(
-            configuration.get_transform_frame_to_world("base").np
-        )
+        _T = np.asarray(base_target.np)
+        base_target_frame.position = _T[:3, 3]
+        base_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        _T = np.asarray(left_wheel_target.np)
+        left_wheel_target_frame.position = _T[:3, 3]
+        left_wheel_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        _T = np.asarray(right_wheel_target.np)
+        right_wheel_target_frame.position = _T[:3, 3]
+        right_wheel_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        _T = np.asarray(configuration.get_transform_frame_to_world("base").np)
+        base_frame.position = _T[:3, 3]
+        base_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 
         # Compute velocity and integrate it into next configuration
         velocity = solve_ik(

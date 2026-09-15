@@ -7,29 +7,32 @@
 
 """SigmaBan humanoid standing on two feet."""
 
-import meshcat_shapes
 import numpy as np
-import pinocchio as pin
 import qpsolvers
+import viser.transforms as vtf
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
+from pinker import kinematics as kin
 from pinker import solve_ik
 from pinker.tasks import FrameTask, PostureTask
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = load_robot_description(
-        "sigmaban_description", root_joint=pin.JointModelFreeFlyer()
-    )
+    robot = pinker.load_robot_description("sigmaban_description", root_joint="free_flyer")
 
     # Initialize visualization
-    viz = start_meshcat_visualizer(robot)
+    viz = start_viser_visualizer(robot)
     viewer = viz.viewer
-    meshcat_shapes.frame(viewer["left_foot_target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["right_foot_target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["torso_target"], opacity=0.5)
+    left_foot_target_frame = viewer.scene.add_frame(
+        "/left_foot_target", axes_length=0.1, axes_radius=0.005
+    )
+    right_foot_target_frame = viewer.scene.add_frame(
+        "/right_foot_target", axes_length=0.1, axes_radius=0.005
+    )
+    torso_target_frame = viewer.scene.add_frame(
+        "/torso_target", axes_length=0.1, axes_radius=0.005
+    )
 
     configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
     viz.display(configuration.q)
@@ -59,10 +62,10 @@ if __name__ == "__main__":
     torso_task.set_target(torso_pose)
     posture_task.set_target_from_configuration(configuration)
 
-    transform_left_foot_tip_target_to_init = pin.SE3(
+    transform_left_foot_tip_target_to_init = kin.SE3(
         np.eye(3), np.array([0.0, 0.03, 0.0])
     )
-    transform_right_foot_tip_target_to_init = pin.SE3(
+    transform_right_foot_tip_target_to_init = kin.SE3(
         np.eye(3), np.array([0.0, -0.03, 0.0])
     )
 
@@ -77,15 +80,15 @@ if __name__ == "__main__":
     torso_task.set_target(configuration.get_transform_frame_to_world("torso"))
 
     # Display targets
-    viewer["left_foot_target"].set_transform(
-        left_foot_task.transform_target_to_world.np
-    )
-    viewer["right_foot_target"].set_transform(
-        right_foot_task.transform_target_to_world.np
-    )
-    viewer["torso_target"].set_transform(
-        torso_task.transform_target_to_world.np
-    )
+    _T = np.asarray(left_foot_task.transform_target_to_world.np)
+    left_foot_target_frame.position = _T[:3, 3]
+    left_foot_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+    _T = np.asarray(right_foot_task.transform_target_to_world.np)
+    right_foot_target_frame.position = _T[:3, 3]
+    right_foot_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+    _T = np.asarray(torso_task.transform_target_to_world.np)
+    torso_target_frame.position = _T[:3, 3]
+    torso_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 
     # Select QP solver
     solver = qpsolvers.available_solvers[0]

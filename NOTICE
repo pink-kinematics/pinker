@@ -1,7 +1,9 @@
-This project includes contributions made under the following copyrights:
+Pinker includes contributions made under the following copyrights:
 
 - Copyright 2022 Stéphane Caron
 - Copyright 2023-2025 Inria
 - Copyright 2024 Ivan Domrachev, Simeon Nedelchev
 - Copyright 2026 Stéphane Caron
 - Copyright 2026 CNRS
+
+The project includes code derived from Pink (https://github.com/pink-kinematics/pink), which is licensed under the Apache License 2.0.

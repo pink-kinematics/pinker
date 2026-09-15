@@ -7,31 +7,26 @@
 
 """G1 humanoid squat by regulating CoM."""
 
-import meshcat.geometry as g
-import meshcat.transformations as tf
 import numpy as np
-import pinocchio as pin
 import qpsolvers
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
+from pinker import kinematics as kin
 from pinker import solve_ik
 from pinker.tasks import ComTask, FrameTask, PostureTask
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = load_robot_description(
-        "g1_description", root_joint=pin.JointModelFreeFlyer()
-    )
+    robot = pinker.load_robot_description("g1_description", root_joint="free_flyer")
 
     # Initialize visualization
-    viz = start_meshcat_visualizer(robot)
-    viz.viewer["com_target"].set_object(
-        g.Sphere(0.03), g.MeshLambertMaterial(color=0x00FF00)
+    viz = start_viser_visualizer(robot)
+    com_target_sphere = viz.viewer.scene.add_icosphere(
+        "/com_target", radius=0.03, color=(0.0, 1.0, 0.0)
     )
-    viz.viewer["com"].set_object(
-        g.Sphere(0.03), g.MeshLambertMaterial(color=0xFF0000)
+    com_sphere = viz.viewer.scene.add_icosphere(
+        "/com", radius=0.03, color=(1.0, 0.0, 0.0)
     )
 
     q_ref = np.zeros(robot.nq)
@@ -92,7 +87,7 @@ if __name__ == "__main__":
     omega = 2 * np.pi / period
 
     while True:
-        pin.centerOfMass(robot.model, robot.data, configuration.q)
+        kin.center_of_mass(robot.model, robot.data, configuration.q)
         com = robot.data.com[0]
         # Update CoM target
         Az = 0.05
@@ -110,10 +105,8 @@ if __name__ == "__main__":
         )
         configuration.integrate_inplace(velocity, dt)
         viz.display(configuration.q)
-        viz.viewer["com_target"].set_transform(
-            tf.translation_matrix(desired_com)
-        )
-        viz.viewer["com"].set_transform(tf.translation_matrix(com))
+        com_target_sphere.position = desired_com
+        com_sphere.position = com
 
         rate.sleep()
         t += dt

@@ -7,25 +7,28 @@
 
 """Kinova Gen2 arm tracking a moving target."""
 
-import meshcat_shapes
 import numpy as np
 import qpsolvers
+import viser.transforms as vtf
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
 from pinker import solve_ik
 from pinker.tasks import FrameTask, PostureTask
 from pinker.kinematics import custom_configuration
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = load_robot_description("gen2_description", root_joint=None)
+    robot = pinker.load_robot_description("gen2_description")
 
-    viz = start_meshcat_visualizer(robot)
+    viz = start_viser_visualizer(robot)
     viewer = viz.viewer
-    meshcat_shapes.frame(viewer["end_effector_target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["end_effector"], opacity=1.0)
+    end_effector_target_frame = viewer.scene.add_frame(
+        "/end_effector_target", axes_length=0.1, axes_radius=0.005
+    )
+    end_effector_frame = viewer.scene.add_frame(
+        "/end_effector", axes_length=0.1, axes_radius=0.005
+    )
 
     end_effector_task = FrameTask(
         "j2s6s200_end_effector",
@@ -40,7 +43,7 @@ if __name__ == "__main__":
     tasks = [end_effector_task, posture_task]
 
     q_ref = custom_configuration(
-        robot,
+        robot.model,
         j2s6s200_joint_2=1.0,
         j2s6s200_joint_3=1.0,
         j2s6s200_joint_5=1.0,
@@ -65,12 +68,16 @@ if __name__ == "__main__":
         end_effector_target.translation[2] = 0.2
 
         # Update visualization frames
-        viewer["end_effector_target"].set_transform(end_effector_target.np)
-        viewer["end_effector"].set_transform(
+        _T = np.asarray(end_effector_target.np)
+        end_effector_target_frame.position = _T[:3, 3]
+        end_effector_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        _T = np.asarray(
             configuration.get_transform_frame_to_world(
                 end_effector_task.frame
             ).np
         )
+        end_effector_frame.position = _T[:3, 3]
+        end_effector_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 
         # Compute velocity and integrate it into next configuration
         velocity = solve_ik(configuration, tasks, dt, solver=solver)

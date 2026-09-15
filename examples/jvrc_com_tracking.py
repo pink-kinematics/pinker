@@ -8,22 +8,19 @@
 """JVRC-1 humanoid backbending by regulating its CoM position."""
 
 import numpy as np
-import pinocchio as pin
 import qpsolvers
 import trimesh
 import viser
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
+from pinker import kinematics as kin
 from pinker import solve_ik
 from pinker.tasks import ComTask, FrameTask
-from pinker.visualization import start_viser_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
-    robot = load_robot_description(
-        "jvrc_description", root_joint=pin.JointModelFreeFlyer()
-    )
+    robot = pinker.load_robot_description("jvrc_description", root_joint="free_flyer")
 
     # Initialize visualization
     viz = start_viser_visualizer(robot)
@@ -45,15 +42,15 @@ if __name__ == "__main__":
     # IK: Set ankle task targets
     left_ankle_task.set_target(
         configuration.get_transform_frame_to_world("l_ankle")
-        * pin.SE3(np.eye(3), np.array([0.1, 0.0, 0.0]))
+        * kin.SE3(np.eye(3), np.array([0.1, 0.0, 0.0]))
     )
     right_ankle_task.set_target(
         configuration.get_transform_frame_to_world("r_ankle")
-        * pin.SE3(np.eye(3), np.array([-0.1, 0.0, 0.0]))
+        * kin.SE3(np.eye(3), np.array([-0.1, 0.0, 0.0]))
     )
 
     # IK: Set CoM task target
-    initial_com = pin.centerOfMass(robot.model, robot.data, configuration.q)
+    initial_com = kin.center_of_mass(robot.model, robot.data, configuration.q)
     desired_com = initial_com.copy()
     desired_com[2] += 0.05
     com_task.set_target(desired_com)
@@ -109,7 +106,7 @@ if __name__ == "__main__":
     dt = rate.period
 
     while True:
-        pin.centerOfMass(robot.model, robot.data, configuration.q)
+        kin.center_of_mass(robot.model, robot.data, configuration.q)
         com = robot.data.com[0]
 
         velocity = solve_ik(

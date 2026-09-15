@@ -10,12 +10,11 @@
 import numpy as np
 import qpsolvers
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
 from pinker import solve_ik
 from pinker.tasks import JointVelocityTask
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
     print(
@@ -23,8 +22,8 @@ if __name__ == "__main__":
         "trajectory that is unfeasible at times.\nThe trajectory is only "
         "tracked while the robot stays within joint limits."
     )
-    robot = load_robot_description("z1_description")
-    viz = start_meshcat_visualizer(robot)
+    robot = pinker.load_robot_description("z1_description")
+    viz = start_viser_visualizer(robot)
     configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
     viz.display(configuration.q)
 

@@ -8,28 +8,31 @@
 """UR3 arm tracking a target, first without then with velocity smoothing."""
 
 import matplotlib.pyplot as plt
-import meshcat_shapes
 import numpy as np
 import qpsolvers
+import viser.transforms as vtf
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
 from pinker import solve_ik
 from pinker.limits import AccelerationLimit
 from pinker.tasks import DampingTask, FrameTask, PostureTask
 from pinker.kinematics import custom_configuration
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 NB_STEPS = 3000  # number of steps to run the example for
 
 if __name__ == "__main__":
-    robot = load_robot_description("ur3_official_description", root_joint=None)
+    robot = pinker.load_robot_description("ur3_official_description")
 
-    viz = start_meshcat_visualizer(robot)
+    viz = start_viser_visualizer(robot)
     viewer = viz.viewer
-    meshcat_shapes.frame(viewer["end_effector_target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["end_effector"], opacity=1.0)
+    end_effector_target_frame = viewer.scene.add_frame(
+        "/end_effector_target", axes_length=0.1, axes_radius=0.005
+    )
+    end_effector_frame = viewer.scene.add_frame(
+        "/end_effector", axes_length=0.1, axes_radius=0.005
+    )
 
     # Define inverse kinematics tasks and limits
     end_effector_task = FrameTask(
@@ -54,7 +57,7 @@ if __name__ == "__main__":
 
     # Initial configuration and task setup
     q_ref = custom_configuration(
-        robot,
+        robot.model,
         shoulder_lift_joint=1.0,
         shoulder_pan_joint=1.0,
         elbow_joint=1.0,
@@ -81,21 +84,22 @@ if __name__ == "__main__":
         end_effector_target.translation[2] = 0.2
 
         # Update visualization frames
-        viewer["end_effector_target"].set_transform(end_effector_target.np)
-        viewer["end_effector"].set_transform(
+        _T = np.asarray(end_effector_target.np)
+        end_effector_target_frame.position = _T[:3, 3]
+        end_effector_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        _T = np.asarray(
             configuration.get_transform_frame_to_world(
                 end_effector_task.frame
             ).np
         )
+        end_effector_frame.position = _T[:3, 3]
+        end_effector_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 
         if step < NB_STEPS // 2:
             # First half: no velocity smoothing
             end_effector_task.gain = 1.0
             tasks = (end_effector_task, posture_task)
-            limits = (
-                configuration.model.configuration_limit,
-                configuration.model.velocity_limit,
-            )
+            limits = configuration.default_limits
         else:  # step >= NB_STEPS // 2
             # Second half: velocity smoothing by:
             # 1. Reducing the task gain
@@ -103,11 +107,7 @@ if __name__ == "__main__":
             # 3. Adding an acceleration limit
             end_effector_task.gain = 0.4
             tasks = (end_effector_task, damping_task)
-            limits = (
-                configuration.model.configuration_limit,
-                configuration.model.velocity_limit,
-                acceleration_limit,
-            )
+            limits = [*configuration.default_limits, acceleration_limit]
 
         # Compute velocity and integrate it into next configuration
         velocity = solve_ik(

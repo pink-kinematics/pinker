@@ -9,17 +9,16 @@
 
 import argparse
 
-import meshcat_shapes
 import numpy as np
 import qpsolvers
+import viser.transforms as vtf
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
 from pinker import solve_ik
 from pinker.barriers import PositionBarrier
 from pinker.tasks import FrameTask, PostureTask
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -31,8 +30,8 @@ if __name__ == "__main__":
         action="store_true",
     )
     args = parser.parse_args()
-    robot = load_robot_description("ur5_official_description", root_joint=None)
-    viz = start_meshcat_visualizer(robot)
+    robot = pinker.load_robot_description("ur5_official_description")
+    viz = start_viser_visualizer(robot)
 
     end_effector_task = FrameTask(
         "tool0",
@@ -72,8 +71,12 @@ if __name__ == "__main__":
     viz.display(configuration.q)
 
     viewer = viz.viewer
-    meshcat_shapes.frame(viewer["end_effector_target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["end_effector"], opacity=1.0)
+    end_effector_target_frame = viewer.scene.add_frame(
+        "/end_effector_target", axes_length=0.1, axes_radius=0.005
+    )
+    end_effector_frame = viewer.scene.add_frame(
+        "/end_effector", axes_length=0.1, axes_radius=0.005
+    )
 
     # Select QP solver
     solver = qpsolvers.available_solvers[0]
@@ -90,12 +93,16 @@ if __name__ == "__main__":
         end_effector_target.translation[2] = 0.5
 
         # Update visualization frames
-        viewer["end_effector_target"].set_transform(end_effector_target.np)
-        viewer["end_effector"].set_transform(
+        _T = np.asarray(end_effector_target.np)
+        end_effector_target_frame.position = _T[:3, 3]
+        end_effector_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
+        _T = np.asarray(
             configuration.get_transform_frame_to_world(
                 end_effector_task.frame
             ).np
         )
+        end_effector_frame.position = _T[:3, 3]
+        end_effector_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 
         velocity = solve_ik(
             configuration,

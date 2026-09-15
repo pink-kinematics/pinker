@@ -9,27 +9,16 @@
 from __future__ import annotations
 
 import numpy as np
-import pinocchio as pin
 import qpsolvers
 
 import pinker
 from pinker.limits import FloatingBaseVelocityLimit
 from pinker.tasks import FrameTask
 
-try:
-    from robot_descriptions.loaders.pinocchio import load_robot_description
-except ModuleNotFoundError as exc:
-    raise ModuleNotFoundError(
-        "Examples need robot_descriptions, "
-        "try `[conda|pip] install robot_descriptions`"
-    ) from exc
-
 
 def main() -> None:
     """Run a short IK loop where the base velocity remains bounded."""
-    robot = load_robot_description(
-        "upkie_description", root_joint=pin.JointModelFreeFlyer()
-    )
+    robot = pinker.load_robot_description("upkie_description", root_joint="free_flyer")
     configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
 
     floating_limit = FloatingBaseVelocityLimit(
@@ -55,7 +44,7 @@ def main() -> None:
 
     dt = 0.1  # [s]
     solver = qpsolvers.available_solvers[0]
-    root_joint = robot.model.joints[robot.model.getJointId("root_joint")]
+    root_joint = robot.model.joints[robot.model.get_joint_id("root_joint")]
 
     for step in range(10):
         velocity = pinker.solve_ik(

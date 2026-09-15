@@ -7,24 +7,22 @@
 
 """JVRC-1 humanoid standing on two feet and reaching with a hand."""
 
-import meshcat_shapes
 import numpy as np
-import pinocchio as pin
 import qpsolvers
+import viser.transforms as vtf
 from loop_rate_limiters import RateLimiter
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 import pinker
+from pinker import kinematics as kin
 from pinker import solve_ik
-from pinker.kinematics import rpy_to_matrix
 from pinker.tasks import FrameTask
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 
 class WavingPose:
     """Moving target to the wave the right hand."""
 
-    def __init__(self, init: pin.SE3):
+    def __init__(self, init: kin.SE3):
         """Initialize pose.
 
         Args:
@@ -40,8 +38,8 @@ class WavingPose:
         """
         T = self.init.copy()
         R = T.rotation
-        R = np.dot(R, rpy_to_matrix(0.0, 0.0, np.pi / 2))
-        R = np.dot(R, rpy_to_matrix(0.0, -np.pi, 0.0))
+        R = np.dot(R, kin.rpy_to_matrix(0.0, 0.0, np.pi / 2))
+        R = np.dot(R, kin.rpy_to_matrix(0.0, -np.pi, 0.0))
         T.rotation = R
         T.translation[0] += 0.5
         T.translation[1] += -0.1 + 0.05 * np.sin(8.0 * t)
@@ -50,16 +48,17 @@ class WavingPose:
 
 
 if __name__ == "__main__":
-    robot = load_robot_description(
-        "jvrc_description", root_joint=pin.JointModelFreeFlyer()
-    )
+    robot = pinker.load_robot_description("jvrc_description", root_joint="free_flyer")
 
     # Initialize visualization
-    viz = start_meshcat_visualizer(robot)
+    viz = start_viser_visualizer(robot)
     viewer = viz.viewer
-    wrist_frame = viewer["right_wrist_pose"]
-    meshcat_shapes.frame(viewer["pelvis_pose"])
-    meshcat_shapes.frame(wrist_frame)
+    wrist_frame = viewer.scene.add_frame(
+        "/right_wrist_pose", axes_length=0.1, axes_radius=0.005
+    )
+    pelvis_pose_frame = viewer.scene.add_frame(
+        "/pelvis_pose", axes_length=0.1, axes_radius=0.005
+    )
 
     configuration = pinker.Configuration(robot.model, robot.data, robot.q0)
     viz.display(configuration.q)
@@ -80,13 +79,15 @@ if __name__ == "__main__":
 
     pelvis_pose = configuration.get_transform_frame_to_world("PELVIS_S").copy()
     pelvis_pose.translation[0] += 0.05
-    viewer["pelvis_pose"].set_transform(pelvis_pose.np)
+    _T = np.asarray(pelvis_pose.np)
+    pelvis_pose_frame.position = _T[:3, 3]
+    pelvis_pose_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
     pelvis_task.set_target(pelvis_pose)
 
-    transform_l_ankle_target_to_init = pin.SE3(
+    transform_l_ankle_target_to_init = kin.SE3(
         np.eye(3), np.array([0.1, 0.0, 0.0])
     )
-    transform_r_ankle_target_to_init = pin.SE3(
+    transform_r_ankle_target_to_init = kin.SE3(
         np.eye(3), np.array([-0.1, 0.0, 0.0])
     )
 
@@ -117,7 +118,9 @@ if __name__ == "__main__":
     while True:
         # Update task targets
         right_wrist_task.set_target(right_wrist_pose.at(t))
-        wrist_frame.set_transform(right_wrist_pose.at(t).np)
+        _T = np.asarray(right_wrist_pose.at(t).np)
+        wrist_frame.position = _T[:3, 3]
+        wrist_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
 
         # Compute velocity and integrate it into next configuration
         velocity = solve_ik(configuration, tasks, dt, solver=solver)

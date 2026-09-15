@@ -1,52 +1,54 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = [
-#     "daqp",
-#     "meshcat",
-#     "pinker",
-#     "qpsolvers",
-#     "robot_descriptions",
-# ]
+# requires-python = ">=3.10"
+# dependencies = ["daqp", "pinker", "pycollada", "qpsolvers",
+# "robot_descriptions >=3.1.0", "scipy", "trimesh", "viser"]
+#
+# [tool.uv.sources]
+# pinker = { path = "..", editable = true }
 # ///
 
 """Solve IK with the Piper arm end-effector at a prescribed target."""
 
 import sys
 
-import meshcat_shapes
 import numpy as np
-import pinocchio as pin
 import qpsolvers
-from robot_descriptions.loaders.pinocchio import load_robot_description
+import viser.transforms as vtf
 from scipy.spatial.transform import Rotation
 
 import pinker
+from pinker import kinematics as kin
 from pinker.tasks import FrameTask
-from pinker.visualization import start_meshcat_visualizer
+from pinker.visualizer import start_viser_visualizer
 
 # IK parameters
 dt = 1e-2
 stop_thres = 1e-8
 
 if __name__ == "__main__":
-    robot = load_robot_description("piper_description")
+    robot = pinker.load_robot_description("piper_description")
     model = robot.model
 
-    viz = start_meshcat_visualizer(robot)
+    viz = start_viser_visualizer(robot)
     viewer = viz.viewer
-    meshcat_shapes.frame(viewer["end_effector_target"], opacity=0.5)
-    meshcat_shapes.frame(viewer["end_effector"], opacity=1.0)
+    end_effector_target_frame = viewer.scene.add_frame(
+        "/end_effector_target", axes_length=0.1, axes_radius=0.005
+    )
+    end_effector_frame = viewer.scene.add_frame(
+        "/end_effector", axes_length=0.1, axes_radius=0.005
+    )
 
     # Frame details
     joint_name = model.names[-1]
-    parent_joint = model.getJointId(joint_name)
+    parent_joint = model.get_joint_id(joint_name)
 
     FRAME_NAME = "joint6"
-    data = pin.Data(model)
+    data = kin.Data(model)
     low = model.lower_position_limit
     high = model.upper_position_limit
-    q_init = pin.neutral(model)
+    q_init = kin.neutral(model)
 
     # Task details
     np.random.seed(0)
@@ -56,17 +58,19 @@ if __name__ == "__main__":
             for i in range(model.nq)
         ]
     )
-    pin.forwardKinematics(model, data, q_final)
+    kin.forward_kinematics(model, data, q_final)
     target_pose = data.oMi[parent_joint]
     ee_task = FrameTask(FRAME_NAME, [1.0, 1.0, 1.0], [1.0, 1.0, 1.0])
 
-    target = pin.SE3.Identity()
+    target = kin.SE3.Identity()
     hit_limit = "--hit-limit" in sys.argv
     target.translation = (
         np.array([0.1, 0.2, 0.3]) if hit_limit else np.array([0.0, 0.2, 0.6])
     )
     target.rotation = Rotation.from_euler("xyz", [0, 0, 0]).as_matrix()
-    viewer["end_effector_target"].set_transform(target.np)
+    _T = np.asarray(target.np)
+    end_effector_target_frame.position = _T[:3, 3]
+    end_effector_target_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
     ee_task.set_target(target)
 
     configuration = pinker.Configuration(model, data, q_init)
@@ -88,13 +92,15 @@ if __name__ == "__main__":
                 else qpsolvers.available_solvers[0]
             ),
         )
-        q_out = pin.integrate(model, configuration.q, dv * dt)
+        q_out = kin.integrate(model, configuration.q, dv * dt)
         q_out = np.clip(q_out, low, high)
         configuration = pinker.Configuration(model, data, q_out)
-        pin.updateFramePlacements(model, data)
-        viewer["end_effector"].set_transform(
+        kin.update_frame_placements(model, data)
+        _T = np.asarray(
             configuration.get_transform_frame_to_world(ee_task.frame).np
         )
+        end_effector_frame.position = _T[:3, 3]
+        end_effector_frame.wxyz = vtf.SO3.from_matrix(_T[:3, :3]).wxyz
         viz.display(configuration.q)
         error_norm = np.linalg.norm(ee_task.compute_error(configuration))
         nb_steps += 1
