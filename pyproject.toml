@@ -169,7 +169,7 @@ xacrodoc = "*"
 [tool.pixi.feature.test.tasks]
 _test-kinematics = { cmd = "python -m unittest discover --failfast --start-directory tests/kinematics --top-level-directory tests/kinematics", depends-on = ["build"] }
 _test-python = { cmd = "python -m unittest discover --failfast", depends-on = ["build"] }
-test = { depends-on = ["_test-python", "_test-kinematics"] }
+test = { depends-on = ["_test-kinematics", "_test-python"] }
 
 [tool.pixi.feature.examples.dependencies]
 loop-rate-limiters = ">=1.2.0"
