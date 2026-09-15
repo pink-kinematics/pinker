@@ -280,14 +280,31 @@ class Motion:
         """
         return self.vector[3:]
 
-    @property
-    def np(self) -> np.ndarray:
-        """Vector representation.
+    def asarray(self) -> np.ndarray:
+        """Convert to a NumPy array as a 6-dimensional vector.
+
+        Note that this is not a copy: the returned array is directly the stored
+        representation of the motion vector, and writing to it updates the
+        motion directly. Copy it (or call :func:`numpy.array`) if that is not
+        what you want.
 
         Returns:
             Spatial velocity as a vector of size 6.
         """
         return self.vector
+
+    def __array__(self, dtype=None, copy=None) -> np.ndarray:
+        """NumPy conversion as the spatial velocity vector.
+
+        Args:
+            dtype: Data type of the output array, if it should be cast.
+            copy: Unused, for compatibility with the NumPy 2 protocol.
+
+        Returns:
+            Spatial velocity as a vector of size 6.
+        """
+        v = self.vector
+        return v if dtype is None else v.astype(dtype)
 
     def __repr__(self) -> str:
         """String representation.
