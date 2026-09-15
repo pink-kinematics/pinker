@@ -7,61 +7,68 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Pinker is [Pink](https://github.com/pink-kinematics/pink) 4.4.0 with its
+kinematics computed by a backend of its own rather than by Pinocchio. Tasks,
+limits, barriers, `Configuration` and `solve_ik` behave as they did in Pink;
+the entries below are what a Pink user needs to know to switch over.
+
 ### Added
 
-- Kinematics: `SE3.toarray` and `Motion.asarray`, converting to NumPy arrays.
-  The two names differ because the transform assembles a new homogeneous
-  matrix, while the motion hands back the vector it stores
-- Kinematics: `Motion.__array__`, so that `numpy.asarray` works on a motion as
-  it already did on a transform
-- `load_robot_description` function, loading a model from a robot description
-- `load_robot_urdf` function, loading a model from a URDF file
-- Configuration: `copy` function, sharing the model, default limits and
-  tangent space of the configuration it copies
+- `pinker.kinematics`: kinematics backend, written as a single C extension
+  with a thin Python layer, implementing the subset of Pinocchio that Pink
+  used: URDF parsing, forward kinematics, frame and joint Jacobians,
+  Lie-group operations on SE(3) and on configuration spaces, center of mass
+  and its Jacobian. Its outputs are cross-validated against Pinocchio
+- `load_robot_description` and `load_robot_urdf`, loading a robot from a robot
+  description or from a URDF file
 - Configuration: `default_limits` attribute and constructor argument, holding
   the limits `solve_ik` enforces unless it is given its own
+- Configuration: `copy` function, sharing the model, default limits and
+  tangent space of the configuration it copies
 
 ### Changed
 
-- **Breaking:** `Configuration.integrate` returns a new `Configuration` rather
-  than a configuration vector
+- **Breaking:** The library is imported as `pinker`, and its visualizer lives
+  in `pinker.visualizer`
+- **Breaking:** Kinematics types come from `pinker.kinematics` rather than
+  from Pinocchio, and follow Python naming: `model.get_frame_id` and
+  `model.lower_position_limit` instead of `getFrameId` and
+  `lowerPositionLimit`, `SE3.toarray` and `Motion.asarray` instead of the `np`
+  property. Model getters raise when a name is not found, where Pinocchio
+  returns a sentinel index
 - **Breaking:** Default limits are stored on the configuration rather than
   cached on the robot model, which Pinker no longer adds attributes to: append
   to `configuration.default_limits` where you used to set
   `configuration.model.floating_base_velocity_limit`
-- Kinematics: Follow Python naming for functions, methods and attributes, for
-  instance `model.get_frame_id` and `model.lower_position_limit` instead of
-  Pinocchio's `getFrameId` and `lowerPositionLimit`
-- Kinematics: Model getters raise when a name is not found, where Pinocchio
-  returns a sentinel index
-- docs: Move the documentation from `doc/` to `docs/`
-- examples: Name examples `<robot_description>_<task>.py`, after the robot
-  description they load and what they do with it
-- pixi: Add `examples` and `dist` environments
-- docs: Switch to the Material theme, in the colors of the project
-- pixi: Rename lint and format tasks to `dev-lint` and `dev-format`
+- **Breaking:** `Configuration.integrate` returns a new `Configuration` rather
+  than a configuration vector
+- Robots are visualized with [Viser](https://viser.studio), which serves the
+  scene to a browser, rather than with MeshCat
+- Installing compiles the C extension, which requires a C compiler and the
+  NumPy headers
+- examples: Ported to Viser, and named `<robot_description>_<task>.py` after
+  the robot description they load and what they do with it
+- docs: Move the documentation from `doc/` to `docs/`, in the Material theme
+  and the colors of the project
 
 ### Removed
 
-- Barrier: `SelfCollisionBarrier`, which required collision detection
-- Configuration: `collision_model` and `collision_data`, arguments and
-  attributes, as Pinker does not support collision detection
-- RobotWrapper: `collision_model` and `collision_data` attributes
-- utils: `process_collision_pairs`, which required collision detection
-- visualization: `start_meshcat_visualizer`, Pinker visualizing with Viser
-- utils: `custom_configuration_vector`, `get_root_joint_dim` and
+- **Breaking:** Dependency on Pinocchio, replaced by `pinker.kinematics`
+- **Breaking:** Collision support, which `pinker.kinematics` does not
+  implement: `SelfCollisionBarrier`, the collision model and data of
+  `Configuration` and `RobotWrapper`, and `utils.process_collision_pairs`.
+  Stay with Pink if you need collision avoidance
+- **Breaking:** MeshCat visualization, in particular
+  `start_meshcat_visualizer`
+- **Breaking:** utils: `custom_configuration_vector`, `get_root_joint_dim` and
   `get_joint_idx`, which moved to the kinematics backend as
   `kinematics.custom_configuration`, `Model.get_root_joint_dim` and
   `Model.get_joint_tangent_id`
-- Clean up unnecessary shebangs from source file headers
-- Clean up unnecessary source encoding lines from source file headers
-- examples: MeshCat shapes helper, superseded by the Viser visualizer
-- examples: Stretch mobile manipulation, same motion as the world-target one
-- examples: Panda manipulability comparison
-- examples: Visualization in yourdfpy, Pinker focusing on Viser
-- examples: Flying dual-arm UR3
-- examples: Iiwa whole-body self-collision avoidance
-- examples: Yumi end-effector self-collision avoidance
+- Dependency on loop-rate-limiters, which only the examples use
+- examples: Those that no longer apply, namely the two collision-avoidance
+  ones (iiwa and yumi), the flying dual-arm UR3, the Panda manipulability
+  comparison, the yourdfpy visualization and the Stretch mobile manipulation,
+  whose motion the world-target example already shows
 
 ## [4.4.0] - 2026-09-09
 
