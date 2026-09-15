@@ -72,30 +72,12 @@ disable = [
     "R0914",  # Too many local variables
     "R0917",  # Too many positional arguments
 ]
-generated-members = [
-    "pin.ARG1",
-    "pin.Data",
-    "pin.GeometryData",
-    "pin.GeometryModel",
-    "pin.Jlog6",
-    "pin.JointModelFreeFlyer",
-    "pin.Model",
-    "pin.ReferenceFrame",
-    "pin.SE3",
-    "pin.centerOfMass",
-    "pin.computeCollisions",
-    "pin.computeDistances",
-    "pin.computeJointJacobians",
-    "pin.dDifference",
-    "pin.difference",
-    "pin.getFrameJacobian",
-    "pin.getJointJacobian",
-    "pin.integrate",
-    "pin.jacobianCenterOfMass",
-    "pin.neutral",
-    "pin.skew",
-    "pin.removeCollisionPairs",
-    "pin.updateFramePlacements",
+extension-pkg-allow-list = ["pinker.kinematics._kinematics_c"]
+ignored-modules = [
+    # Optional imports, not installed in the linting environment
+    "robot_descriptions",
+    "trimesh",
+    "viser",
 ]
 
 [tool.pixi.workspace]
