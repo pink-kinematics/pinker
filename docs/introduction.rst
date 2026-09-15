@@ -52,7 +52,7 @@ See also this `spatial algebra cheat sheet
 Loading a robot
 ===============
 
-.. automodule:: pinker.load_robot
+.. automodule:: pinker.loaders
     :members:
 
 .. _Configuration:

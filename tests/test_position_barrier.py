@@ -6,11 +6,9 @@ import unittest
 
 import numpy as np
 
-from pinker import Configuration
+from pinker import Configuration, load_robot_description
 from pinker.barriers import PositionBarrier
 from pinker.exceptions import NoPositionLimitProvided
-
-from .loaders import load_robot_description
 
 
 class TestPositionBarrier(unittest.TestCase):

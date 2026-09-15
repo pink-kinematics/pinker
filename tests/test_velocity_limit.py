@@ -6,11 +6,10 @@ import unittest
 
 import numpy as np
 
+from pinker import load_robot_description
 from pinker import kinematics as kin
 from pinker.exceptions import PinkerError
 from pinker.limits import VelocityLimit
-
-from .loaders import load_robot_description
 
 
 class TestVelocityLimit(unittest.TestCase):

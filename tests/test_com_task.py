@@ -6,12 +6,10 @@ import unittest
 
 import numpy as np
 
-from pinker import Configuration
+from pinker import Configuration, load_robot_description
 from pinker import kinematics as kin
 from pinker.exceptions import TargetNotSet
 from pinker.tasks import ComTask
-
-from .loaders import load_robot_description
 
 
 class TestComTask(unittest.TestCase):

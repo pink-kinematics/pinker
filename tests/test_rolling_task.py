@@ -6,10 +6,8 @@ import unittest
 
 import numpy as np
 
-from pinker import Configuration
+from pinker import Configuration, load_robot_description
 from pinker.tasks import RollingTask
-
-from .loaders import load_robot_description
 
 
 class TestRollingTask(unittest.TestCase):

@@ -4,10 +4,9 @@
 
 import unittest
 
+from pinker import load_robot_description
 from pinker import kinematics as kin
 from pinker.utils import VectorSpace
-
-from .loaders import load_robot_description
 
 
 class TestUtils(unittest.TestCase):

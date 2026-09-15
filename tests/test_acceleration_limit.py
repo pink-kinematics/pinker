@@ -6,12 +6,10 @@ import unittest
 
 import numpy as np
 
-from pinker import Configuration, solve_ik
+from pinker import Configuration, load_robot_description, solve_ik
 from pinker import kinematics as kin
 from pinker.limits import AccelerationLimit
 from pinker.tasks import FrameTask
-
-from .loaders import load_robot_description
 
 # UR3 max acceleration taken as 800 deg/s² ≈ 14 rad/s² in these tests
 # https://forum.universal-robots.com/t/maximum-axis-speed-acceleration/13338/2

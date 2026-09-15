@@ -68,18 +68,17 @@ Universal Robots arms, also require `xacrodoc
 
     pip install xacrodoc
 
-Descriptions are then loaded by name with :func:`.load_robot`:
+Descriptions are then loaded by name with :func:`.load_robot_description`:
 
 .. code:: python
 
     import pinker
 
-    robot = pinker.load_robot("ur3_official_description")
+    robot = pinker.load_robot_description("ur3_official_description")
 
-The same function can be called with the path to a local URDF file:
+Local URDF files are loaded with :func:`.load_robot_urdf`, which does not
+require the ``robot_descriptions`` package:
 
 .. code:: python
 
-    robot = pinker.load_robot("robot.urdf")
-
-In that case, the ``robot_descriptions`` package is not needed.
+    robot = pinker.load_robot_urdf("robot.urdf")

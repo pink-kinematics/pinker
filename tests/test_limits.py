@@ -6,12 +6,10 @@ import unittest
 
 import numpy as np
 
-from pinker import Configuration
+from pinker import Configuration, load_robot_description
 from pinker import kinematics as kin
 from pinker.limits import ConfigurationLimit, VelocityLimit
 from pinker.solve_ik import build_ik
-
-from .loaders import load_robot_description
 
 
 class TestLimits(unittest.TestCase):

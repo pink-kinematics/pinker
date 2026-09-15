@@ -7,12 +7,10 @@ import unittest
 import numpy as np
 from qpsolvers import solve_qp
 
-from pinker import Configuration
+from pinker import Configuration, load_robot_description
 from pinker import kinematics as kin
 from pinker.exceptions import TargetNotSet, TaskDefinitionError
 from pinker.tasks import FrameTask
-
-from .loaders import load_robot_description
 
 
 class TestFrameTask(unittest.TestCase):

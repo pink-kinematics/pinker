@@ -93,9 +93,9 @@ Aside from their costs, most tasks take a second set of parameters called *targe
 Body tasks can be initialized, for example, from the robot's neutral configuration:
 
 ```python
-from pinker import Configuration, load_robot, solve_ik
+from pinker import Configuration, load_robot_description, solve_ik
 
-robot = load_robot("ur3_official_description")  # or: load_robot("robot.urdf")
+robot = load_robot_description("ur3_official_description")
 configuration = Configuration(robot.model, robot.data, robot.q0)
 for body, task in tasks.items():
     if type(task) is FrameTask:

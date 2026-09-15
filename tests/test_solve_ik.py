@@ -8,13 +8,11 @@ import numpy as np
 import qpsolvers
 from numpy.linalg import norm
 
-from pinker import Configuration, build_ik, solve_ik
+from pinker import Configuration, build_ik, load_robot_description, solve_ik
 from pinker import kinematics as kin
 from pinker.barriers import PositionBarrier
 from pinker.exceptions import NotWithinConfigurationLimits
 from pinker.tasks import ComTask, FrameTask
-
-from .loaders import load_robot_description
 
 
 def _numpy_supports_copy_keyword() -> bool:

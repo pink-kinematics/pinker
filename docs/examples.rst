@@ -14,7 +14,7 @@ moving back and forth. We first load the robot model:
 
     import pinker
 
-    robot = pinker.load_robot("ur3_official_description")
+    robot = pinker.load_robot_description("ur3_official_description")
 
 We define the two tasks of this inverse kinematics: track the target with the
 end effector, and stay close to a reference posture. The posture task has a
