@@ -1,5 +1,3 @@
-:github_url: https://github.com/pink-kinematics/pinker/tree/main/doc/references.rst
-
 **********
 References
 **********
