@@ -18,8 +18,6 @@ Their outputs are cross-validated against Pinocchio by the test suite in
 `tests/kinematics`.
 """
 
-__version__ = "0.1.0"
-
 from .algorithms import (
     ARG0,
     ARG1,
