@@ -167,7 +167,16 @@ Check out the [examples](https://github.com/pink-kinematics/pinker/tree/main/exa
 
 ## Benchmark
 
-Pinker and Pink can be compared using [pinker_benchmark](https://github.com/pink-kinematics/pinker_benchmark), a standalone pixi project that runs a collection of arm and humanoid examples. Here are the results of running it on 2026-09-22 on a Raspberry Pi 4 Model B (aarch64), comparing pinker 0.1.0-alpha to pink 4.4.0 (pinocchio 4.1.0), with the clarabel QP solver, 10 rollouts per scenario, pinned to CPU 3:
+Pinker and Pink were compared in the [pinker benchmark](https://github.com/pink-kinematics/pinker_benchmark), which runs both against the [pink motions](https://github.com/pink-kinematics/pink_motions/) library of robot trajectories.
+
+Here are the results of running it on 2026-09-22 on a Raspberry Pi 4 Model B (aarch64), comparing pinker 0.1.0-alpha to pink 4.4.0 (pinocchio 4.1.0), with the clarabel QP solver, 10 rollouts per scenario:
+
+From the data collected during this evaluation, we conclude that:
+
+1. **Same IK problems:** ✅, numerical variations less than 1e-09
+2. **Same performance:** ✅, timings variations less than 3%
+
+Here are the overall statistics scenario by scenario:
 
 | scenario      | nv | max QP distance | IK check | Pink step (ms) | Pinker step (ms) | step var. (%) | perf check |
 |:--------------|---:|----------------:|:---------|---------------:|-----------------:|--------------:|:-----------|
@@ -199,7 +208,7 @@ Pinker and Pink can be compared using [pinker_benchmark](https://github.com/pink
 | cassie        | 22 |           3e-15 | ✅       |    3.31 ± 0.01 |      3.33 ± 0.01 |          +0.6 | ✅         |
 | spryped       | 14 |           8e-15 | ✅       |    2.56 ± 0.01 |      2.60 ± 0.01 |          +1.5 | ✅         |
 
-Pinker builds the same IK problems as Pink, to within 1e-09, and takes the same time per step, to within 3%. See the readme and data files in the benchmark repository for what each column means and how the run was conducted.
+See the readme and data files in the benchmark repository for details on each check and how the run was conducted.
 
 ## Citation
 
