@@ -24,6 +24,10 @@ jobs:
           key: robot-descriptions-${{ hashFiles('pixi.lock') }}
           restore-keys: robot-descriptions-
       - run: pixi run -e coverage coverage-run
+      - name: Upload coverage results
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pixi run -e coverage coveralls
 
   lint:
     name: "Code style"
