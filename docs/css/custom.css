@@ -177,6 +177,48 @@ button[data-md-color-accent="pink"] {
     margin-bottom: 0;
 }
 
+/*
+ * Citations, as a label column next to a text column. The theme ships
+ * material.css in place of Sphinx's basic.css, and with it go the docutils
+ * rules that keep the label of a citation on the same line as its text.
+ */
+
+.md-typeset div.citation {
+    align-items: baseline;
+    border-radius: 0.1rem;
+    column-gap: 0.5rem;
+    display: grid;
+    grid-template-columns: max-content auto;
+    margin: 0.5rem -0.4rem;
+    padding: 0.25rem 0.4rem;
+    scroll-margin-top: 3.6rem;
+}
+
+.md-typeset div.citation:target {
+    background-color: rgba(212, 97, 156, 0.14);
+}
+
+.md-typeset div.citation > span.label {
+    color: #b83277;
+    font-family: "Roboto Mono", "Courier New", Courier, monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    grid-column: 1;
+}
+
+.md-typeset div.citation > span.label .fn-bracket {
+    opacity: 0.5;
+}
+
+.md-typeset div.citation > p {
+    grid-column: 2;
+    margin: 0 0 0.4rem;
+}
+
+.md-typeset div.citation > p:last-child {
+    margin-bottom: 0;
+}
+
 /* Inline literals, letting cross-references keep their link color */
 
 .md-typeset code.literal {
