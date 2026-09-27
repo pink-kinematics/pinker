@@ -13,22 +13,21 @@ compiler and every dependency:
 
 .. code:: bash
 
-    pixi run build              # compile the C extension, install in editable mode
-    pixi run test               # build, then run the test suite
-    pixi run -e lint lint       # ruff check and ruff format --check
-    pixi run -e docs docs-open  # build this documentation and open it
+    pixi run -e test-py312 test   # run tests
+    pixi run build                # compile the C extension
+    pixi run dev-lint             # clang-format, mypy, pylint and ruff
+    pixi run docs-open            # build this documentation and open it
 
-The tasks that need the library depend on ``build``, so the C extension is
-rebuilt before they run. Pass ``-e docs`` to the documentation tasks: without
-an explicit environment, pixi runs their ``build`` dependency in the heavier
-default environment.
+The test task currently requires specifying which Python version to use by
+specifying the corresponding ``test-py3xx`` environment. For the other tasks,
+pixi will pick up the appropriate environment automatically.
 
-You can also use the ``example`` task to run examples in a dev pixi
+You can also use the ``example`` task to run examples in the ``examples``
 environment:
 
 .. code:: bash
 
-    pixi run example examples/ur3_end_effector_tracking.py
+    pixi run -e examples example examples/ur3_end_effector_tracking.py
 
 Design guidelines
 =================
@@ -50,12 +49,12 @@ Testing
 =======
 
 The test suite covers both the Python library and the C extension for the
-kinematics backend:
+kinematics backend, and ``test`` runs the two of them after rebuilding the
+extension:
 
 .. code:: bash
 
-    pixi run test             # full suite, after rebuilding the C extension
-    pixi run test-kinematics  # backend tests only, including cross-validation
+    pixi run -e test-py312 test
 
 Cross-validation tests are included in
 ``tests/kinematics/test_vs_pinocchio.py`` to compare the backend's outputs with
