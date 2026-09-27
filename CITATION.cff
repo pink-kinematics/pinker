@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you find this code helpful, please cite it as below."
 title: "Pinker: Python inverse kinematics for embedded robots"
-version: 0.1.0
-date-released: 2026-09-09
+version: 1.0.0
+date-released: 2026-09-27
 url: "https://github.com/pink-kinematics/pinker"
 license: "Apache-2.0"
 authors:
