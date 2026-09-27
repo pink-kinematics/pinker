@@ -3,6 +3,7 @@
 [![Build](https://img.shields.io/github/actions/workflow/status/pink-kinematics/pinker/ci.yml?branch=main)](https://github.com/pink-kinematics/pinker/actions)
 [![Documentation](https://img.shields.io/github/actions/workflow/status/pink-kinematics/pinker/docs.yml?branch=main&label=docs)](https://pink-kinematics.github.io/pinker/)
 [![Coverage](https://coveralls.io/repos/github/pink-kinematics/pinker/badge.svg?branch=main)](https://coveralls.io/github/pink-kinematics/pinker?branch=main)
+[![PyPI version](https://img.shields.io/pypi/v/pinker)](https://pypi.org/project/pinker/)
 
 **P**ython **in**verse **k**inematics for **e**mbedded **r**obots.
 
