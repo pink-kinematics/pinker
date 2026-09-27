@@ -2,31 +2,30 @@
 Installation
 ************
 
-Pinker is not published to PyPI or conda-forge yet, so for now it is installed
-from source. Its C extension is compiled at installation time, which requires a
-C compiler and the NumPy headers; everything else is pure Python.
+Pinker is distributed as a source package: its C extension is compiled at
+installation time, while everything else in the library is pure Python.
 
-From source
-===========
+From PyPI
+=========
+
+You can install Pinker directly from PyPI, for instance using pip:
 
 .. code:: bash
 
     pip install pinker
 
-The runtime dependencies are `NumPy <https://numpy.org/>`__ and `qpsolvers
+The main runtime dependencies are `NumPy <https://numpy.org/>`__ and `qpsolvers
 <https://github.com/qpsolvers/qpsolvers>`__ (which brings in a QP solver of
-your choice). Pinker requires Python 3.10 or later.
-
-Since the library ships no QP solver of its own, you should install at least
-one, for instance:
+your choice). Since the library ships no QP solver of its own, you should
+install at least one, for instance:
 
 .. code:: bash
 
     pip install daqp
 
-Solvers available in your environment are listed in
-``qpsolvers.available_solvers``, and selected by name in
-:func:`pinker.solve_ik.solve_ik`.
+Solvers available in your environment will be listed in
+``qpsolvers.available_solvers``. You can select the backend QP solver by name
+when calling :func:`pinker.solve_ik.solve_ik`.
 
 Robot descriptions
 ==================
