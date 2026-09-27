@@ -138,7 +138,7 @@ Check out the [examples](https://github.com/pink-kinematics/pinker/tree/main/exa
 
 ## Compatibility
 
-Pinker is API-compatible with **Pink 4.4.0**, with the following exceptions:
+Pinker is API-compatible with Pink 4.4.0, with the following exceptions:
 
 - Default limits are now stored in `configuration.default_limits` rather than cached on the robot model.
 - Functions and methods of the kinematics backend follow Python's PEP 8 naming conventions, e.g. `model.get_frame_id` instead of `getFrameId`.
@@ -151,42 +151,42 @@ Pinker is API-compatible with **Pink 4.4.0**, with the following exceptions:
 
 Pinker and Pink were compared in the [pinker benchmark](https://github.com/pink-kinematics/pinker_benchmark), which runs both against the [pink motions](https://github.com/pink-kinematics/pink_motions/) library of robot trajectories.
 
-Here are the results from running the benchmark on 2026-09-27 (aarch64, commit 440f2f80b) comparing pinker 0.1.0 to pink 4.4.0 (pinocchio 4.1.0). QP solver is clarabel, 10 rollouts per scenario. The conclusions are that:
+Here are the results from running the benchmark on 2026-09-27 (aarch64, commit 751da6a89) comparing pinker 1.0.0 to pink 4.4.0 (pinocchio 4.1.0). QP solver is clarabel, 10 rollouts per scenario. The conclusions are that:
 
-1. **Pinker produces the same IK problems as Pink:** ✅ (numerical variations less than 1e-9)
+1. **Pinker produces the same IK problems as Pink:** ✅ (numerical variations less than 1e-09)
 2. **Pinker has the same performance as Pink:** ✅ (timings variations less than 3%)
 
 Here are the statistics scenario by scenario:
 
 | scenario      | nv | max QP distance | IK check | Pink step (ms) | Pinker step (ms) | step var. (%) | perf check |
 |:--------------|---:|----------------:|:---------|---------------:|-----------------:|--------------:|:-----------|
-| edo           |  6 |           6e-15 | ✅       |    1.96 ± 0.01 |      1.94 ± 0.01 |          -0.9 | ✅         |
-| fanuc         |  6 |           9e-14 | ✅       |    2.16 ± 0.01 |      2.15 ± 0.01 |          -0.6 | ✅         |
-| gen2          |  6 |           5e-15 | ✅       |    2.12 ± 0.01 |      2.10 ± 0.01 |          -0.6 | ✅         |
-| gen3          |  7 |           1e-14 | ✅       |    2.15 ± 0.01 |      2.13 ± 0.01 |          -0.8 | ✅         |
-| iiwa14        |  7 |           3e-15 | ✅       |    2.21 ± 0.01 |      2.19 ± 0.01 |          -0.5 | ✅         |
-| panda         |  9 |           1e-15 | ✅       |    2.36 ± 0.01 |      2.34 ± 0.01 |          -0.6 | ✅         |
-| poppy_ergo_jr |  6 |           2e-15 | ✅       |    1.95 ± 0.01 |      1.94 ± 0.01 |          -0.7 | ✅         |
-| ur10          |  6 |           4e-15 | ✅       |    2.14 ± 0.01 |      2.13 ± 0.01 |          -0.4 | ✅         |
-| ur3           |  6 |           3e-15 | ✅       |    2.13 ± 0.01 |      2.12 ± 0.01 |          -0.6 | ✅         |
-| ur5           |  6 |           3e-15 | ✅       |    2.12 ± 0.01 |      2.11 ± 0.01 |          -0.4 | ✅         |
-| z1            |  6 |           2e-14 | ✅       |    2.13 ± 0.01 |      2.12 ± 0.01 |          -0.6 | ✅         |
-| atlas_drc     | 36 |           3e-13 | ✅       |    3.86 ± 0.02 |      3.83 ± 0.01 |          -0.7 | ✅         |
-| atlas_v4      | 36 |           3e-13 | ✅       |    3.85 ± 0.01 |      3.83 ± 0.01 |          -0.4 | ✅         |
-| draco3        | 33 |           5e-14 | ✅       |    3.68 ± 0.01 |      3.67 ± 0.01 |          -0.4 | ✅         |
-| ergocub       | 63 |           1e-14 | ✅       |    7.70 ± 0.03 |      7.57 ± 0.03 |          -1.7 | ✅         |
-| h1            | 25 |           1e-14 | ✅       |    3.29 ± 0.01 |      3.30 ± 0.01 |          +0.4 | ✅         |
-| icub          | 38 |           2e-13 | ✅       |    4.23 ± 0.01 |      4.15 ± 0.01 |          -2.0 | ✅         |
-| jaxon         | 44 |           1e-13 | ✅       |    4.08 ± 0.01 |      4.05 ± 0.01 |          -0.8 | ✅         |
-| jvrc          | 50 |           5e-13 | ✅       |    4.56 ± 0.01 |      4.53 ± 0.01 |          -0.8 | ✅         |
-| r2            | 62 |           2e-14 | ✅       |    5.61 ± 0.01 |      5.55 ± 0.02 |          -1.1 | ✅         |
-| romeo         | 67 |           5e-14 | ✅       |    5.04 ± 0.03 |      4.95 ± 0.03 |          -1.7 | ✅         |
-| sigmaban      | 26 |           6e-14 | ✅       |    2.99 ± 0.01 |      3.00 ± 0.01 |          +0.3 | ✅         |
-| talos         | 50 |           9e-12 | ✅       |    4.29 ± 0.01 |      4.26 ± 0.01 |          -0.8 | ✅         |
-| valkyrie      | 65 |           4e-15 | ✅       |    5.40 ± 0.03 |      5.32 ± 0.03 |          -1.3 | ✅         |
-| bolt          | 12 |           2e-15 | ✅       |    2.57 ± 0.01 |      2.61 ± 0.01 |          +1.4 | ✅         |
-| cassie        | 22 |           3e-15 | ✅       |    3.30 ± 0.01 |      3.31 ± 0.01 |          +0.4 | ✅         |
-| spryped       | 14 |           8e-15 | ✅       |    2.56 ± 0.01 |      2.59 ± 0.01 |          +1.2 | ✅         |
+| edo           |  6 |           6e-15 | ✅       |    1.99 ± 0.01 |      1.98 ± 0.01 |          -0.6 | ✅         |
+| fanuc         |  6 |           9e-14 | ✅       |    2.19 ± 0.01 |      2.18 ± 0.01 |          -0.4 | ✅         |
+| gen2          |  6 |           5e-15 | ✅       |    2.14 ± 0.01 |      2.13 ± 0.01 |          -0.4 | ✅         |
+| gen3          |  7 |           1e-14 | ✅       |    2.19 ± 0.01 |      2.17 ± 0.01 |          -0.6 | ✅         |
+| iiwa14        |  7 |           3e-15 | ✅       |    2.24 ± 0.01 |      2.24 ± 0.01 |          -0.2 | ✅         |
+| panda         |  9 |           1e-15 | ✅       |    2.39 ± 0.01 |      2.38 ± 0.01 |          -0.5 | ✅         |
+| poppy_ergo_jr |  6 |           2e-15 | ✅       |    1.98 ± 0.01 |      1.97 ± 0.01 |          -0.5 | ✅         |
+| ur10          |  6 |           4e-15 | ✅       |    2.17 ± 0.01 |      2.16 ± 0.01 |          -0.3 | ✅         |
+| ur3           |  6 |           3e-15 | ✅       |    2.16 ± 0.01 |      2.15 ± 0.01 |          -0.5 | ✅         |
+| ur5           |  6 |           3e-15 | ✅       |    2.16 ± 0.01 |      2.15 ± 0.01 |          -0.3 | ✅         |
+| z1            |  6 |           2e-14 | ✅       |    2.16 ± 0.01 |      2.15 ± 0.01 |          -0.4 | ✅         |
+| atlas_drc     | 36 |           3e-13 | ✅       |    3.89 ± 0.02 |      3.88 ± 0.02 |          -0.5 | ✅         |
+| atlas_v4      | 36 |           3e-13 | ✅       |    3.89 ± 0.01 |      3.88 ± 0.01 |          -0.1 | ✅         |
+| draco3        | 33 |           5e-14 | ✅       |    3.72 ± 0.01 |      3.72 ± 0.01 |          -0.1 | ✅         |
+| ergocub       | 63 |           1e-14 | ✅       |    7.76 ± 0.03 |      7.64 ± 0.03 |          -1.6 | ✅         |
+| h1            | 25 |           1e-14 | ✅       |    3.33 ± 0.01 |      3.35 ± 0.01 |          +0.6 | ✅         |
+| icub          | 38 |           2e-13 | ✅       |    4.27 ± 0.01 |      4.20 ± 0.01 |          -1.7 | ✅         |
+| jaxon         | 44 |           1e-13 | ✅       |    4.13 ± 0.01 |      4.11 ± 0.01 |          -0.6 | ✅         |
+| jvrc          | 50 |           5e-13 | ✅       |    4.61 ± 0.02 |      4.58 ± 0.02 |          -0.5 | ✅         |
+| r2            | 62 |           2e-14 | ✅       |    5.66 ± 0.02 |      5.61 ± 0.02 |          -0.9 | ✅         |
+| romeo         | 67 |           5e-14 | ✅       |    5.08 ± 0.02 |      5.00 ± 0.02 |          -1.4 | ✅         |
+| sigmaban      | 26 |           6e-14 | ✅       |    3.03 ± 0.01 |      3.05 ± 0.01 |          +0.6 | ✅         |
+| talos         | 50 |           9e-12 | ✅       |    4.33 ± 0.02 |      4.30 ± 0.01 |          -0.6 | ✅         |
+| valkyrie      | 65 |           4e-15 | ✅       |    5.44 ± 0.03 |      5.39 ± 0.03 |          -1.0 | ✅         |
+| bolt          | 12 |           2e-15 | ✅       |    2.61 ± 0.01 |      2.65 ± 0.01 |          +1.8 | ✅         |
+| cassie        | 22 |           3e-15 | ✅       |    3.34 ± 0.01 |      3.36 ± 0.01 |          +0.7 | ✅         |
+| spryped       | 14 |           8e-15 | ✅       |    2.59 ± 0.01 |      2.63 ± 0.01 |          +1.7 | ✅         |
 
 See the readme and data files in the benchmark repository for more details.
 
