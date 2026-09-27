@@ -22,7 +22,7 @@ uv run examples/ur3_end_effector_tracking.py
 You can also run examples with [pixi](https://pixi.prefix.dev/latest/):
 
 ```
-pixi run -e examples python examples/ur3_end_effector_tracking.py
+pixi run example examples/ur3_end_effector_tracking.py
 ```
 
 Most examples are visualized with [Viser](https://viser.studio).

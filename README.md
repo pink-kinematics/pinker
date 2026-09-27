@@ -126,7 +126,7 @@ Pinker is a standalone replacement for Pink where kinematics are carried out by 
 The `examples/` directory mirrors Pink's examples, ported to the `pinker.kinematics` backend with [Viser](https://viser.studio) visualization. Each one is named `<robot>_<task>.py`, after the robot description it loads and what it does with it:
 
 ```console
-pixi run -e examples python examples/ur3_end_effector_tracking.py
+pixi run example examples/ur3_end_effector_tracking.py
 ```
 
 Each example can also be run standalone with [uv](https://docs.astral.sh/uv/):

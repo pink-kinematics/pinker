@@ -23,11 +23,11 @@ specifying the corresponding ``test-py3xx`` environment. For the other tasks,
 pixi will pick up the appropriate environment automatically.
 
 You can also use the ``example`` task to run examples in the ``examples``
-environment:
+environment. It takes the path to the example as argument:
 
 .. code:: bash
 
-    pixi run -e examples example examples/ur3_end_effector_tracking.py
+    pixi run example examples/ur3_end_effector_tracking.py
 
 Design guidelines
 =================
