@@ -15,13 +15,6 @@ You can install the library from PyPI:
 pip install pinker
 ```
 
-You can also clone the repository and run it locally:
-
-```bash
-git clone https://github.com/pink-kinematics/pinker.git && cd pinker
-uv run examples/g1_com_tracking.py
-```
-
 ## Usage
 
 Pinker solves differential inverse kinematics by [weighted tasks](https://scaron.info/robot-locomotion/inverse-kinematics.html). A task is defined by a *residual* function $e(q)$ of the robot configuration $q \in \mathcal{C}$ to be driven to zero. For instance, putting a foot position $p_{foot}(q)$ at a given target $p_{foot}^{\star}$ can be described by the position residual:
