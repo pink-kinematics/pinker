@@ -100,6 +100,15 @@ build = "pip install --no-build-isolation --no-deps --force-reinstall -e ."
 
 [tool.pixi.feature.coverage.dependencies]
 coverage = ">=7.0.0"
+daqp = "*"
+osqp = "*"
+pinocchio = ">=3.0.0"  # cross-validation of the kinematics backend
+proxsuite = "*"
+quadprog = "*"
+rich = "<15"  # viser >=1.0 requires rich <15
+robot_descriptions = ">=3.1.0"
+scs = "*"
+xacrodoc = "*"
 
 [tool.pixi.feature.coverage.tasks]
 _coverage-erase = { cmd = "coverage erase" }
@@ -142,6 +151,22 @@ _dev-lint-ruff = "ruff check pinker && ruff format --check pinker"
 dev-format = { depends-on = ["_dev-format-c", "_dev-format-python"] }
 dev-lint = { depends-on = ["_dev-lint-c", "_dev-lint-mypy", "_dev-lint-pylint", "_dev-lint-ruff"] }
 
+[tool.pixi.feature.examples.dependencies]
+loop-rate-limiters = ">=1.2.0"
+matplotlib = "*"
+pycollada = "*"
+rich = "<15"  # viser >=1.0 requires rich <15
+robot_descriptions = ">=3.1.0"
+xacrodoc = "*"
+
+[tool.pixi.feature.examples.pypi-dependencies]
+viser = ">=1.0.0"
+
+[tool.pixi.feature.examples.tasks.example]
+args = ["script"]
+cmd = "python {{ script }}"
+depends-on = [{ task = "build", environment = "examples" }]
+
 [tool.pixi.feature.py310.dependencies]
 python = "3.10.*"
 
@@ -172,22 +197,6 @@ xacrodoc = "*"
 _test-kinematics = { cmd = "python -m unittest discover --failfast --start-directory tests/kinematics --top-level-directory tests/kinematics", depends-on = ["build"] }
 _test-python = { cmd = "python -m unittest discover --failfast", depends-on = ["build"] }
 test = { depends-on = ["_test-kinematics", "_test-python"] }
-
-[tool.pixi.feature.examples.dependencies]
-loop-rate-limiters = ">=1.2.0"
-matplotlib = "*"
-pycollada = "*"
-rich = "<15"  # viser >=1.0 requires rich <15
-robot_descriptions = ">=3.1.0"
-xacrodoc = "*"
-
-[tool.pixi.feature.examples.pypi-dependencies]
-viser = ">=1.0.0"
-
-[tool.pixi.feature.examples.tasks.example]
-args = ["script"]
-cmd = "python {{ script }}"
-depends-on = [{ task = "build", environment = "examples" }]
 
 [tool.pixi.feature.dist.dependencies]
 python-build = "*"

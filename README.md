@@ -5,7 +5,7 @@
 
 **P**ython **in**verse **k**inematics for **e**mbedded **r**obots.
 
-Pinker is a leaner version of [Pink](https://github.com/pink-kinematics/pink/) for single-board computers. Two dependencies, one C file, and it takes 5 seconds to build from source on a Raspberry Pi 4. But it doesn't implement collision avoidance.
+Pinker is a leaner version of [Pink](https://github.com/pink-kinematics/pink/) aimed in particular at single-board computers. It ships its own kinematics backend, so the whole library is NumPy, a QP solver and one C file that takes seconds to compile. Pinker is API-compatible with Pink 4.4.0 and produces the [same results at the same speed](#benchmark).
 
 ## Installation
 
@@ -111,16 +111,6 @@ for t in np.arange(0.0, 42.0, dt):
 
 If task targets are continuously updated, there will be no stationary solution to converge to, but the model will keep on tracking each target at best. By default, `solve_ik` will take into account both joint limits and velocity limits read from the robot model.
 
-## Compatibility
-
-Pinker is API-compatible with **Pink 4.4.0**, with the following exceptions:
-
-- Default limits live on the configuration, as `configuration.default_limits`, rather than being cached on the robot model. Add your own, for instance a `FloatingBaseVelocityLimit`, by appending to that list.
-- `Configuration.integrate` returns a new `Configuration` rather than a configuration vector. Its vector is `configuration.integrate(v, dt).q`.
-- Functions and methods of the kinematics backend follow Python naming, so `model.getFrameId` is `model.get_frame_id` and `model.lowerPositionLimit` is `model.lower_position_limit`. Model getters raise rather than returning the sentinel index Pinocchio returns when a name is not found.
-
-Pinker is a standalone replacement for Pink where kinematics are carried out by `pinker.kinematics`, a backend written as a single C extension with a thin Python layer. Tasks, limits, barriers, the `Configuration` class and `solve_ik`, is the same as in Pink, and differential IK problems are still solved through [qpsolvers](https://github.com/qpsolvers/qpsolvers).
-
 ## Examples
 
 The `examples/` directory mirrors Pink's examples, ported to the `pinker.kinematics` backend with [Viser](https://viser.studio) visualization. Each one is named `<robot>_<task>.py`, after the robot description it loads and what it does with it:
@@ -144,19 +134,16 @@ uv run examples/ur3_end_effector_tracking.py
 
 Check out the [examples](https://github.com/pink-kinematics/pinker/tree/main/examples) directory for more.
 
-## Limitations
+## Compatibility
 
-- No collision support: Pink's `SelfCollisionBarrier` is not available, and
-  neither `Configuration` nor `RobotWrapper` carries a collision model or
-  collision data. Use Pink if you need collision-avoidance tasks.
-- One visualizer: Pinker works with [Viser](https://viser.studio), which
-  handles both visualization and user inputs. If you would rather use (the
-  older) MeshCat, head over to Pink, which is compatible with it.
-- The `pinker.kinematics` backend is not type-checked yet: mypy is disabled on
-  it in `pyproject.toml`. Enabling it is a matter of shipping a
-  `_kinematics_c.pyi` stub for the C extension, annotating the arrays cached in
-  `Model._packed` and the optional values the URDF parser reads, then removing
-  the override.
+Pinker is API-compatible with **Pink 4.4.0**, with the following exceptions:
+
+- Default limits are now stored in `configuration.default_limits` rather than cached on the robot model.
+- Functions and methods of the kinematics backend follow Python's PEP 8 naming conventions, e.g. `model.get_frame_id` instead of `getFrameId`.
+- Integrating via `Configuration.integrate` returns a new `Configuration` rather than a configuration vector.
+- Model getters raise rather than returning the sentinel index when a name is not found.
+- Pink's `SelfCollisionBarrier` was not carried over, and configurations don't have a collision model. Use Pink if you need collision-avoidance tasks.
+- Pinker works with a single visualizer, [Viser](https://viser.studio), used for both visualization and user inputs.
 
 ## Benchmark
 
@@ -164,8 +151,8 @@ Pinker and Pink were compared in the [pinker benchmark](https://github.com/pink-
 
 Here are the results from running the benchmark on 2026-09-27 (aarch64, commit 440f2f80b) comparing pinker 0.1.0 to pink 4.4.0 (pinocchio 4.1.0). QP solver is clarabel, 10 rollouts per scenario. The conclusions are that:
 
-1. Pinker produces the same IK problems as Pink: ✅ (numerical variations less than 1e-9)
-2. Pinker has the same performance as Pink: ✅ (timings variations less than 3%)
+1. **Pinker produces the same IK problems as Pink:** ✅ (numerical variations less than 1e-9)
+2. **Pinker has the same performance as Pink:** ✅ (timings variations less than 3%)
 
 Here are the statistics scenario by scenario:
 
@@ -211,7 +198,7 @@ If you use Pinker in your scientific works, please cite it *e.g.* as follows:
   author = {Caron, Stéphane and De Mont-Marin, Yann and Budhiraja, Rohan and Bang, Seung Hyeon and Domrachev, Ivan and Nedelchev, Simeon and Du, Peter and Escande, Adrien and Vaillant, Joris and Wingo, Bruce and Patapati, Santosh and San José Pro, Daniel and Marticorena Vidal, Nicolas Guillermo},
   license = {Apache-2.0},
   url = {https://github.com/pink-kinematics/pinker},
-  version = {0.1.0},
+  version = {1.0.0},
   year = {2026}
 }
 ```
