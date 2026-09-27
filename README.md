@@ -167,13 +167,39 @@ Check out the [examples](https://github.com/pink-kinematics/pinker/tree/main/exa
 
 ## Benchmark
 
-Pinker and Pink can be compared using [pinker_benchmark](https://github.com/pink-kinematics/pinker_benchmark), a standalone pixi project that runs a collection of arm and humanoid examples. On a Raspberry Pi 4 Model B:
+Pinker and Pink can be compared using [pinker_benchmark](https://github.com/pink-kinematics/pinker_benchmark), a standalone pixi project that runs a collection of arm and humanoid examples. Here are the results of running it on 2026-09-22 on a Raspberry Pi 4 Model B (aarch64), comparing pinker 0.1.0-alpha to pink 4.4.0 (pinocchio 4.1.0), with the clarabel QP solver, 10 rollouts per scenario, pinned to CPU 3:
 
-```
-TODO: benchmark results
-```
+| scenario      | nv | max QP distance | IK check | Pink step (ms) | Pinker step (ms) | step var. (%) | perf check |
+|:--------------|---:|----------------:|:---------|---------------:|-----------------:|--------------:|:-----------|
+| edo           |  6 |           6e-15 | ✅       |    1.97 ± 0.01 |      1.95 ± 0.01 |          -0.9 | ✅         |
+| fanuc         |  6 |           9e-14 | ✅       |    2.16 ± 0.01 |      2.15 ± 0.01 |          -0.5 | ✅         |
+| gen2          |  6 |           5e-15 | ✅       |    2.13 ± 0.01 |      2.11 ± 0.01 |          -0.7 | ✅         |
+| gen3          |  7 |           1e-14 | ✅       |    2.16 ± 0.01 |      2.15 ± 0.01 |          -0.8 | ✅         |
+| iiwa14        |  7 |           3e-15 | ✅       |    2.22 ± 0.01 |      2.21 ± 0.01 |          -0.5 | ✅         |
+| panda         |  9 |           1e-15 | ✅       |    2.36 ± 0.01 |      2.35 ± 0.01 |          -0.6 | ✅         |
+| poppy_ergo_jr |  6 |           2e-15 | ✅       |    1.96 ± 0.01 |      1.94 ± 0.01 |          -0.6 | ✅         |
+| ur10          |  6 |           4e-15 | ✅       |    2.15 ± 0.01 |      2.14 ± 0.01 |          -0.4 | ✅         |
+| ur3           |  6 |           3e-15 | ✅       |    2.14 ± 0.01 |      2.13 ± 0.01 |          -0.6 | ✅         |
+| ur5           |  6 |           3e-15 | ✅       |    2.13 ± 0.01 |      2.12 ± 0.01 |          -0.4 | ✅         |
+| z1            |  6 |           2e-14 | ✅       |    2.13 ± 0.01 |      2.12 ± 0.01 |          -0.6 | ✅         |
+| atlas_drc     | 36 |           3e-13 | ✅       |    3.88 ± 0.01 |      3.85 ± 0.01 |          -0.7 | ✅         |
+| atlas_v4      | 36 |           3e-13 | ✅       |    3.87 ± 0.01 |      3.86 ± 0.01 |          -0.3 | ✅         |
+| draco3        | 33 |           5e-14 | ✅       |    3.71 ± 0.01 |      3.70 ± 0.01 |          -0.4 | ✅         |
+| ergocub       | 63 |           1e-14 | ✅       |    7.73 ± 0.03 |      7.60 ± 0.03 |          -1.7 | ✅         |
+| h1            | 25 |           1e-14 | ✅       |    3.31 ± 0.01 |      3.33 ± 0.01 |          +0.5 | ✅         |
+| icub          | 38 |           2e-13 | ✅       |    4.26 ± 0.01 |      4.18 ± 0.01 |          -2.0 | ✅         |
+| jaxon         | 44 |           1e-13 | ✅       |    4.11 ± 0.01 |      4.08 ± 0.01 |          -0.7 | ✅         |
+| jvrc          | 50 |           5e-13 | ✅       |    4.59 ± 0.01 |      4.55 ± 0.01 |          -0.7 | ✅         |
+| r2            | 62 |           2e-14 | ✅       |    5.65 ± 0.02 |      5.59 ± 0.02 |          -1.0 | ✅         |
+| romeo         | 67 |           5e-14 | ✅       |    5.07 ± 0.03 |      4.99 ± 0.03 |          -1.7 | ✅         |
+| sigmaban      | 26 |           6e-14 | ✅       |    3.01 ± 0.01 |      3.02 ± 0.01 |          +0.4 | ✅         |
+| talos         | 50 |           9e-12 | ✅       |    4.31 ± 0.01 |      4.28 ± 0.01 |          -0.7 | ✅         |
+| valkyrie      | 65 |           4e-15 | ✅       |    5.44 ± 0.03 |      5.37 ± 0.03 |          -1.2 | ✅         |
+| bolt          | 12 |           2e-15 | ✅       |    2.58 ± 0.01 |      2.62 ± 0.01 |          +1.6 | ✅         |
+| cassie        | 22 |           3e-15 | ✅       |    3.31 ± 0.01 |      3.33 ± 0.01 |          +0.6 | ✅         |
+| spryped       | 14 |           8e-15 | ✅       |    2.56 ± 0.01 |      2.60 ± 0.01 |          +1.5 | ✅         |
 
-See the readme and data files in the benchmark repository for more details.
+Pinker builds the same IK problems as Pink, to within 1e-09, and takes the same time per step, to within 3%. See the readme and data files in the benchmark repository for what each column means and how the run was conducted.
 
 ## Citation
 
