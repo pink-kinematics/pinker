@@ -100,6 +100,7 @@ build = "pip install --no-build-isolation --no-deps --force-reinstall -e ."
 
 [tool.pixi.feature.coverage.dependencies]
 coverage = ">=7.0.0"
+coveralls = ">=4.0.0"
 daqp = "*"
 osqp = "*"
 pinocchio = ">=3.0.0"  # cross-validation of the kinematics backend
@@ -117,6 +118,7 @@ _coverage-python = { cmd = "coverage run -a -m unittest discover --failfast", de
 _coverage-html = { cmd = "coverage html --include=\"pinker/*\"", depends-on = ["_coverage-python", "_coverage-kinematics"] }
 coverage-run = { cmd = "coverage report --include=\"pinker/*\"", depends-on = ["_coverage-python", "_coverage-kinematics"] }
 coverage-open = { cmd = "xdg-open htmlcov/index.html", depends-on = ["_coverage-html"] }
+coveralls = { cmd = "coveralls --service=github" }
 
 [tool.pixi.feature.docs.dependencies]
 sphinx = ">=8.0.0"
