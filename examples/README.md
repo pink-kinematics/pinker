@@ -6,6 +6,7 @@ and what they do with it. Here is an overview of some of them:
 - [Draco 3: reaching](#draco-3-reaching)
 - [Go2: squat barrier](#go2-squat-barrier)
 - [Panda: end-effector tracking](#panda-end-effector-tracking)
+- [Panda: manipulability](#panda-manipulability)
 - [Stretch: world target](#stretch-world-target)
 - [Upkie: rolling](#upkie-rolling)
 - [UR10: inverse kinematics](#ur10-inverse-kinematics)
@@ -65,6 +66,18 @@ https://github.com/domrachev03/pink/assets/28687492/78281f44-3676-4d4d-9619-768b
 In `panda_end_effector_tracking.py`, a Panda arm tracks an interactive target in Viser:
 
 https://github.com/user-attachments/assets/1c4ac222-8e3f-469d-95c3-550f1c0979fa
+
+## Panda: manipulability
+
+In `panda_manipulability.py`, two Panda arms track the same target as it sweeps around their base. One of them adds a `ManipulabilityTask` to its inverse kinematics, the other one, labelled "Baseline" in the scene, does not:
+
+| Task | Manipulability robot | Baseline robot |
+|------|----------------------|----------------|
+| End-effector | (1, 1) | (1, 1) |
+| Manipulability | $0.3$ | - |
+| Posture | $10^{-3}$ | $10^{-3}$ |
+
+Sliders tune the cost and the desired rate of the manipulability task while the example runs. A negative rate steers the robot towards singular configurations rather than away from them. When the example terminates, it plots the Yoshikawa manipulability index and the end-effector task error of both robots: maximizing manipulability keeps the arm away from singularities, at the price of a larger tracking error.
 
 ## Stretch: world target
 

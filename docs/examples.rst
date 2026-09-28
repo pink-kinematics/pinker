@@ -129,6 +129,8 @@ What the examples cover
     * - ``jvrc_reaching.py``, ``sigmaban_standing.py``,
         ``upkie_crouching.py``
       - Whole-body inverse kinematics, with the feet in contact
+    * - ``panda_manipulability.py``
+      - Maximizing manipulability with :class:`.ManipulabilityTask`
     * - ``piper_inverse_kinematics.py``, ``ur10_inverse_kinematics.py``
       - Iterating differential IK to reach a prescribed end-effector pose
     * - ``stretch_relative_target.py``, ``stretch_world_target.py``

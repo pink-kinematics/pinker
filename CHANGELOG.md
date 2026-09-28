@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- examples: Panda comparing inverse kinematics with and without `ManipulabilityTask`
+
 ## [1.0.0] - 2026-09-27
 
 ### Added
