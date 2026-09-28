@@ -7,7 +7,7 @@
 
 **P**ython **in**verse **k**inematics for **e**mbedded **r**obots.
 
-Pinker is a leaner version of [Pink](https://github.com/pink-kinematics/pink/) aimed in particular at single-board computers. It ships its own kinematics backend, so the whole library is NumPy, a QP solver and one C file that takes seconds to compile. Pinker is API-compatible with Pink 4.4.0 and produces the [same results at the same speed](#benchmark).
+Pinker is a leaner version of [Pink](https://github.com/pink-kinematics/pink/) aimed in particular at single-board computers. It ships its own kinematics backend, so the whole library is NumPy, a QP solver and one C file that takes seconds to compile. Pinker is API-compatible with Pink 4.4.0 and produces the same results at the same speed ([checks](#benchmark)).
 
 ## Installation
 
@@ -149,7 +149,7 @@ Pinker is API-compatible with Pink 4.4.0, with the following exceptions:
 
 ## Benchmark
 
-Pinker and Pink were compared in the [pinker benchmark](https://github.com/pink-kinematics/pinker_benchmark), which runs both against the [pink motions](https://github.com/pink-kinematics/pink_motions/) library of robot trajectories.
+Pinker and Pink were compared on a Raspberry Pi 4 Model B using the [pinker benchmark](https://github.com/pink-kinematics/pinker_benchmark), which runs both of them on the [pink motions](https://github.com/pink-kinematics/pink_motions/) library of robot trajectories.
 
 Here are the results from running the benchmark on 2026-09-27 (aarch64, commit 751da6a89) comparing pinker 1.0.0 to pink 4.4.0 (pinocchio 4.1.0). QP solver is clarabel, 10 rollouts per scenario. The conclusions are that:
 
