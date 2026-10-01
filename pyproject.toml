@@ -103,7 +103,7 @@ coverage = ">=7.0.0"
 coveralls = ">=4.0.0"
 daqp = "*"
 osqp = "*"
-pinocchio = ">=3.0.0"  # cross-validation of the kinematics backend
+pinocchio = "==4.1.0"  # cross-validation of the kinematics backend
 proxsuite = "*"
 quadprog = "*"
 rich = "<15"  # viser >=1.0 requires rich <15
@@ -187,7 +187,7 @@ python = "3.14.*"
 [tool.pixi.feature.test.dependencies]
 daqp = "*"
 osqp = "*"
-pinocchio = ">=3.0.0"  # cross-validation of the kinematics backend
+pinocchio = "==4.1.0"  # cross-validation of the kinematics backend
 proxsuite = "*"
 quadprog = "*"
 rich = "<15"  # viser >=1.0 requires rich <15
