@@ -5,7 +5,7 @@
 # two additional settings: IndentCaseLabels, and InsertBraces, so that
 # single-statement if/for bodies get their braces.
 #
-# Check with `pixi run -e dev dev-lint`, apply with `pixi run -e dev dev-format`.
+# Check with `pixi run -e dev lint`, apply with `pixi run -e dev format`.
 Language: Cpp
 BasedOnStyle: LLVM
 IndentCaseLabels: true

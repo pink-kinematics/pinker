@@ -132,14 +132,14 @@ ruff = ">=0.4.3"
 clang-format = "==23.1.1"
 
 [tool.pixi.feature.dev.tasks]
-_dev-format-c = "clang-format -i pinker/kinematics/_kinematics_c.c"
-_dev-format-python = "ruff format pinker"
-_dev-lint-c = "clang-format --dry-run --Werror pinker/kinematics/_kinematics_c.c"
-_dev-lint-mypy = "mypy pinker --ignore-missing-imports"
-_dev-lint-pylint = "pylint pinker --exit-zero --rcfile=pyproject.toml"
-_dev-lint-ruff = "ruff check pinker && ruff format --check pinker"
-dev-format = { depends-on = ["_dev-format-c", "_dev-format-python"] }
-dev-lint = { depends-on = ["_dev-lint-c", "_dev-lint-mypy", "_dev-lint-pylint", "_dev-lint-ruff"] }
+_format-c = "clang-format -i pinker/kinematics/_kinematics_c.c"
+_format-python = "ruff format pinker"
+_lint-c = "clang-format --dry-run --Werror pinker/kinematics/_kinematics_c.c"
+_lint-mypy = "mypy pinker --ignore-missing-imports"
+_lint-pylint = "pylint pinker --exit-zero --rcfile=pyproject.toml"
+_lint-ruff = "ruff check pinker && ruff format --check pinker"
+format = { depends-on = ["_format-c", "_format-python"] }
+lint = { depends-on = ["_lint-c", "_lint-mypy", "_lint-pylint", "_lint-ruff"] }
 
 [tool.pixi.feature.dist.dependencies]
 python-build = "*"

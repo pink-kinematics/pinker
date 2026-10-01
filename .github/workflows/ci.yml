@@ -38,7 +38,7 @@ jobs:
         with:
           environments: dev
           cache: true
-      - run: pixi run -e dev dev-lint
+      - run: pixi run -e dev lint
 
   test:
     name: "Test with ${{ matrix.pyenv }} on ${{ matrix.os }}"

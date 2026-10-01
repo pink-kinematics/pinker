@@ -15,7 +15,7 @@ compiler and every dependency:
 
     pixi run -e test-py312 test   # run tests
     pixi run build                # compile the C extension
-    pixi run dev-lint             # clang-format, mypy, pylint and ruff
+    pixi run lint                 # clang-format, mypy, pylint and ruff
     pixi run docs-open            # build this documentation and open it
 
 The test task currently requires specifying which Python version to use by
