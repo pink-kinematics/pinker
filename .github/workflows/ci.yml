@@ -23,7 +23,7 @@ jobs:
           path: ~/.cache/robot_descriptions
           key: robot-descriptions-${{ hashFiles('pixi.lock') }}
           restore-keys: robot-descriptions-
-      - run: pixi run -e coverage coverage-run
+      - run: pixi run -e coverage _coverage-run
       - name: Upload coverage results
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
