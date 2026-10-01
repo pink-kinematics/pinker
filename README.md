@@ -207,6 +207,10 @@ If you use Pinker in your scientific works, please cite it *e.g.* as follows:
 
 Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you contribute to this repository.
 
+## Acknowledgements
+
+Pinker is a successor to [Pink](https://github.com/pink-kinematics/pink/), which used [Pinocchio](https://github.com/stack-of-tasks/pinocchio) for modeling and forward kinematics. The idea to switch the kinematics backend to a C extension was inspired by the `lie` submodule of [mink](https://github.com/kevinzakka/mink). All functions in the backend were implemented using their homonyms in Pinocchio v4.1.0 as a reference, and their outputs were cross-checked against it with unit tests and the benchmark.
+
 ## See also
 
 Software:
