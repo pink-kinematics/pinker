@@ -120,18 +120,6 @@ coverage-run = { cmd = "coverage report --include=\"pinker/*\"", depends-on = ["
 coverage-open = { cmd = "xdg-open htmlcov/index.html", depends-on = ["_coverage-html"] }
 coveralls = { cmd = "coveralls --service=github" }
 
-[tool.pixi.feature.docs.dependencies]
-sphinx = ">=8.0.0"
-sphinx-autodoc-typehints = "*"
-
-[tool.pixi.feature.docs.pypi-dependencies]
-sphinx-material = "*"
-sphinx-mathjax-offline = "*"
-
-[tool.pixi.feature.docs.tasks]
-docs-build = { cmd = "sphinx-build docs/ docs/_build -W", depends-on = [{ task = "build", environment = "docs" }] }
-docs-open = { cmd = "xdg-open docs/_build/index.html", depends-on = ["docs-build"] }
-
 [tool.pixi.feature.dev.dependencies]
 mypy = ">=0.812"
 pylint = ">=2.8.2"
@@ -152,6 +140,32 @@ _dev-lint-pylint = "pylint pinker --exit-zero --rcfile=pyproject.toml"
 _dev-lint-ruff = "ruff check pinker && ruff format --check pinker"
 dev-format = { depends-on = ["_dev-format-c", "_dev-format-python"] }
 dev-lint = { depends-on = ["_dev-lint-c", "_dev-lint-mypy", "_dev-lint-pylint", "_dev-lint-ruff"] }
+
+[tool.pixi.feature.dist.dependencies]
+python-build = "*"
+twine = "*"
+
+[tool.pixi.feature.dist.tasks]
+_dist-clean = "rm -rf build dist pinker.egg-info"
+dist-build = { cmd = "python -m build --sdist", depends-on = ["_dist-clean"] }
+dist-check = { cmd = "twine check dist/*.tar.gz", depends-on = ["dist-build"] }
+
+[tool.pixi.feature.dist.tasks.dist-upload]
+args = ["repository", "version"]
+depends-on = ["dist-check"]
+cmd = "twine upload --repository {{ repository }} dist/pinker-{{ version }}.tar.gz"
+
+[tool.pixi.feature.docs.dependencies]
+sphinx = ">=8.0.0"
+sphinx-autodoc-typehints = "*"
+
+[tool.pixi.feature.docs.pypi-dependencies]
+sphinx-material = "*"
+sphinx-mathjax-offline = "*"
+
+[tool.pixi.feature.docs.tasks]
+docs-build = { cmd = "sphinx-build docs/ docs/_build -W", depends-on = [{ task = "build", environment = "docs" }] }
+docs-open = { cmd = "xdg-open docs/_build/index.html", depends-on = ["docs-build"] }
 
 [tool.pixi.feature.examples.dependencies]
 loop-rate-limiters = ">=1.2.0"
@@ -199,20 +213,6 @@ xacrodoc = "*"
 _test-kinematics = { cmd = "python -m unittest discover --failfast --start-directory tests/kinematics --top-level-directory tests/kinematics", depends-on = ["build"] }
 _test-python = { cmd = "python -m unittest discover --failfast", depends-on = ["build"] }
 test = { depends-on = ["_test-kinematics", "_test-python"] }
-
-[tool.pixi.feature.dist.dependencies]
-python-build = "*"
-twine = "*"
-
-[tool.pixi.feature.dist.tasks]
-_dist-clean = "rm -rf build dist pinker.egg-info"
-dist-build = { cmd = "python -m build --sdist", depends-on = ["_dist-clean"] }
-dist-check = { cmd = "twine check dist/*.tar.gz", depends-on = ["dist-build"] }
-
-[tool.pixi.feature.dist.tasks.dist-upload]
-args = ["repository", "version"]
-depends-on = ["dist-check"]
-cmd = "twine upload --repository {{ repository }} dist/pinker-{{ version }}.tar.gz"
 
 [tool.pixi.environments]
 coverage = { features = ["py312", "coverage"], solve-group = "py312" }
