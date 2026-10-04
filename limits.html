@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#d4619c">
+  <script src="_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Limits &#8212; pinker</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=75810a84" />
+    <link rel="stylesheet" type="text/css" href="_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=deb1f23b" />
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="_static/mathjax/tex-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Barriers" href="barriers.html" />
+    <link rel="prev" title="Tasks" href="tasks.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=pink data-md-color-accent=pink>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#limits" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="index.html" title="pinker"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">pinker</span>
+          <span class="md-header-nav__topic"> Limits </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/pink-kinematics/pinker/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    pinker
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = ""versions.json"",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">pinker</a></li>
+            
+            <li class="md-tabs__item"><a href="installation.html" class="md-tabs__link">Installation</a></li>
+            
+            <li class="md-tabs__item"><a href="tasks.html" class="md-tabs__link">Tasks</a></li>
+            
+            <li class="md-tabs__item"><a href="#" class="md-tabs__link">Limits</a></li>
+            
+            <li class="md-tabs__item"><a href="barriers.html" class="md-tabs__link">Barriers</a></li>
+            
+            <li class="md-tabs__item"><a href="inverse-kinematics.html" class="md-tabs__link">Inverse kinematics</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="index.html" title="pinker" class="md-nav__button md-logo">
+      
+        <img src="_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="index.html"
+       title="pinker">pinker</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/pink-kinematics/pinker/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    pinker
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <span class="md-nav__link caption"><span class="caption-text">Getting started</span></span>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="installation.html" class="md-nav__link">Installation</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="introduction.html" class="md-nav__link">Introduction</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="examples.html" class="md-nav__link">Examples</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+      <span class="md-nav__link caption"><span class="caption-text">API documentation</span></span>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="tasks.html" class="md-nav__link">Tasks</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Limits </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Limits</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#limits--page-root" class="md-nav__link">Limits</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.Delta_q_prev" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.Delta_q_prev</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.a_max" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.a_max</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.has_configuration_limit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.has_configuration_limit</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.indices" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.indices</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.model" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.model</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.projection_matrix" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.projection_matrix</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.compute_qp_inequalities" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.compute_qp_inequalities()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.set_last_integration" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.set_last_integration()</span></code></a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.ConfigurationLimit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">ConfigurationLimit</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pinker.limits.ConfigurationLimit.config_limit_gain" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">ConfigurationLimit.config_limit_gain</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.ConfigurationLimit.model" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">ConfigurationLimit.model</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.ConfigurationLimit.joints" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">ConfigurationLimit.joints</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.ConfigurationLimit.projection_matrix" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">ConfigurationLimit.projection_matrix</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.ConfigurationLimit.compute_qp_inequalities" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">ConfigurationLimit.compute_qp_inequalities()</span></code></a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.FloatingBaseVelocityLimit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">FloatingBaseVelocityLimit</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pinker.limits.FloatingBaseVelocityLimit.compute_qp_inequalities" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">FloatingBaseVelocityLimit.compute_qp_inequalities()</span></code></a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.Limit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">Limit</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pinker.limits.Limit.compute_qp_inequalities" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">Limit.compute_qp_inequalities()</span></code></a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit.indices" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit.indices</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit.joints" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit.joints</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit.model" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit.model</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit.projection_matrix" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit.projection_matrix</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit.velocity_limit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit.velocity_limit</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit.compute_qp_inequalities" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit.compute_qp_inequalities()</span></code></a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="barriers.html" class="md-nav__link">Barriers</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="inverse-kinematics.html" class="md-nav__link">Inverse kinematics</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="kinematics.html" class="md-nav__link">Kinematics</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="visualization.html" class="md-nav__link">Visualization</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="developer-notes.html" class="md-nav__link">Developer notes</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="references.html" class="md-nav__link">References</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#limits--page-root" class="md-nav__link">Limits</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.Delta_q_prev" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.Delta_q_prev</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.a_max" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.a_max</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.has_configuration_limit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.has_configuration_limit</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.indices" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.indices</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.model" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.model</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.projection_matrix" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.projection_matrix</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.compute_qp_inequalities" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.compute_qp_inequalities()</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.AccelerationLimit.set_last_integration" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">AccelerationLimit.set_last_integration()</span></code></a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.ConfigurationLimit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">ConfigurationLimit</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pinker.limits.ConfigurationLimit.config_limit_gain" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">ConfigurationLimit.config_limit_gain</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.ConfigurationLimit.model" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">ConfigurationLimit.model</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.ConfigurationLimit.joints" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">ConfigurationLimit.joints</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.ConfigurationLimit.projection_matrix" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">ConfigurationLimit.projection_matrix</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.ConfigurationLimit.compute_qp_inequalities" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">ConfigurationLimit.compute_qp_inequalities()</span></code></a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.FloatingBaseVelocityLimit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">FloatingBaseVelocityLimit</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pinker.limits.FloatingBaseVelocityLimit.compute_qp_inequalities" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">FloatingBaseVelocityLimit.compute_qp_inequalities()</span></code></a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.Limit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">Limit</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pinker.limits.Limit.compute_qp_inequalities" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">Limit.compute_qp_inequalities()</span></code></a>
+        </li></ul>
+            </nav>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit</span></code></a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit.indices" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit.indices</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit.joints" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit.joints</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit.model" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit.model</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit.projection_matrix" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit.projection_matrix</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit.velocity_limit" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit.velocity_limit</span></code></a>
+        </li>
+        <li class="md-nav__item"><a href="#pinker.limits.VelocityLimit.compute_qp_inequalities" class="md-nav__link"><code class="docutils literal notranslate"><span class="pre">VelocityLimit.compute_qp_inequalities()</span></code></a>
+        </li></ul>
+            </nav>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="limits">
+<span id="id1"></span><h1 id="limits--page-root">Limits<a class="headerlink" href="#limits--page-root" title="Link to this heading">¶</a></h1>
+<p id="module-pinker.limits">Limits implemented as inequality constraints in the IK problem.</p>
+<p>Kinematic limits derive from the <a class="reference internal" href="#pinker.limits.Limit" title="pinker.limits.Limit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Limit</span></code></a> base class. They compute QP
+inequality constraints of the form:</p>
+<div class="math notranslate nohighlight">
+\[G(q) \Delta q \leq h(q)\]</div>
+<p>where <span class="math notranslate nohighlight">\(q \in {\cal C}\)</span> is the robot’s configuration and
+<span class="math notranslate nohighlight">\(\Delta q \in T_q({\cal C})\)</span> is the displacement in the tangent
+space at <span class="math notranslate nohighlight">\(q\)</span>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pinker.limits.AccelerationLimit">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pinker.limits.</span></span><span class="sig-name descname"><span class="pre">AccelerationLimit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acceleration_limit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pinker.limits.AccelerationLimit" title="Link to this definition">¶</a></dt>
+<dd><p>Subset of acceleration-limited joints in a robot model.</p>
+<p>Acceleration limits consists of two parts: the expected <span class="math notranslate nohighlight">\(|a| \leq
+a_{\mathrm{max}}\)</span>, but also the following term accounting for the “breaking
+distance” to configuration limits. This additional inequality is detailed
+in <a class="reference internal" href="references.html#flacco2015" id="id2"><span>[Flacco2015]</span></a> as well as in <a class="reference internal" href="references.html#delprete2018" id="id3"><span>[DelPrete2018]</span></a>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.AccelerationLimit.Delta_q_prev">
+<span class="sig-name descname"><span class="pre">Delta_q_prev</span></span><a class="headerlink" href="#pinker.limits.AccelerationLimit.Delta_q_prev" title="Link to this definition">¶</a></dt>
+<dd><p>Latest displacement of the robot.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.AccelerationLimit.a_max">
+<span class="sig-name descname"><span class="pre">a_max</span></span><a class="headerlink" href="#pinker.limits.AccelerationLimit.a_max" title="Link to this definition">¶</a></dt>
+<dd><p>Maximum acceleration vector for acceleration-limited joints.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.AccelerationLimit.has_configuration_limit">
+<span class="sig-name descname"><span class="pre">has_configuration_limit</span></span><a class="headerlink" href="#pinker.limits.AccelerationLimit.has_configuration_limit" title="Link to this definition">¶</a></dt>
+<dd><p>Whether each acceleration-limited joint also
+has a real configuration limit, in which case the “braking
+distance” term applies. Continuous (unbounded) joints do not
+have one.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.AccelerationLimit.indices">
+<span class="sig-name descname"><span class="pre">indices</span></span><a class="headerlink" href="#pinker.limits.AccelerationLimit.indices" title="Link to this definition">¶</a></dt>
+<dd><p>Tangent indices corresponding to acceleration-limited joints.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.AccelerationLimit.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#pinker.limits.AccelerationLimit.model" title="Link to this definition">¶</a></dt>
+<dd><p>Robot model.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.AccelerationLimit.projection_matrix">
+<span class="sig-name descname"><span class="pre">projection_matrix</span></span><a class="headerlink" href="#pinker.limits.AccelerationLimit.projection_matrix" title="Link to this definition">¶</a></dt>
+<dd><p>Projection from tangent space to subspace with
+acceleration-limited joints.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pinker.limits.AccelerationLimit.compute_qp_inequalities">
+<span class="sig-name descname"><span class="pre">compute_qp_inequalities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pinker.limits.AccelerationLimit.compute_qp_inequalities" title="Link to this definition">¶</a></dt>
+<dd><p>Compute inequalities for acceleration limits.</p>
+<p>Those limits are defined by two constraints. First, the
+finite-difference approximation of the acceleration is bounded by
+the robot’s acceleration-limit vector
+<span class="math notranslate nohighlight">\(a_{\mathrm{max}} \in {\cal T}_q({\cal C})\)</span> (which belongs to
+the tangent space at the current configuration
+<span class="math notranslate nohighlight">\(q \in \mathcal{C}\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[- a_{\mathrm{max}}
+\leq \frac{\frac{\Delta q}{\mathrm{d} t} - \frac{\Delta
+q_{\mathrm{prev}}}{\mathrm{d} t}}{\mathrm{d} t}
+\leq a_{\mathrm{max}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta q \in T_q({\cal C})\)</span> is the displacement
+computed by the inverse kinematics, and
+<span class="math notranslate nohighlight">\(\Delta q_{\mathrm{prev}}\)</span> is the displacement from our
+previous iteration of differential IK.</p>
+<p>Second, our new velocity <span class="math notranslate nohighlight">\(\Delta q / \mathrm{d} t\)</span> should not
+exceed the “braking distance” until configuration limits:</p>
+<div class="math notranslate nohighlight">
+\[-\sqrt{2 a_{\mathrm{max}} (q \ominus q_{\min})} \leq
+\frac{\Delta q}{\mathrm{d} t} \leq \sqrt{2 a_{\mathrm{max}}
+(q_{\max} \ominus q)}\]</div>
+<p>This additional inequality is detailed in <a class="reference internal" href="references.html#flacco2015" id="id4"><span>[Flacco2015]</span></a> as well as
+in <a class="reference internal" href="references.html#delprete2018" id="id5"><span>[DelPrete2018]</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="introduction.html#pinker.configuration.Configuration" title="pinker.configuration.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a></span>) – Robot configuration.</p></li>
+<li><p><strong>dt</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Integration timestep in [s].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pair <span class="math notranslate nohighlight">\((G, h)\)</span> representing the inequality constraint as
+<span class="math notranslate nohighlight">\(G \Delta q \leq h\)</span>, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if there is no limit.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pinker.limits.AccelerationLimit.set_last_integration">
+<span class="sig-name descname"><span class="pre">set_last_integration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v_prev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pinker.limits.AccelerationLimit.set_last_integration" title="Link to this definition">¶</a></dt>
+<dd><p>Set the latest velocity and the duration it was applied for.</p>
+<p>The goal of the low-acceleration task is to minimize the difference
+between the new velocity and the previous one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>v_prev</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a></span>) – Latest integrated velocity.</p></li>
+<li><p><strong>dt</strong> – Integration timestep in [s].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pinker.limits.ConfigurationLimit">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pinker.limits.</span></span><span class="sig-name descname"><span class="pre">ConfigurationLimit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_limit_gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pinker.limits.ConfigurationLimit" title="Link to this definition">¶</a></dt>
+<dd><p>Maintain the configuration <span class="math notranslate nohighlight">\(q\)</span> between bounds.</p>
+<p>A configuration limit can be written <span class="math notranslate nohighlight">\(q_{min} \leq q \leq q_{max}\)</span>
+when the configuration space is homeomorphic to <span class="math notranslate nohighlight">\(\mathbb{R}^n\)</span>. For
+instance, this is the case when all joints are revolute and
+<span class="math notranslate nohighlight">\(\mathcal{C} = (S^1)^n \cong \mathbb{R}^n\)</span>.</p>
+<p>Since this is not always the case, the limit is defined on the tangent
+space of displacements (equivalently velocities) as:</p>
+<div class="math notranslate nohighlight">
+\[{q \ominus q_{min}} \leq \Delta q \leq {q_{max} \ominus q}\]</div>
+<p>When the current configuration <span class="math notranslate nohighlight">\(q\)</span> is within bounds, the limit
+ensures that the next configuration <span class="math notranslate nohighlight">\(q \oplus \Delta q\)</span> stays within
+bounds as well.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This limit assumes the current configuration <span class="math notranslate nohighlight">\(q\)</span> is within
+bounds. This is why
+<a class="reference internal" href="introduction.html#pinker.configuration.Configuration.check_limits" title="pinker.configuration.Configuration.check_limits"><code class="xref py py-func docutils literal notranslate"><span class="pre">pinker.configuration.Configuration.check_limits()</span></code></a> is called with
+the safety break by default when solving IK. If <span class="math notranslate nohighlight">\(q\)</span> is out of
+bounds, the configuration limit still works, but it may yield a large
+displacement <span class="math notranslate nohighlight">\(\Delta q\)</span> incompatible with e.g. a velocity limit.</p>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.ConfigurationLimit.config_limit_gain">
+<span class="sig-name descname"><span class="pre">config_limit_gain</span></span><a class="headerlink" href="#pinker.limits.ConfigurationLimit.config_limit_gain" title="Link to this definition">¶</a></dt>
+<dd><p>gain between 0 and 1 to steer away from
+configuration limits. It is described in “Real-time prioritized
+kinematic control under inequality constraints for redundant
+manipulators” (Kanoun, 2012). More details in <a class="reference external" href="https://scaron.info/teaching/inverse-kinematics.html">this writeup</a>.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.ConfigurationLimit.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#pinker.limits.ConfigurationLimit.model" title="Link to this definition">¶</a></dt>
+<dd><p>Robot model the limit applies to.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.ConfigurationLimit.joints">
+<span class="sig-name descname"><span class="pre">joints</span></span><a class="headerlink" href="#pinker.limits.ConfigurationLimit.joints" title="Link to this definition">¶</a></dt>
+<dd><p>Joints with configuration limits.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.ConfigurationLimit.projection_matrix">
+<span class="sig-name descname"><span class="pre">projection_matrix</span></span><a class="headerlink" href="#pinker.limits.ConfigurationLimit.projection_matrix" title="Link to this definition">¶</a></dt>
+<dd><p>Projection from tangent space to subspace with
+configuration-limited joints.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pinker.limits.ConfigurationLimit.compute_qp_inequalities">
+<span class="sig-name descname"><span class="pre">compute_qp_inequalities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pinker.limits.ConfigurationLimit.compute_qp_inequalities" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the configuration-dependent velocity limits.</p>
+<p>Those limits are returned as:</p>
+<div class="math notranslate nohighlight">
+\[{q \ominus q_{min}} \leq \Delta q \leq {q_{max} \ominus q}\]</div>
+<p>where <span class="math notranslate nohighlight">\(q \in {\cal C}\)</span> is the robot’s configuration and
+<span class="math notranslate nohighlight">\(\Delta q \in T_q({\cal C})\)</span> is the displacement in the tangent
+space at <span class="math notranslate nohighlight">\(q\)</span>. These limits correspond to the derivative of
+<span class="math notranslate nohighlight">\(q_{min} \leq q \leq q_{max}\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="introduction.html#pinker.configuration.Configuration" title="pinker.configuration.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a></span>) – Robot configuration.</p></li>
+<li><p><strong>dt</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Integration timestep in [s].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pair <span class="math notranslate nohighlight">\((G, h)\)</span> representing the inequality constraint as
+<span class="math notranslate nohighlight">\(G \Delta q \leq h\)</span>, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if there is no limit.</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pinker.limits.FloatingBaseVelocityLimit">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pinker.limits.</span></span><span class="sig-name descname"><span class="pre">FloatingBaseVelocityLimit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_linear_velocity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_angular_velocity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pinker.limits.FloatingBaseVelocityLimit" title="Link to this definition">¶</a></dt>
+<dd><p>Velocity limits applied to the robot floating base.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pinker.limits.FloatingBaseVelocityLimit.compute_qp_inequalities">
+<span class="sig-name descname"><span class="pre">compute_qp_inequalities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pinker.limits.FloatingBaseVelocityLimit.compute_qp_inequalities" title="Link to this definition">¶</a></dt>
+<dd><p>Linearize floating base velocity bounds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>]]</span></p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pinker.limits.Limit">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pinker.limits.</span></span><span class="sig-name descname"><span class="pre">Limit</span></span><a class="headerlink" href="#pinker.limits.Limit" title="Link to this definition">¶</a></dt>
+<dd><p>Abstract base class for kinematic limits.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pinker.limits.Limit.compute_qp_inequalities">
+<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_qp_inequalities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pinker.limits.Limit.compute_qp_inequalities" title="Link to this definition">¶</a></dt>
+<dd><p>Compute limit as linearized QP inequalities.</p>
+<p>Those limits are returned as:</p>
+<div class="math notranslate nohighlight">
+\[G(q) \Delta q \leq h(q)\]</div>
+<p>where <span class="math notranslate nohighlight">\(q \in {\cal C}\)</span> is the robot’s configuration and
+<span class="math notranslate nohighlight">\(\Delta q \in T_q({\cal C})\)</span> is the displacement in the tangent
+space at <span class="math notranslate nohighlight">\(q\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="introduction.html#pinker.configuration.Configuration" title="pinker.configuration.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a></span>) – Robot configuration providing up-to-date kinematics.</p></li>
+<li><p><strong>dt</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Integration timestep in [s].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pair <span class="math notranslate nohighlight">\((G, h)\)</span> representing the inequality constraint as
+<span class="math notranslate nohighlight">\(G \Delta q \leq h\)</span>, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if there is no limit.</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pinker.limits.VelocityLimit">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pinker.limits.</span></span><span class="sig-name descname"><span class="pre">VelocityLimit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pinker.limits.VelocityLimit" title="Link to this definition">¶</a></dt>
+<dd><p>Subset of velocity-limited joints in a robot model.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.VelocityLimit.indices">
+<span class="sig-name descname"><span class="pre">indices</span></span><a class="headerlink" href="#pinker.limits.VelocityLimit.indices" title="Link to this definition">¶</a></dt>
+<dd><p>Tangent indices corresponding to velocity-limited joints.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.VelocityLimit.joints">
+<span class="sig-name descname"><span class="pre">joints</span></span><a class="headerlink" href="#pinker.limits.VelocityLimit.joints" title="Link to this definition">¶</a></dt>
+<dd><p>List of velocity-limited joints.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.VelocityLimit.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#pinker.limits.VelocityLimit.model" title="Link to this definition">¶</a></dt>
+<dd><p>Robot model.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.VelocityLimit.projection_matrix">
+<span class="sig-name descname"><span class="pre">projection_matrix</span></span><a class="headerlink" href="#pinker.limits.VelocityLimit.projection_matrix" title="Link to this definition">¶</a></dt>
+<dd><p>Projection from tangent space to subspace with
+velocity-limited joints.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pinker.limits.VelocityLimit.velocity_limit">
+<span class="sig-name descname"><span class="pre">velocity_limit</span></span><a class="headerlink" href="#pinker.limits.VelocityLimit.velocity_limit" title="Link to this definition">¶</a></dt>
+<dd><p>Velocity-limit vector used to bound the joints: the
+constructor argument when one is given, otherwise the model’s.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pinker.limits.VelocityLimit.compute_qp_inequalities">
+<span class="sig-name descname"><span class="pre">compute_qp_inequalities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pinker.limits.VelocityLimit.compute_qp_inequalities" title="Link to this definition">¶</a></dt>
+<dd><p>Compute inequalities for velocity limits.</p>
+<p>Those limits are defined by:</p>
+<div class="math notranslate nohighlight">
+\[-\mathrm{d}t v_{max} \leq \Delta q \leq \mathrm{d}t v_{max}\]</div>
+<p>where <span class="math notranslate nohighlight">\(v_{max} \in {\cal T}\)</span> is the robot’s velocity limit
+vector and <span class="math notranslate nohighlight">\(\Delta q \in T_q({\cal C})\)</span> is the displacement
+computed by the inverse kinematics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configuration</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="introduction.html#pinker.configuration.Configuration" title="pinker.configuration.Configuration"><code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code></a></span>) – Robot configuration (unused).</p></li>
+<li><p><strong>dt</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Integration timestep in [s].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code></a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></a>]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pair <span class="math notranslate nohighlight">\((G, h)\)</span> representing the inequality constraint as
+<span class="math notranslate nohighlight">\(G \Delta q \leq h\)</span>, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if there is no limit.</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="tasks.html" title="Tasks"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Tasks </span>
+              </div>
+            </a>
+          
+          
+            <a href="barriers.html" title="Barriers"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> Barriers </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2026 CNRS.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>

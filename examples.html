@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="lang:clipboard.copy" content="Copy to clipboard">
+  <meta name="lang:clipboard.copied" content="Copied to clipboard">
+  <meta name="lang:search.language" content="en">
+  <meta name="lang:search.pipeline.stopwords" content="True">
+  <meta name="lang:search.pipeline.trimmer" content="True">
+  <meta name="lang:search.result.none" content="No matching documents">
+  <meta name="lang:search.result.one" content="1 matching document">
+  <meta name="lang:search.result.other" content="# matching documents">
+  <meta name="lang:search.tokenizer" content="[\s\-]+">
+
+  
+    <link href="https://fonts.gstatic.com/" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700|Roboto:300,400,400i,700&display=fallback" rel="stylesheet">
+
+    <style>
+      body,
+      input {
+        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
+      }
+
+      code,
+      kbd,
+      pre {
+        font-family: "Roboto Mono", "Courier New", Courier, monospace
+      }
+    </style>
+  
+
+  <link rel="stylesheet" href="_static/stylesheets/application.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-palette.css"/>
+  <link rel="stylesheet" href="_static/stylesheets/application-fixes.css"/>
+  
+  <link rel="stylesheet" href="_static/fonts/material-icons.css"/>
+  
+  <meta name="theme-color" content="#d4619c">
+  <script src="_static/javascripts/modernizr.js"></script>
+  
+  
+  
+    <title>Examples &#8212; pinker</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=75810a84" />
+    <link rel="stylesheet" type="text/css" href="_static/material.css?v=79c92029" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=deb1f23b" />
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tasks" href="tasks.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" />
+  
+   
+
+  </head>
+  <body dir=ltr
+        data-md-color-primary=pink data-md-color-accent=pink>
+  
+  <svg class="md-svg">
+    <defs data-children-count="0">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="__github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+      
+    </defs>
+  </svg>
+  
+  <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer">
+  <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search">
+  <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+  <a href="#examples" tabindex="1" class="md-skip"> Skip to content </a>
+  <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex navheader">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="index.html" title="pinker"
+           class="md-header-nav__button md-logo">
+          
+            &nbsp;
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          <span class="md-header-nav__topic">pinker</span>
+          <span class="md-header-nav__topic"> Examples </span>
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+        
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" action="search.html" method="get" name="search">
+      <input type="text" class="md-search__input" name="q" placeholder=""Search""
+             autocapitalize="off" autocomplete="off" spellcheck="false"
+             data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      </div>
+      
+        <div class="md-flex__cell md-flex__cell--shrink">
+          <div class="md-header-nav__source">
+            <a href="https://github.com/pink-kinematics/pinker/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    pinker
+  </div>
+</a>
+          </div>
+        </div>
+      
+      
+  
+  <script src="_static/javascripts/version_dropdown.js"></script>
+  <script>
+    var json_loc = ""versions.json"",
+        target_loc = "../",
+        text = "Versions";
+    $( document ).ready( add_version_dropdown(json_loc, target_loc, text));
+  </script>
+  
+
+    </div>
+  </nav>
+</header>
+
+  
+  <div class="md-container">
+    
+    
+    
+  <nav class="md-tabs" data-md-component="tabs">
+    <div class="md-tabs__inner md-grid">
+      <ul class="md-tabs__list">
+          <li class="md-tabs__item"><a href="index.html" class="md-tabs__link">pinker</a></li>
+            
+            <li class="md-tabs__item"><a href="installation.html" class="md-tabs__link">Installation</a></li>
+            
+            <li class="md-tabs__item"><a href="tasks.html" class="md-tabs__link">Tasks</a></li>
+            
+            <li class="md-tabs__item"><a href="limits.html" class="md-tabs__link">Limits</a></li>
+            
+            <li class="md-tabs__item"><a href="barriers.html" class="md-tabs__link">Barriers</a></li>
+            
+            <li class="md-tabs__item"><a href="inverse-kinematics.html" class="md-tabs__link">Inverse kinematics</a></li>
+      </ul>
+    </div>
+  </nav>
+    <main class="md-main">
+      <div class="md-main__inner md-grid" data-md-component="container">
+        
+          <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="index.html" title="pinker" class="md-nav__button md-logo">
+      
+        <img src="_static/" alt=" logo" width="48" height="48">
+      
+    </a>
+    <a href="index.html"
+       title="pinker">pinker</a>
+  </label>
+    <div class="md-nav__source">
+      <a href="https://github.com/pink-kinematics/pinker/" title="Go to repository" class="md-source" data-md-source="github">
+
+    <div class="md-source__icon">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24" width="28" height="28">
+        <use xlink:href="#__github" width="24" height="24"></use>
+      </svg>
+    </div>
+  
+  <div class="md-source__repository">
+    pinker
+  </div>
+</a>
+    </div>
+  
+  
+
+  
+  <ul class="md-nav__list">
+    <li class="md-nav__item">
+    
+      <span class="md-nav__link caption"><span class="caption-text">Getting started</span></span>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="installation.html" class="md-nav__link">Installation</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="introduction.html" class="md-nav__link">Introduction</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <label class="md-nav__link md-nav__link--active" for="__toc"> Examples </label>
+    
+      <a href="#" class="md-nav__link md-nav__link--active">Examples</a>
+      
+        
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples--page-root" class="md-nav__link">Examples</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#a-first-script" class="md-nav__link">A first script</a>
+        </li>
+        <li class="md-nav__item"><a href="#running-the-examples" class="md-nav__link">Running the examples</a>
+        </li>
+        <li class="md-nav__item"><a href="#what-the-examples-cover" class="md-nav__link">What the examples cover</a>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+      <span class="md-nav__link caption"><span class="caption-text">API documentation</span></span>
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="tasks.html" class="md-nav__link">Tasks</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="limits.html" class="md-nav__link">Limits</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="barriers.html" class="md-nav__link">Barriers</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="inverse-kinematics.html" class="md-nav__link">Inverse kinematics</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="kinematics.html" class="md-nav__link">Kinematics</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="visualization.html" class="md-nav__link">Visualization</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="developer-notes.html" class="md-nav__link">Developer notes</a>
+      
+    
+    </li>
+    <li class="md-nav__item">
+    
+    
+      <a href="references.html" class="md-nav__link">References</a>
+      
+    
+    </li>
+  </ul>
+  
+
+</nav>
+              </div>
+            </div>
+          </div>
+          <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+            <div class="md-sidebar__scrollwrap">
+              <div class="md-sidebar__inner">
+                
+<nav class="md-nav md-nav--secondary">
+    <label class="md-nav__title" for="__toc">Contents</label>
+  <ul class="md-nav__list" data-md-scrollfix="">
+        <li class="md-nav__item"><a href="#examples--page-root" class="md-nav__link">Examples</a><nav class="md-nav">
+              <ul class="md-nav__list">
+        <li class="md-nav__item"><a href="#a-first-script" class="md-nav__link">A first script</a>
+        </li>
+        <li class="md-nav__item"><a href="#running-the-examples" class="md-nav__link">Running the examples</a>
+        </li>
+        <li class="md-nav__item"><a href="#what-the-examples-cover" class="md-nav__link">What the examples cover</a>
+        </li></ul>
+            </nav>
+        </li>
+  </ul>
+</nav>
+              </div>
+            </div>
+          </div>
+        
+        <div class="md-content">
+          <article class="md-content__inner md-typeset" role="main">
+            
+  <section id="examples">
+<span id="id1"></span><h1 id="examples--page-root">Examples<a class="headerlink" href="#examples--page-root" title="Link to this heading">¶</a></h1>
+<section id="a-first-script">
+<h2 id="a-first-script">A first script<a class="headerlink" href="#a-first-script" title="Link to this heading">¶</a></h2>
+<p>Let us go through <code class="docutils literal notranslate"><span class="pre">examples/ur3_end_effector_tracking.py</span></code>, where a UR3 arm
+tracks a target moving back and forth. We first load the robot model:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pinker</span>
+
+<span class="n">robot</span> <span class="o">=</span> <span class="n">pinker</span><span class="o">.</span><span class="n">load_robot_description</span><span class="p">(</span><span class="s2">"ur3_official_description"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We define the two tasks of this inverse kinematics: track the target with the
+end effector, and stay close to a reference posture. The posture task has a
+much lower cost, so that it only regularizes the redundancy left by the first
+task:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pinker.tasks</span><span class="w"> </span><span class="kn">import</span> <span class="n">FrameTask</span><span class="p">,</span> <span class="n">PostureTask</span>
+
+<span class="n">end_effector_task</span> <span class="o">=</span> <span class="n">FrameTask</span><span class="p">(</span>
+    <span class="s2">"tool0"</span><span class="p">,</span>
+    <span class="n">position_cost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># [cost] / [m]</span>
+    <span class="n">orientation_cost</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># [cost] / [rad]</span>
+    <span class="n">lm_damping</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># tuned for this setup</span>
+<span class="p">)</span>
+<span class="n">posture_task</span> <span class="o">=</span> <span class="n">PostureTask</span><span class="p">(</span>
+    <span class="n">cost</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span>  <span class="c1"># [cost] / [rad]</span>
+<span class="p">)</span>
+<span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">end_effector_task</span><span class="p">,</span> <span class="n">posture_task</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Tasks are defined by their cost and by their target. Here we initialize all
+targets from the initial configuration of the robot, so that the robot starts
+at rest with a zero task error:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pinker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pinker.kinematics</span><span class="w"> </span><span class="kn">import</span> <span class="n">custom_configuration</span>
+
+<span class="n">q_ref</span> <span class="o">=</span> <span class="n">custom_configuration</span><span class="p">(</span>
+    <span class="n">robot</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+    <span class="n">elbow_joint</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">shoulder_lift_joint</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">shoulder_pan_joint</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">configuration</span> <span class="o">=</span> <span class="n">pinker</span><span class="o">.</span><span class="n">Configuration</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">robot</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">q_ref</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+    <span class="n">task</span><span class="o">.</span><span class="n">set_target_from_configuration</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can now run the closed-loop inverse kinematics. Each cycle updates the
+target of the end-effector task, computes a velocity that steers the robot
+towards all its tasks, and integrates that velocity into the next
+configuration:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">loop_rate_limiters</span><span class="w"> </span><span class="kn">import</span> <span class="n">RateLimiter</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pinker</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ik</span>
+
+<span class="n">rate</span> <span class="o">=</span> <span class="n">RateLimiter</span><span class="p">(</span><span class="n">frequency</span><span class="o">=</span><span class="mf">200.0</span><span class="p">,</span> <span class="n">warn</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">rate</span><span class="o">.</span><span class="n">period</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># [s]</span>
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">end_effector_target</span> <span class="o">=</span> <span class="n">end_effector_task</span><span class="o">.</span><span class="n">transform_target_to_world</span>
+    <span class="n">end_effector_target</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">end_effector_target</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.2</span>
+    <span class="n">velocity</span> <span class="o">=</span> <span class="n">solve_ik</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="n">tasks</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">"daqp"</span><span class="p">)</span>
+    <span class="n">configuration</span><span class="o">.</span><span class="n">integrate_inplace</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="n">dt</span><span class="p">)</span>
+    <span class="n">rate</span><span class="o">.</span><span class="n">sleep</span><span class="p">()</span>
+    <span class="n">t</span> <span class="o">+=</span> <span class="n">dt</span>
+</pre></div>
+</div>
+<p>The configuration is thus the state carried from one cycle to the next. The
+full example wraps this loop with a <a class="reference external" href="https://viser.studio">Viser</a>
+visualizer:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pinker.visualizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">start_viser_visualizer</span>
+
+<span class="n">viz</span> <span class="o">=</span> <span class="n">start_viser_visualizer</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">configuration</span><span class="o">.</span><span class="n">q</span><span class="p">)</span>  <span class="c1"># in the loop, after integration</span>
+</pre></div>
+</div>
+</section>
+<section id="running-the-examples">
+<h2 id="running-the-examples">Running the examples<a class="headerlink" href="#running-the-examples" title="Link to this heading">¶</a></h2>
+<p>Examples live in the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> directory and carry their own dependencies
+in an inline script metadata block (<a class="reference external" href="https://peps.python.org/pep-0723/">PEP 723</a>), so that <a class="reference external" href="https://docs.astral.sh/uv/">uv</a> can run them standalone:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>examples/ur3_end_effector_tracking.py
+</pre></div>
+</div>
+<p>Most examples start a Viser server and open the visualization in a new browser
+tab.</p>
+</section>
+<section id="what-the-examples-cover">
+<h2 id="what-the-examples-cover">What the examples cover<a class="headerlink" href="#what-the-examples-cover" title="Link to this heading">¶</a></h2>
+<table>
+<colgroup>
+<col style="width: 40.0%"/>
+<col style="width: 60.0%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Example</p></th>
+<th class="head"><p>Illustrates</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cookie_visualization.py</span></code></p></td>
+<td><p>Displaying a robot description in Viser</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">draco3_reaching.py</span></code></p></td>
+<td><p>Closed kinematic chains with <a class="reference internal" href="tasks.html#pinker.tasks.JointCouplingTask" title="pinker.tasks.JointCouplingTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">JointCouplingTask</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">g1_com_tracking.py</span></code>, <code class="docutils literal notranslate"><span class="pre">jvrc_com_tracking.py</span></code></p></td>
+<td><p>Center-of-mass tracking with <a class="reference internal" href="tasks.html#pinker.tasks.ComTask" title="pinker.tasks.ComTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">ComTask</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gen2_end_effector_tracking.py</span></code>,
+<code class="docutils literal notranslate"><span class="pre">panda_end_effector_tracking.py</span></code>, <code class="docutils literal notranslate"><span class="pre">ur3_end_effector_tracking.py</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ur5_end_effector_tracking.py</span></code></p></td>
+<td><p>End-effector tracking with a posture regularization</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">go2_squat_barrier.py</span></code>, <code class="docutils literal notranslate"><span class="pre">ur5_position_barrier.py</span></code></p></td>
+<td><p>Control barrier functions (<a class="reference internal" href="barriers.html#barriers"><span class="std std-ref">Barriers</span></a>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jvrc_reaching.py</span></code>, <code class="docutils literal notranslate"><span class="pre">sigmaban_standing.py</span></code>,
+<code class="docutils literal notranslate"><span class="pre">upkie_crouching.py</span></code></p></td>
+<td><p>Whole-body inverse kinematics, with the feet in contact</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">panda_manipulability.py</span></code></p></td>
+<td><p>Maximizing manipulability with <a class="reference internal" href="tasks.html#pinker.tasks.ManipulabilityTask" title="pinker.tasks.ManipulabilityTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">ManipulabilityTask</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">piper_inverse_kinematics.py</span></code>, <code class="docutils literal notranslate"><span class="pre">ur10_inverse_kinematics.py</span></code></p></td>
+<td><p>Iterating differential IK to reach a prescribed end-effector pose</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">stretch_relative_target.py</span></code>, <code class="docutils literal notranslate"><span class="pre">stretch_world_target.py</span></code></p></td>
+<td><p>Mobile manipulation, with world and mobile-base targets</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">upkie_floating_base_velocity_limit.py</span></code></p></td>
+<td><p>Clamping base velocities with <a class="reference internal" href="limits.html#pinker.limits.FloatingBaseVelocityLimit" title="pinker.limits.FloatingBaseVelocityLimit"><code class="xref py py-class docutils literal notranslate"><span class="pre">FloatingBaseVelocityLimit</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">upkie_rolling.py</span></code></p></td>
+<td><p>Rolling without slipping, with <a class="reference internal" href="tasks.html#pinker.tasks.RollingTask" title="pinker.tasks.RollingTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">RollingTask</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ur3_sparse_solver.py</span></code></p></td>
+<td><p>Selecting a sparse QP solver</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ur3_velocity_smoothing.py</span></code></p></td>
+<td><p>Smoothing velocities with a task gain, a <a class="reference internal" href="tasks.html#pinker.tasks.DampingTask" title="pinker.tasks.DampingTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">DampingTask</span></code></a> and an
+<a class="reference internal" href="limits.html#pinker.limits.AccelerationLimit" title="pinker.limits.AccelerationLimit"><code class="xref py py-class docutils literal notranslate"><span class="pre">AccelerationLimit</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">z1_joint_velocity_tracking.py</span></code></p></td>
+<td><p>Tracking joint velocities with <a class="reference internal" href="tasks.html#pinker.tasks.JointVelocityTask" title="pinker.tasks.JointVelocityTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">JointVelocityTask</span></code></a></p></td>
+</tr>
+</tbody>
+</table>
+<p>Examples are named <code class="docutils literal notranslate"><span class="pre">&lt;robot&gt;_&lt;task&gt;.py</span></code>, after the robot description they load
+and what they do with it. Their <code class="docutils literal notranslate"><span class="pre">README.md</span></code> has videos of the resulting
+motions.</p>
+</section>
+</section>
+
+
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <footer class="md-footer">
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+          
+            <a href="introduction.html" title="Introduction"
+               class="md-flex md-footer-nav__link md-footer-nav__link--prev"
+               rel="prev">
+              <div class="md-flex__cell md-flex__cell--shrink">
+                <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+              </div>
+              <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+                <span class="md-flex__ellipsis">
+                  <span
+                      class="md-footer-nav__direction"> "Previous" </span> Introduction </span>
+              </div>
+            </a>
+          
+          
+            <a href="tasks.html" title="Tasks"
+               class="md-flex md-footer-nav__link md-footer-nav__link--next"
+               rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title"><span
+                class="md-flex__ellipsis"> <span
+                class="md-footer-nav__direction"> "Next" </span> Tasks </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink"><i
+                class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          
+        </a>
+        
+      </nav>
+    </div>
+    <div class="md-footer-meta md-typeset">
+      <div class="md-footer-meta__inner md-grid">
+        <div class="md-footer-copyright">
+          <div class="md-footer-copyright__highlight">
+              &#169; Copyright 2026 CNRS.
+              
+          </div>
+            Created using
+            <a href="http://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+             and
+            <a href="https://github.com/bashtage/sphinx-material/">Material for
+              Sphinx</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="_static/javascripts/application.js"></script>
+  <script>app.initialize({version: "1.0.4", url: {base: ".."}})</script>
+  </body>
+</html>
