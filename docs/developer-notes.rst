@@ -45,24 +45,15 @@ Design guidelines
       zero).
     - Parent-class attributes come after the class's own.
 
-Testing
-=======
-
-The test suite covers both the Python library and the C extension for the
-kinematics backend, and ``test`` runs the two of them after rebuilding the
-extension:
-
-.. code:: bash
-
-    pixi run -e test-py312 test
-
-Cross-validation tests are included in
-``tests/kinematics/test_vs_pinocchio.py`` to compare the backend's outputs with
-Pinocchio's as a reference implementation, with a precision threshold set to
-:math:`10^{-10}` on the same models.
-
 Exceptions
 ==========
 
 .. automodule:: pinker.exceptions
+    :members:
+
+
+Utility functions
+=================
+
+.. automodule:: pinker.utils
     :members:

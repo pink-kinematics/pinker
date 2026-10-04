@@ -23,9 +23,3 @@ It is also possible to only build the underlying inverse kinematics problem,
 without solving it, via the :func:`.build_ik` function:
 
 .. autofunction:: pinker.solve_ik.build_ik
-
-Utility functions
-=================
-
-.. automodule:: pinker.utils
-    :members:
