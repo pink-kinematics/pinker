@@ -111,6 +111,34 @@ def forward_kinematics(model: Model, data: Data, q: ArrayLike) -> None:
     )
 
 
+def _update_joint_jacobians(
+    model: Model, data: Data, q: Optional[ArrayLike] = None
+) -> None:
+    """Update joint placements and the full model Jacobian in ``data``.
+
+    This is :func:`compute_joint_jacobians` without the copy of the result,
+    for internal callers that only need ``data`` to be updated.
+
+    Args:
+        model: Robot model.
+        data: Data of the model, updated in place.
+        q: Configuration vector. If None, joint placements already in ``data``
+            are used as is.
+    """
+    packed = model._packed()
+    if q is not None:
+        forward_kinematics(model, data, q)
+    _c.joint_jacobians(
+        packed["jtype"],
+        packed["idx_v"],
+        packed["axis"],
+        data._oMi_rot,
+        data._oMi_trans,
+        data.J,
+        model.nv,
+    )
+
+
 def compute_joint_jacobians(
     model: Model, data: Data, q: Optional[ArrayLike] = None
 ) -> np.ndarray:
@@ -126,21 +154,10 @@ def compute_joint_jacobians(
             are used as is.
 
     Returns:
-        Full model Jacobian ``data.J``, of shape (6, nv).
+        Copy of the full model Jacobian ``data.J``, of shape (6, nv).
     """
-    packed = model._packed()
-    if q is not None:
-        forward_kinematics(model, data, q)
-    _c.joint_jacobians(
-        packed["jtype"],
-        packed["idx_v"],
-        packed["axis"],
-        data._oMi_rot,
-        data._oMi_trans,
-        data.J,
-        model.nv,
-    )
-    return data.J
+    _update_joint_jacobians(model, data, q)
+    return data.J.copy()
 
 
 def update_frame_placements(model: Model, data: Data) -> None:
@@ -333,7 +350,8 @@ def center_of_mass(
             are used as is.
 
     Returns:
-        Position of the center of mass in the world frame.
+        Position of the center of mass in the world frame, as a copy of
+        ``data.com[0]``.
     """
     packed = model._packed()
     if q is not None:
@@ -347,7 +365,7 @@ def center_of_mass(
         data.com[0],
     )
     data.mass[0] = total_mass
-    return data.com[0]
+    return data.com[0].copy()
 
 
 def jacobian_center_of_mass(
@@ -363,12 +381,12 @@ def jacobian_center_of_mass(
             are used as is.
 
     Returns:
-        Center-of-mass Jacobian ``data.Jcom``, of shape (3, nv).
+        Copy of the center-of-mass Jacobian ``data.Jcom``, of shape (3, nv).
     """
     packed = model._packed()
     if q is not None:
         forward_kinematics(model, data, q)
-    compute_joint_jacobians(model, data)
+    _update_joint_jacobians(model, data)
     total_mass = _c.com_jacobian(
         packed["jtype"],
         packed["parent"],
@@ -383,7 +401,7 @@ def jacobian_center_of_mass(
         model.nv,
     )
     data.mass[0] = total_mass
-    return data.Jcom
+    return data.Jcom.copy()
 
 
 def log6(M: SE3) -> Motion:

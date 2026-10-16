@@ -16,6 +16,7 @@ import numpy as np
 
 from . import kinematics as kin
 from .exceptions import FrameNotFound, NotWithinConfigurationLimits
+from .kinematics.algorithms import _update_joint_jacobians
 from .limits import ConfigurationLimit, Limit, VelocityLimit
 from .utils import VectorSpace
 
@@ -130,7 +131,7 @@ class Configuration:
             q_readonly.setflags(write=False)
             self.q = q_readonly
 
-        kin.compute_joint_jacobians(self.model, self.data, self.q)
+        _update_joint_jacobians(self.model, self.data, self.q)
         kin.update_frame_placements(self.model, self.data)
 
     def check_limits(

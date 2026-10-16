@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - examples: Panda comparing inverse kinematics with and without `ManipulabilityTask`
 
+### Fixed
+
+- kinematics: `center_of_mass` returns a copy rather than a reference
+- kinematics: `compute_joint_jacobians` return copies rather than a reference
+- kinematics: `jacobian_center_of_mass` returns a copy rather than a reference
+
 ## [1.0.0] - 2026-09-27
 
 ### Added
