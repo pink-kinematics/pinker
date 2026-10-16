@@ -127,6 +127,43 @@ class TestVersusPinocchio(unittest.TestCase):
             assert_kinematics_equal(pin_model, kin_model, q)
             assert_liegroup_equal(pin_model, kin_model, q, rng)
 
+    def test_returned_arrays_are_not_overwritten(self):
+        """Arrays returned by algorithms keep their values, like Pinocchio's.
+
+        Pinocchio returns copies of its data buffers to Python, so that
+        results computed at one configuration are not modified when the same
+        algorithm is later called at another configuration.
+        """
+        pin_model, kin_model = build_pair(URDF_PATHS[0], "freeflyer")
+        pin_data = pin_model.createData()
+        kin_data = kin_model.create_data()
+        q1 = pin.neutral(pin_model)
+        q2 = random_configuration(pin_model, np.random.default_rng(42))
+        algorithms = {
+            "center_of_mass": (
+                pin.centerOfMass,
+                kin.center_of_mass,
+            ),
+            "jacobian_center_of_mass": (
+                pin.jacobianCenterOfMass,
+                kin.jacobian_center_of_mass,
+            ),
+            "compute_joint_jacobians": (
+                pin.computeJointJacobians,
+                kin.compute_joint_jacobians,
+            ),
+        }
+        for name, (pin_algo, kin_algo) in algorithms.items():
+            with self.subTest(algorithm=name):
+                pin_result = pin_algo(pin_model, pin_data, q1)
+                kin_result = kin_algo(kin_model, kin_data, q1)
+                pin_expected = np.array(pin_result, copy=True)
+                kin_expected = np.array(kin_result, copy=True)
+                pin_algo(pin_model, pin_data, q2)
+                kin_algo(kin_model, kin_data, q2)
+                self.assertTrue(np.allclose(pin_result, pin_expected))
+                self.assertTrue(np.allclose(kin_result, kin_expected))
+
     def test_neutral_and_limits(self):
         """Neutral configuration and limit vectors match."""
         for root in ROOT_JOINTS:
