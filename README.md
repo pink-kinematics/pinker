@@ -200,7 +200,7 @@ If you use Pinker in your scientific works, please cite it *e.g.* as follows:
   author = {Caron, Stéphane and De Mont-Marin, Yann and Budhiraja, Rohan and Bang, Seung Hyeon and Domrachev, Ivan and Nedelchev, Simeon and Du, Peter and Escande, Adrien and Vaillant, Joris and Wingo, Bruce and Patapati, Santosh and San José Pro, Daniel and Marticorena Vidal, Nicolas Guillermo},
   license = {Apache-2.0},
   url = {https://github.com/pink-kinematics/pinker},
-  version = {1.0.0},
+  version = {1.1.0},
   year = {2026}
 }
 ```
