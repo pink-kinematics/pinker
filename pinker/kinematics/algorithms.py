@@ -16,6 +16,7 @@ import numpy as np
 
 from . import _kinematics_c as _c
 from .model import Data, Model, ReferenceFrame
+from .se2 import SE2, _se2_c_args
 from .se3 import SE3, Motion, _se3_c_args
 
 if TYPE_CHECKING:  # numpy.typing requires NumPy >= 1.20, we support >= 1.19

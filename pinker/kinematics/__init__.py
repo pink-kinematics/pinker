@@ -23,6 +23,7 @@ from .algorithms import (
     ARG0,
     ARG1,
     Jlog6,
+    Jlog_se2,
     center_of_mass,
     compute_joint_jacobians,
     custom_configuration,
@@ -30,6 +31,8 @@ from .algorithms import (
     difference,
     exp3,
     exp6,
+    exp_se2,
+    exp_so2,
     forward_kinematics,
     frames_forward_kinematics,
     get_frame_jacobian,
@@ -38,6 +41,8 @@ from .algorithms import (
     jacobian_center_of_mass,
     log3,
     log6,
+    log_se2,
+    log_so2,
     neutral,
     update_frame_placements,
 )
@@ -58,6 +63,7 @@ from .joints import (
 )
 from .model import Data, Frame, FrameType, Model, ReferenceFrame
 from .robot_wrapper import RobotWrapper
+from .se2 import SE2
 from .se3 import SE3, Inertia, Motion
 from .so3 import (
     quaternion_to_matrix,
@@ -81,6 +87,7 @@ __all__ = [
     "GeometryObject",
     "Inertia",
     "Jlog6",
+    "Jlog_se2",
     "JointModel",
     "JointModelFreeFlyer",
     "JointModelPX",
@@ -97,6 +104,7 @@ __all__ = [
     "Motion",
     "ReferenceFrame",
     "RobotWrapper",
+    "SE2",
     "SE3",
     "build_geom_from_urdf",
     "build_model_from_urdf",
@@ -108,6 +116,8 @@ __all__ = [
     "difference",
     "exp3",
     "exp6",
+    "exp_se2",
+    "exp_so2",
     "forward_kinematics",
     "frames_forward_kinematics",
     "get_frame_jacobian",
@@ -116,6 +126,8 @@ __all__ = [
     "jacobian_center_of_mass",
     "log3",
     "log6",
+    "log_se2",
+    "log_so2",
     "neutral",
     "quaternion_to_matrix",
     "quaternion_wxyz",
