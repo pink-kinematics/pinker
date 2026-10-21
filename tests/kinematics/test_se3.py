@@ -28,6 +28,21 @@ class TestSE3(unittest.TestCase):
             M = kin.exp6(nu)
             self.assertTrue(np.allclose(kin.log6(M).vector, nu, atol=1e-10))
 
+    def test_exp_matches_pinocchio(self):
+        """exp6 matches Pinocchio, including near-pi rotations."""
+        for theta in (0.0, 1e-8, 0.5, np.pi - 1e-3, np.pi):
+            with self.subTest(theta=theta):
+                axis = np.random.standard_normal(3)
+                axis /= np.linalg.norm(axis)
+                nu = np.hstack([np.random.standard_normal(3), axis * theta])
+                self.assertTrue(
+                    np.allclose(
+                        kin.exp6(nu).homogeneous,
+                        pin.exp6(nu).homogeneous,
+                        atol=1e-10,
+                    )
+                )
+
     def test_log_matches_pinocchio(self):
         """log6 and Jlog6 match Pinocchio, including near-pi rotations."""
         for _ in range(100):
