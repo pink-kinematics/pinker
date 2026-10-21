@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- examples: RB-Y1 carrying a tray along `SE2` waypoints
 - kinematics: `SE2` class of planar rigid transforms
 - kinematics: `exp_se2`, `log_se2` and `Jlog_se2` maps on SE(2)
 - kinematics: `exp_so2` and `log_so2` maps on SO(2)
