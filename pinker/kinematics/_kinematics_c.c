@@ -1522,6 +1522,90 @@ static PyObject *py_exp3(PyObject *self, PyObject *args) {
 }
 
 /* ------------------------------------------------------------------ */
+/* SE(2) and SO(2) helpers exposed to the Python SE2 class            */
+/* ------------------------------------------------------------------ */
+
+/* log_so2(R): angle of the 2D rotation matrix R */
+static PyObject *py_log_so2(PyObject *self, PyObject *args) {
+  PyObject *o_R;
+  if (!PyArg_ParseTuple(args, "O", &o_R)) {
+    return NULL;
+  }
+  double *R = as_f64(o_R, 4, "R");
+  if (!R) {
+    return NULL;
+  }
+  return PyFloat_FromDouble(so2_log(R[0], R[2]));
+}
+
+/* log_se2(R, p): twist of the planar transform (R, p), as (vx, vy, omega) */
+static PyObject *py_log_se2(PyObject *self, PyObject *args) {
+  PyObject *o_R, *o_p;
+  if (!PyArg_ParseTuple(args, "OO", &o_R, &o_p)) {
+    return NULL;
+  }
+  double *R = as_f64(o_R, 4, "R");
+  double *p = as_f64(o_p, 2, "p");
+  if (!R || !p) {
+    return NULL;
+  }
+  npy_intp dims[1] = {3};
+  PyObject *out = new_f64(1, dims);
+  if (!out) {
+    return NULL;
+  }
+  se2_log((double *)PyArray_DATA((PyArrayObject *)out), R[0], R[2], p);
+  return out;
+}
+
+/* Jlog_se2(R, p): Jacobian of log_se2 at the transform (R, p), as 3x3 */
+static PyObject *py_jlog_se2(PyObject *self, PyObject *args) {
+  PyObject *o_R, *o_p;
+  if (!PyArg_ParseTuple(args, "OO", &o_R, &o_p)) {
+    return NULL;
+  }
+  double *R = as_f64(o_R, 4, "R");
+  double *p = as_f64(o_p, 2, "p");
+  if (!R || !p) {
+    return NULL;
+  }
+  npy_intp dims[2] = {3, 3};
+  PyObject *out = new_f64(2, dims);
+  if (!out) {
+    return NULL;
+  }
+  se2_jlog((double *)PyArray_DATA((PyArrayObject *)out), R[0], R[2], p);
+  return out;
+}
+
+/* exp_se2(v): planar transform (R, p) of the twist v = (vx, vy, omega) */
+static PyObject *py_exp_se2(PyObject *self, PyObject *args) {
+  PyObject *o_v;
+  if (!PyArg_ParseTuple(args, "O", &o_v)) {
+    return NULL;
+  }
+  double *v = as_f64(o_v, 3, "v");
+  if (!v) {
+    return NULL;
+  }
+  double c, s, p[2];
+  se2_exp(&c, &s, p, v);
+  double R[4] = {c, -s, s, c};
+  npy_intp rdims[2] = {2, 2};
+  npy_intp pdims[1] = {2};
+  PyObject *o_R = new_f64(2, rdims);
+  PyObject *o_p = new_f64(1, pdims);
+  if (!o_R || !o_p) {
+    Py_XDECREF(o_R);
+    Py_XDECREF(o_p);
+    return NULL;
+  }
+  memcpy(PyArray_DATA((PyArrayObject *)o_R), R, sizeof(R));
+  memcpy(PyArray_DATA((PyArrayObject *)o_p), p, sizeof(p));
+  return Py_BuildValue("(NN)", o_R, o_p);
+}
+
+/* ------------------------------------------------------------------ */
 /* Module definition                                                  */
 /* ------------------------------------------------------------------ */
 
@@ -1685,6 +1769,41 @@ static PyMethodDef methods[] = {
      "\n"
      "Returns:\n"
      "    Corresponding 3 x 3 rotation matrix."},
+    {"log_so2", py_log_so2, METH_VARARGS,
+     "Logarithm map of a 2D rotation matrix.\n"
+     "\n"
+     "Args:\n"
+     "    R: Rotation matrix (4 floats, row-major).\n"
+     "\n"
+     "Returns:\n"
+     "    Rotation angle in [-pi, pi]."},
+    {"log_se2", py_log_se2, METH_VARARGS,
+     "Logarithm map of a planar rigid transform.\n"
+     "\n"
+     "Args:\n"
+     "    R: Rotation of the transform (4 floats, row-major).\n"
+     "    p: Translation of the transform (2 floats).\n"
+     "\n"
+     "Returns:\n"
+     "    Twist of the transform, as (vx, vy, omega)."},
+    {"Jlog_se2", py_jlog_se2, METH_VARARGS,
+     "Jacobian of the SE2 logarithm at a planar rigid transform.\n"
+     "\n"
+     "Args:\n"
+     "    R: Rotation of the transform (4 floats, row-major).\n"
+     "    p: Translation of the transform (2 floats).\n"
+     "\n"
+     "Returns:\n"
+     "    Jacobian of log_se2 at the transform, as a 3 x 3 array."},
+    {"exp_se2", py_exp_se2, METH_VARARGS,
+     "Exponential map of a planar twist.\n"
+     "\n"
+     "Args:\n"
+     "    v: Twist, as (vx, vy, omega).\n"
+     "\n"
+     "Returns:\n"
+     "    Pair (R, p) of the 2 x 2 rotation matrix and translation of the\n"
+     "    corresponding planar rigid transform."},
     {NULL, NULL, 0, NULL}};
 
 static struct PyModuleDef module = {
