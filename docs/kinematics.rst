@@ -30,6 +30,9 @@ Spatial algebra
 .. automodule:: pinker.kinematics.so3
     :members:
 
+.. automodule:: pinker.kinematics.se2
+    :members:
+
 .. automodule:: pinker.kinematics.se3
     :members:
 
