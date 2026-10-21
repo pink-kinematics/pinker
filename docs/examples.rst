@@ -133,6 +133,8 @@ What the examples cover
       - Maximizing manipulability with :class:`.ManipulabilityTask`
     * - ``piper_inverse_kinematics.py``, ``ur10_inverse_kinematics.py``
       - Iterating differential IK to reach a prescribed end-effector pose
+    * - ``rby1_tray_waypoints.py``
+      - Whole-body motion of a mobile base following :class:`.SE2` waypoints
     * - ``stretch_relative_target.py``, ``stretch_world_target.py``
       - Mobile manipulation, with world and mobile-base targets
     * - ``upkie_floating_base_velocity_limit.py``

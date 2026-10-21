@@ -7,6 +7,7 @@ and what they do with it. Here is an overview of some of them:
 - [Go2: squat barrier](#go2-squat-barrier)
 - [Panda: end-effector tracking](#panda-end-effector-tracking)
 - [Panda: manipulability](#panda-manipulability)
+- [RB-Y1: tray waypoints](#rb-y1-tray-waypoints)
 - [Stretch: world target](#stretch-world-target)
 - [Upkie: rolling](#upkie-rolling)
 - [UR10: inverse kinematics](#ur10-inverse-kinematics)
@@ -78,6 +79,16 @@ In `panda_manipulability.py`, two Panda arms track the same target as it sweeps 
 | Posture | $10^{-3}$ | $10^{-3}$ |
 
 Sliders tune the cost and the desired rate of the manipulability task while the example runs. A negative rate steers the robot towards singular configurations rather than away from them. When the example terminates, it plots the Yoshikawa manipulability index and the end-effector task error of both robots: maximizing manipulability keeps the arm away from singularities, at the price of a larger tracking error.
+
+## RB-Y1: tray waypoints
+
+In `rby1_tray_waypoints.py`, an RB-Y1 carries a tray along a figure-eight of planar waypoints. The path is interpolated between `SE2` waypoints, while only the robot's hands have targets: whole-body inverse kinematics makes the mobile base drive along the path.
+
+| Task | Position cost | Orientation cost |
+|------|---------------|------------------|
+| Left hand | 1 | 1 |
+| Posture | $10^{-2}$ | - |
+| Right hand | 1 | 1 |
 
 ## Stretch: world target
 
