@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- kinematics: `SE2` class of planar rigid transforms
+
 ## [1.1.0] - 2026-10-19
 
 ### Added
