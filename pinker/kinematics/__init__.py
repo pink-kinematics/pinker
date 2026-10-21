@@ -8,7 +8,8 @@ This module implements the kinematics functions used by Pinker:
   fixed joints);
 - forward kinematics, frame placements, frame and joint Jacobians in world,
   local and local-world-aligned frames;
-- Lie-group operations on SE(3) and configuration spaces;
+- Lie-group operations on SO(2), SE(2), SO(3), SE(3) and configuration
+  spaces;
 - center of mass and its Jacobian.
 
 Heavy computations are delegated to an internal C extension. Functions were
