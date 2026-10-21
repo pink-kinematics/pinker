@@ -464,3 +464,65 @@ def exp3(w: ArrayLike) -> np.ndarray:
         Corresponding rotation matrix.
     """
     return _c.exp3(_vec(w, 3))
+
+
+def log_se2(M: SE2) -> np.ndarray:
+    """Logarithm map of a planar rigid transform.
+
+    Args:
+        M: Planar rigid transform.
+
+    Returns:
+        Twist (vx, vy, omega) whose exponential is the transform.
+    """
+    return _c.log_se2(*_se2_c_args(M))
+
+
+def Jlog_se2(M: SE2) -> np.ndarray:
+    """Jacobian of the SE2 logarithm at a planar rigid transform.
+
+    Args:
+        M: Planar rigid transform.
+
+    Returns:
+        Jacobian of :func:`log_se2` at the transform, of shape (3, 3).
+    """
+    return _c.Jlog_se2(*_se2_c_args(M))
+
+
+def exp_se2(nu: ArrayLike) -> SE2:
+    """Exponential map of a planar twist.
+
+    Args:
+        nu: Twist, as a vector (vx, vy, omega).
+
+    Returns:
+        Planar rigid transform whose logarithm is the twist.
+    """
+    R, p = _c.exp_se2(_vec(nu, 3))
+    return SE2(R, p)
+
+
+def log_so2(R: ArrayLike) -> float:
+    """Logarithm map of a 2D rotation matrix.
+
+    Args:
+        R: 2x2 rotation matrix.
+
+    Returns:
+        Rotation angle in [-pi, pi].
+    """
+    return _c.log_so2(np.ascontiguousarray(R, dtype=np.float64))
+
+
+def exp_so2(theta: float) -> np.ndarray:
+    """Exponential map of a 2D rotation angle.
+
+    Args:
+        theta: Rotation angle in [rad].
+
+    Returns:
+        Corresponding 2x2 rotation matrix.
+    """
+    c, s = np.cos(theta), np.sin(theta)
+    return np.array([[c, -s], [s, c]])
