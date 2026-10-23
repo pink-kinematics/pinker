@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# requires-python = ">=3.10"
+# requires-python = ">=3.11"
 # dependencies = ["daqp", "loop-rate-limiters", "pinker", "pycollada",
 # "qpsolvers", "robot_descriptions >=3.1.0", "trimesh", "viser", "xacrodoc"]
 #
