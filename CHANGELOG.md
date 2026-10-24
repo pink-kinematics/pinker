@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump minimum supported Python version to 3.11
 
+### Removed
+
+- Python 3.10 support (end of life)
+
 ## [1.1.0] - 2026-10-19
 
 ### Added
