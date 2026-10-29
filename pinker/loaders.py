@@ -55,10 +55,13 @@ def load_robot_description(
 
     Args:
         description_name: Name of the robot description, for instance
-            ``"ur3_official_description"``.
+            ``"ur3_official_description"``. Descriptions are read from their
+            respective URDF or MJCF files.
         root_joint: Joint between the world and the root link of the robot,
             either by name (``"free_flyer"``, ``"planar"`` or
             ``"spherical"``) or as a joint model. Defaults to a fixed root.
+            Ignored, with a warning, for MJCF descriptions whose root body
+            already has a joint.
         commit: If specified, check out that commit from the cloned robot
             description repository.
 
@@ -88,6 +91,8 @@ def load_robot_description(
             os.environ.pop("ROBOT_DESCRIPTION_COMMIT", None)
     if hasattr(module, "URDF_PATH"):
         urdf_path = module.URDF_PATH
+    elif hasattr(module, "MJCF_PATH"):
+        return RobotWrapper.BuildFromMJCF(module.MJCF_PATH, root_joint=joint)
     else:  # xacro-backed description
         from robot_descriptions._xacro import get_urdf_path
 
@@ -141,3 +146,39 @@ def load_robot_urdf(
     return RobotWrapper.BuildFromURDF(
         os.fspath(urdf_path), package_dirs=package_dirs, root_joint=joint
     )
+
+
+def load_robot_mjcf(
+    mjcf_path: Union[str, os.PathLike],
+    root_joint: Optional[Union[str, JointModel]] = None,
+) -> RobotWrapper:
+    """Load a robot model from an MJCF file.
+
+    The robot bundles a model with its data and initial configuration, which
+    is what a :class:`.Configuration` is built from:
+
+    .. code:: python
+
+        robot = pinker.load_robot_mjcf("robot.xml")
+        configuration = pinker.Configuration(
+            robot.model, robot.data, robot.q0
+        )
+
+    Args:
+        mjcf_path: Path to the MJCF file.
+        root_joint: Joint between the world and the root body of the robot,
+            either by name (``"free_flyer"``, ``"planar"`` or
+            ``"spherical"``) or as a joint model. Defaults to a fixed root.
+            Ignored, with a warning, if the root body already has a joint,
+            for instance a ``<freejoint>``.
+
+    Returns:
+        Robot model, bundled with its data and initial configuration.
+
+    Raises:
+        FileNotFoundError: if there is no MJCF file at that path.
+        ValueError: if the root joint is not a known name, or if the MJCF
+            uses a feature that the parser does not support.
+    """
+    joint = __make_root_joint(root_joint)
+    return RobotWrapper.BuildFromMJCF(os.fspath(mjcf_path), root_joint=joint)

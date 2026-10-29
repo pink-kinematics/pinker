@@ -53,9 +53,11 @@ Descriptions are then loaded by name with :func:`.load_robot_description`:
 
     robot = pinker.load_robot_description("ur3_official_description")
 
-Local URDF files are loaded with :func:`.load_robot_urdf`, which does not
-require the ``robot_descriptions`` package:
+Local URDF and MJCF files are loaded with :func:`.load_robot_urdf` and
+:func:`.load_robot_mjcf`, which do not require the ``robot_descriptions``
+package:
 
 .. code:: python
 
     robot = pinker.load_robot_urdf("robot.urdf")
+    robot = pinker.load_robot_mjcf("robot.xml")
