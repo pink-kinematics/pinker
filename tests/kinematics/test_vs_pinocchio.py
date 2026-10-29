@@ -7,6 +7,7 @@ environment) and compare every quantity pinker.kinematics computes against the
 reference implementation.
 """
 
+import logging
 import os
 import unittest
 
@@ -21,18 +22,12 @@ from compare import (
 
 from pinker import kinematics as kin
 
-HERE = os.path.dirname(__file__)
-# Extra URDFs from a Pinocchio checkout next to the pinker workspace, when
-# present (these tests only run on the bundled URDF otherwise).
-PINOCCHIO_MODELS = os.path.join(HERE, "..", "..", "..", "pinocchio", "models")
+ASSETS = os.path.join(os.path.dirname(__file__), "..", "assets")
 
 URDF_PATHS = [
-    os.path.join(HERE, "wheeled.urdf"),
+    os.path.join(ASSETS, name)
+    for name in ("wheeled.urdf", "simple_humanoid.urdf", "baxter_simple.urdf")
 ]
-for name in ("simple_humanoid.urdf", "baxter_simple.urdf"):
-    path = os.path.join(PINOCCHIO_MODELS, name)
-    if os.path.exists(path):
-        URDF_PATHS.append(path)
 
 ROOT_JOINTS = ["fixed", "freeflyer", "planar"]
 

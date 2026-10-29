@@ -11,7 +11,7 @@ import numpy as np
 from pinker import kinematics as kin
 
 HERE = os.path.dirname(__file__)
-WHEELED_URDF = os.path.join(HERE, "wheeled.urdf")
+WHEELED_URDF = os.path.join(HERE, "..", "assets", "wheeled.urdf")
 DBL_MAX = np.finfo(np.float64).max
 
 VISUAL_URDF = """<?xml version="1.0"?>

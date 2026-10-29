@@ -1,0 +1,27 @@
+<!-- MJCF counterpart of double_pendulum.urdf, with the same values.
+     SPDX-FileCopyrightText: 2018-2020 LAAS-CNRS, University of Edinburgh, INRIA
+     SPDX-License-Identifier: BSD-3-Clause -->
+<mujoco model="double_pendulum">
+  <compiler angle="radian"/>
+  <default>
+    <joint axis="1 0 0" damping="0.05"/>
+    <geom type="box" contype="0" conaffinity="0"/>
+  </default>
+  <worldbody>
+    <body name="base_link">
+      <inertial pos="0 0 0" mass="0.1" diaginertia="1 1 1"/>
+      <geom size="0.025 0.025 0.025" rgba="1 0 0 1"/>
+      <body name="link1" pos="0.025 0 0">
+        <joint name="joint1"/>
+        <inertial pos="0 0 0.05" mass="0.2" diaginertia="0.000177083 0.000177083 0.000020833"/>
+        <geom pos="0 0 0.05" size="0.0125 0.0125 0.05" rgba="0 1 0 1"/>
+        <body name="link2" pos="0.0125 0 0.1">
+          <joint name="joint2"/>
+          <inertial pos="0 0 0.1" mass="0.3" diaginertia="0.001015625 0.001015625 0.002"/>
+          <geom pos="0 0 0.1" size="0.0125 0.0125 0.1" rgba="0 0 1 1"/>
+          <site name="tip" pos="0 0 0.2"/>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>
