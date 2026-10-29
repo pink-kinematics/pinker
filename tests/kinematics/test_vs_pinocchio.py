@@ -53,6 +53,48 @@ def build_pair(urdf_path: str, root: str):
     return pin_model, kin_model
 
 
+def mjcf_paths():
+    """MJCF files to compare, Go2 being downloaded on first use."""
+    from robot_descriptions import go2_mj_description
+
+    return [
+        go2_mj_description.MJCF_PATH,
+        os.path.join(ASSETS, "simple_humanoid.xml"),
+    ]
+
+
+def build_mjcf_pair(mjcf_path: str, root: str):
+    """Build the same MJCF model with Pinocchio and pinker.kinematics."""
+    if root == "fixed":
+        pin_model = pin.buildModelFromMJCF(mjcf_path)
+        kin_model = kin.build_model_from_mjcf(mjcf_path)
+    else:
+        pin_model = pin.buildModelFromMJCFAndRootJoint(
+            mjcf_path, pin.JointModelFreeFlyer(), "root_joint"
+        )
+        # Both parsers ignore the root joint, with a warning, when the root
+        # body already has a joint (Go2 has a freejoint)
+        logging.disable(logging.WARNING)
+        try:
+            kin_model = kin.build_model_from_mjcf(
+                mjcf_path, kin.JointModelFreeFlyer()
+            )
+        finally:
+            logging.disable(logging.NOTSET)
+    # Pinker deliberately leaves the translations of free joints unbounded
+    # where Pinocchio bounds them by 1.01, like quaternion coordinates.
+    lower = pin_model.lowerPositionLimit.copy()
+    upper = pin_model.upperPositionLimit.copy()
+    for joint in pin_model.joints[1:]:
+        is_root_joint = pin_model.names[joint.id] == "root_joint"
+        if joint.shortname() == "JointModelFreeFlyer" and not is_root_joint:
+            lower[joint.idx_q : joint.idx_q + 3] = -np.inf
+            upper[joint.idx_q : joint.idx_q + 3] = np.inf
+    pin_model.lowerPositionLimit = lower
+    pin_model.upperPositionLimit = upper
+    return pin_model, kin_model
+
+
 class TestVersusPinocchio(unittest.TestCase):
     """Compare models and kinematics against Pinocchio's."""
 
@@ -70,6 +112,26 @@ class TestVersusPinocchio(unittest.TestCase):
             for root in ROOT_JOINTS:
                 with self.subTest(urdf=os.path.basename(urdf_path), root=root):
                     pin_model, kin_model = build_pair(urdf_path, root)
+                    rng = np.random.default_rng(42)
+                    for _ in range(10):
+                        q = random_configuration(pin_model, rng)
+                        assert_kinematics_equal(pin_model, kin_model, q)
+                        assert_liegroup_equal(pin_model, kin_model, q, rng)
+
+    def test_mjcf_model(self):
+        """Models built from MJCF match joint for joint, frame for frame."""
+        for mjcf_path in mjcf_paths():
+            for root in ("fixed", "freeflyer"):
+                with self.subTest(mjcf=os.path.basename(mjcf_path), root=root):
+                    pin_model, kin_model = build_mjcf_pair(mjcf_path, root)
+                    assert_models_equal(pin_model, kin_model)
+
+    def test_mjcf_kinematics(self):
+        """Kinematics of MJCF models match on random configurations."""
+        for mjcf_path in mjcf_paths():
+            for root in ("fixed", "freeflyer"):
+                with self.subTest(mjcf=os.path.basename(mjcf_path), root=root):
+                    pin_model, kin_model = build_mjcf_pair(mjcf_path, root)
                     rng = np.random.default_rng(42)
                     for _ in range(10):
                         q = random_configuration(pin_model, rng)
