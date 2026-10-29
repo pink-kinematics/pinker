@@ -83,6 +83,47 @@ class TestSO3(unittest.TestCase):
                 )
             )
 
+    def test_rotation_from_axis_angle_matches_pinocchio(self):
+        """Axis-angle rotations agree with Pinocchio's exponential map."""
+        for _ in range(100):
+            axis = np.random.standard_normal(3)
+            axis /= np.linalg.norm(axis)
+            angle = np.random.uniform(-2.0 * np.pi, 2.0 * np.pi)
+            self.assertTrue(
+                np.allclose(
+                    kin.rotation_from_axis_angle(axis, angle),
+                    pin.exp3(axis * angle),
+                    atol=1e-12,
+                )
+            )
+
+    def test_rotation_from_z_axis_matches_eigen(self):
+        """Minimal rotation from the z-axis agrees with Eigen's."""
+        z_axes = [np.random.standard_normal(3) for _ in range(100)]
+        # Close to but not exactly opposite, where the rotation axis is
+        # arbitrary and Eigen picks a different one than MuJoCo
+        z_axes += [np.array([0.0, 0.0, 1.0]), np.array([1e-3, 0.0, -1.0])]
+        for z_axis in z_axes:
+            z_axis /= np.linalg.norm(z_axis)
+            R = kin.rotation_from_z_axis(z_axis)
+            self.assertTrue(
+                np.allclose(
+                    R,
+                    pin.Quaternion.FromTwoVectors(
+                        np.array([0.0, 0.0, 1.0]), z_axis
+                    ).matrix(),
+                    atol=1e-9,
+                )
+            )
+
+    def test_rotation_from_z_axis_opposite(self):
+        """Pointing down the z-axis yields a half turn about the x-axis.
+
+        The axis is arbitrary in this case, we pick the same as MuJoCo.
+        """
+        R = kin.rotation_from_z_axis(np.array([0.0, 0.0, -1.0]))
+        self.assertTrue(np.allclose(R, np.diag([1.0, -1.0, -1.0])))
+
     def test_exp3_log3_roundtrip(self):
         """exp3 and log3 are inverse of each other below pi."""
         for _ in range(100):

@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - kinematics: `SE2` class of planar rigid transforms
 - kinematics: `exp_se2`, `log_se2` and `Jlog_se2` maps on SE(2)
 - kinematics: `exp_so2` and `log_so2` maps on SO(2)
+- kinematics: `rotation_from_axis_angle` rotation about an axis by an angle
+- kinematics: `rotation_from_z_axis` minimal rotation from the z-axis to a unit vector
 
 ### Changed
 

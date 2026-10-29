@@ -73,6 +73,8 @@ from .se3 import SE3, Inertia, Motion
 from .so3 import (
     quaternion_to_matrix,
     quaternion_wxyz,
+    rotation_from_axis_angle,
+    rotation_from_z_axis,
     rpy_to_matrix,
     skew,
 )
@@ -139,6 +141,8 @@ __all__ = [
     "neutral",
     "quaternion_to_matrix",
     "quaternion_wxyz",
+    "rotation_from_axis_angle",
+    "rotation_from_z_axis",
     "rpy_to_matrix",
     "skew",
     "update_frame_placements",
