@@ -141,3 +141,35 @@ def skew(v: ArrayLike) -> np.ndarray:
             [-y, x, 0.0],
         ]
     )
+
+
+def rotation_from_axis_angle(axis: ArrayLike, angle: float) -> np.ndarray:
+    """Rotation by a given angle about a given axis.
+
+    Args:
+        axis: Unit vector of the rotation axis.
+        angle: Rotation angle, in [rad].
+
+    Returns:
+        Rotation matrix.
+    """
+    K = skew(axis)
+    return np.eye(3) + np.sin(angle) * K + (1.0 - np.cos(angle)) * K @ K
+
+
+def rotation_from_z_axis(z_axis: ArrayLike) -> np.ndarray:
+    """Minimal rotation that maps the z-axis to a given unit vector.
+
+    Args:
+        z_axis: Unit vector to map the z-axis to.
+
+    Returns:
+        Rotation matrix about an axis orthogonal to both the z-axis and
+        ``z_axis``, or by half a turn about the x-axis if ``z_axis`` points
+        down the z-axis.
+    """
+    cos_angle = z_axis[2]
+    if cos_angle < -1.0 + 1e-12:  # opposite: any orthogonal axis will do
+        return np.diag([1.0, -1.0, -1.0])
+    K = skew(np.cross([0.0, 0.0, 1.0], z_axis))  # sine times unit axis
+    return np.eye(3) + K + K @ K / (1.0 + cos_angle)

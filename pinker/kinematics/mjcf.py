@@ -31,7 +31,6 @@ from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Tuple
 
 import numpy as np
 
-from .algorithms import exp3
 from .joints import (
     JT_FREEFLYER,
     JT_PRISMATIC,
@@ -41,7 +40,11 @@ from .joints import (
 )
 from .model import Frame, FrameType, Model
 from .se3 import SE3, Inertia
-from .so3 import quaternion_to_matrix
+from .so3 import (
+    quaternion_to_matrix,
+    rotation_from_axis_angle,
+    rotation_from_z_axis,
+)
 
 if TYPE_CHECKING:
     from .geometry import GeometryModel
@@ -225,12 +228,12 @@ class _Mjcf:
         elif "axisangle" in attributes:
             axis_angle = _floats(attributes["axisangle"], 4)
             angle = axis_angle[3] * self.angle_scale
-            rotation = exp3(_unit(axis_angle[:3]) * angle)
+            rotation = rotation_from_axis_angle(_unit(axis_angle[:3]), angle)
         elif "euler" in attributes:
             angles = _floats(attributes["euler"], 3) * self.angle_scale
             for axis_name, angle in zip(self.eulerseq, angles):
                 axis = np.eye(3)["xyz".index(axis_name.lower())]
-                R = exp3(axis * angle)
+                R = rotation_from_axis_angle(axis, angle)
                 if axis_name.islower():  # about moving axes, as in MuJoCo
                     rotation = rotation @ R
                 else:  # about fixed axes
@@ -243,7 +246,9 @@ class _Mjcf:
                 [x_axis, y_axis, np.cross(x_axis, y_axis)]
             )
         elif "zaxis" in attributes:
-            rotation = _rotation_from_z(_unit(_floats(attributes["zaxis"], 3)))
+            rotation = rotation_from_z_axis(
+                _unit(_floats(attributes["zaxis"], 3))
+            )
         return SE3(rotation, translation)
 
     def bodies(
@@ -271,23 +276,6 @@ class _Mjcf:
                 yield body, parent, name, childclass
                 for child in reversed(body.findall("body")):
                     stack.append((child, body, childclass))
-
-
-def _rotation_from_z(z_axis: np.ndarray) -> np.ndarray:
-    """Minimal rotation that maps the z-axis to a given unit vector.
-
-    Args:
-        z_axis: Unit vector to map the z-axis to.
-
-    Returns:
-        Rotation matrix.
-    """
-    cos_angle = z_axis[2]
-    axis = np.cross([0.0, 0.0, 1.0], z_axis)
-    sin_angle = np.linalg.norm(axis)
-    if sin_angle < 1e-12:  # aligned or opposite
-        return np.eye(3) if cos_angle > 0.0 else np.diag([1.0, -1.0, -1.0])
-    return exp3(axis / sin_angle * np.arctan2(sin_angle, cos_angle))
 
 
 def _parse_inertial(mjcf: _Mjcf, body: ET.Element, body_name: str) -> Inertia:
@@ -671,7 +659,7 @@ def build_geom_from_mjcf(model: Model, filename: str) -> "GeometryModel":
             if "fromto" in attributes and shape == "cylinder":
                 fromto = _floats(attributes["fromto"], 6)
                 start, end = fromto[:3], fromto[3:]
-                rotation = _rotation_from_z(_unit(end - start))
+                rotation = rotation_from_z_axis(_unit(end - start))
                 pose = SE3(rotation, 0.5 * (start + end))
                 size = np.array([size[0], 0.5 * np.linalg.norm(end - start)])
             elif "fromto" in attributes:
