@@ -42,6 +42,9 @@ Loading models
 .. automodule:: pinker.kinematics.urdf
     :members:
 
+.. automodule:: pinker.kinematics.mjcf
+    :members:
+
 .. automodule:: pinker.kinematics.robot_wrapper
     :members:
 

@@ -5,7 +5,7 @@
 This module implements the kinematics functions used by Pinker:
 
 - models built from URDF (revolute, continuous, prismatic, planar, floating and
-  fixed joints);
+  fixed joints) or MJCF (hinge, slide, ball and free joints);
 - forward kinematics, frame placements, frame and joint Jacobians in world,
   local and local-world-aligned frames;
 - Lie-group operations on SO(2), SE(2), SO(3), SE(3) and configuration
@@ -61,6 +61,11 @@ from .joints import (
     JointModelRZ,
     JointModelSpherical,
 )
+from .mjcf import (
+    build_geom_from_mjcf,
+    build_model_from_mjcf,
+    build_model_from_mjcf_xml,
+)
 from .model import Data, Frame, FrameType, Model, ReferenceFrame
 from .robot_wrapper import RobotWrapper
 from .se2 import SE2
@@ -106,7 +111,10 @@ __all__ = [
     "RobotWrapper",
     "SE2",
     "SE3",
+    "build_geom_from_mjcf",
     "build_geom_from_urdf",
+    "build_model_from_mjcf",
+    "build_model_from_mjcf_xml",
     "build_model_from_urdf",
     "build_model_from_xml",
     "center_of_mass",

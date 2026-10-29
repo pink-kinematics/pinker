@@ -16,8 +16,9 @@ a robot wrapper, then display configurations as the inverse kinematics unrolls:
     viz.display(configuration.q)
 
 Visuals come from the geometry model that
-:func:`~pinker.kinematics.urdf.build_geom_from_urdf` reads from the URDF: see
-:ref:`Kinematics` for the geometry types the parser supports.
+:func:`~pinker.kinematics.urdf.build_geom_from_urdf` reads from the URDF, or
+:func:`~pinker.kinematics.mjcf.build_geom_from_mjcf` from the MJCF: see
+:ref:`Kinematics` for the geometry types the parsers support.
 
 .. automodule:: pinker.visualizer
     :members:
