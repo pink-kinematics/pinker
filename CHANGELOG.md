@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- examples: Microban moving its hands, feet and pelvis to interactive targets
 - examples: RB-Y1 carrying a tray along `SE2` waypoints
 - kinematics: `build_geom_from_mjcf` to read visual geoms from MJCF files
 - kinematics: `build_model_from_mjcf` and `build_model_from_mjcf_xml` MJCF parsers

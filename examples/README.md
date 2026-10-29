@@ -5,6 +5,7 @@ and what they do with it. Here is an overview of some of them:
 
 - [Draco 3: reaching](#draco-3-reaching)
 - [Go2: squat barrier](#go2-squat-barrier)
+- [Microban: posture](#microban-posture)
 - [Panda: end-effector tracking](#panda-end-effector-tracking)
 - [Panda: manipulability](#panda-manipulability)
 - [RB-Y1: tray waypoints](#rb-y1-tray-waypoints)
@@ -61,6 +62,17 @@ https://github.com/domrachev03/pink/assets/28687492/78281f44-3676-4d4d-9619-768b
 | Barrier | Gain |
 |---------|------|
 | Base position | $10^{2}$ |
+
+## Microban: posture
+
+In `microban_posture.py`, a Microban humanoid loaded from its MJCF description follows hands, feet and pelvis targets that you can move around in Viser. Hand frames are added to the model at the tips of the forearms, and hand targets only translate:
+
+| Task | Cost |
+|------|------|
+| Feet | (1, 1) |
+| Hands | (1, 0) |
+| Pelvis | (1, 1) |
+| Posture | $10^{-3}$ |
 
 ## Panda: end-effector tracking
 
