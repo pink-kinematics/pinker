@@ -11,16 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - examples: Microban moving its hands, feet and pelvis to interactive targets
 - examples: RB-Y1 carrying a tray along `SE2` waypoints
+- kinematics: `RobotWrapper.BuildFromMJCF`
+- kinematics: `SE2` class of planar rigid transforms
 - kinematics: `build_geom_from_mjcf` to read visual geoms from MJCF files
 - kinematics: `build_model_from_mjcf` and `build_model_from_mjcf_xml` MJCF parsers
-- kinematics: `RobotWrapper.BuildFromMJCF`
-- loaders: `load_robot_description` loads descriptions that only have an MJCF
-- loaders: `load_robot_mjcf` to load robot models from MJCF files
-- kinematics: `SE2` class of planar rigid transforms
 - kinematics: `exp_se2`, `log_se2` and `Jlog_se2` maps on SE(2)
 - kinematics: `exp_so2` and `log_so2` maps on SO(2)
 - kinematics: `rotation_from_axis_angle` rotation about an axis by an angle
 - kinematics: `rotation_from_z_axis` minimal rotation from the z-axis to a unit vector
+- loaders: `load_robot_description` loads descriptions that only have an MJCF
+- loaders: `load_robot_mjcf` to load robot models from MJCF files
 
 ### Changed
 
