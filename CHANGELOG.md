@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-05
+
 ### Added
 
 - examples: Microban moving its hands, feet and pelvis to interactive targets
@@ -79,7 +81,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog as of Pink 4.4.0.
 
-[unreleased]: https://github.com/pink-kinematics/pinker/compare/v1.1.0...HEAD
+[unreleased]: https://github.com/pink-kinematics/pinker/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/pink-kinematics/pinker/releases/tag/v1.2.0
 [1.1.0]: https://github.com/pink-kinematics/pinker/releases/tag/v1.1.0
 [1.0.0]: https://github.com/pink-kinematics/pinker/releases/tag/v1.0.0
 [0.1.0]: https://github.com/pink-kinematics/pinker/releases/tag/v0.1.0
