@@ -34,7 +34,7 @@ from .se3 import SE3, Inertia
 from .so3 import rpy_to_matrix
 
 if TYPE_CHECKING:
-    from .geometry import GeometryModel
+    from .geometry import GeometryModel, GeometryType
 
 
 def _parse_origin(element: Optional[ET.Element]) -> SE3:
@@ -181,8 +181,18 @@ def build_model_from_xml(
         )
         root_entry = (root_link, root_id, SE3.Identity(), root_frame)
     else:
-        model.append_body_to_joint(0, _parse_inertial(links[root_link]))
-        root_frame = model.add_body_frame(root_link, 0, SE3.Identity(), 0)
+        root_inertia = _parse_inertial(links[root_link])
+        model.append_body_to_joint(0, root_inertia)
+        root_frame = model.add_frame(
+            Frame(
+                root_link,
+                0,
+                0,
+                SE3.Identity(),
+                FrameType.BODY,
+                root_inertia,
+            )
+        )
         root_entry = (root_link, 0, SE3.Identity(), root_frame)
 
     # Depth-first traversal with child joints in file order, like Pinocchio.
@@ -206,6 +216,7 @@ def build_model_from_xml(
                         link_frame,
                         placement,
                         FrameType.FIXED_JOINT,
+                        child_inertia,
                     )
                 )
                 model.append_body_to_joint(
@@ -360,21 +371,30 @@ def build_geom_from_urdf(
     model: Model,
     filename: str,
     package_dirs: Optional[List[str]] = None,
+    geometry_type: Optional["GeometryType"] = None,
 ) -> "GeometryModel":
-    """Parse the visual geometries of a URDF file.
+    """Parse the visual or collision geometries of a URDF file.
 
     Args:
         model: Model previously built from the same URDF.
         filename: Path to the URDF file.
         package_dirs: Directories where mesh files are looked up.
+        geometry_type: Kind of geometries to parse, ``GeometryType.VISUAL``
+            (default) for <visual> elements or ``GeometryType.COLLISION`` for
+            <collision> elements.
 
     Returns:
-        Geometry model with one object per URDF <visual> element.
+        Geometry model with one object per URDF <visual> or <collision>
+        element. Geometries are named ``<link>_<index>``, where the index
+        counts elements of the same kind in the link, as in Pinocchio.
     """
     import os
 
-    from .geometry import GeometryModel, GeometryObject
-    from .model import FrameType
+    from .geometry import GeometryModel, GeometryObject, GeometryType
+
+    if geometry_type is None:
+        geometry_type = GeometryType.VISUAL
+    tag = "visual" if geometry_type == GeometryType.VISUAL else "collision"
 
     with open(filename, "r", encoding="utf-8") as handle:
         robot = ET.fromstring(handle.read())
@@ -390,25 +410,21 @@ def build_geom_from_urdf(
             rgba = [float(x) for x in color.get("rgba").split()]
             materials[material.get("name")] = np.array(rgba)
 
-    # BODY frames map each link to its supporting joint and placement
-    link_frames = {
-        frame.name: frame
-        for frame in model.frames
-        if frame.type == FrameType.BODY
-    }
-
+    # Links are visited in the order of their BODY frames, that is, in the
+    # depth-first order of the kinematic tree, as in Pinocchio
+    links = {link.get("name"): link for link in robot.findall("link")}
     geometry_model = GeometryModel()
-    for link in robot.findall("link"):
-        link_name = link.get("name")
-        if link_name not in link_frames:
+    for frame_id, frame in enumerate(model.frames):
+        if frame.type != FrameType.BODY or frame.name not in links:
             continue
-        frame = link_frames[link_name]
-        for index, visual in enumerate(link.findall("visual")):
-            origin = _parse_origin(visual.find("origin"))
+        link_name = frame.name
+        link = links[link_name]
+        for index, element in enumerate(link.findall(tag)):
+            origin = _parse_origin(element.find("origin"))
             placement = frame.placement * origin
             name = f"{link_name}_{index}"
             color = None
-            material = visual.find("material")
+            material = element.find("material")
             if material is not None:
                 color_elem = material.find("color")
                 if color_elem is not None:
@@ -417,64 +433,51 @@ def build_geom_from_urdf(
                     )
                 elif material.get("name") in materials:
                     color = materials[material.get("name")]
-            geometry = visual.find("geometry")
+            geometry = element.find("geometry")
             box = geometry.find("box")
             sphere = geometry.find("sphere")
             cylinder = geometry.find("cylinder")
             mesh = geometry.find("mesh")
+            mesh_path = ""
+            mesh_scale = None
             if box is not None:
+                shape = "box"
                 size = np.array([float(x) for x in box.get("size").split()])
-                obj = GeometryObject(
-                    name,
-                    frame.parent_joint,
-                    placement,
-                    "box",
-                    size,
-                    mesh_color=color,
-                )
             elif sphere is not None:
-                obj = GeometryObject(
-                    name,
-                    frame.parent_joint,
-                    placement,
-                    "sphere",
-                    np.array([float(sphere.get("radius"))]),
-                    mesh_color=color,
-                )
+                shape = "sphere"
+                size = np.array([float(sphere.get("radius"))])
             elif cylinder is not None:
+                shape = "cylinder"
                 size = np.array(
                     [
                         float(cylinder.get("radius")),
                         float(cylinder.get("length")),
                     ]
                 )
-                obj = GeometryObject(
-                    name,
-                    frame.parent_joint,
-                    placement,
-                    "cylinder",
-                    size,
-                    mesh_color=color,
-                )
             elif mesh is not None:
+                shape = "mesh"
+                size = None
                 mesh_path = _resolve_mesh_path(
                     mesh.get("filename"), urdf_dir, package_dirs
                 )
                 if not mesh_path:
-                    continue  # mesh file not found: skip this visual
-                scale = np.array(
+                    continue  # mesh file not found: skip this geometry
+                mesh_scale = np.array(
                     [float(x) for x in mesh.get("scale", "1 1 1").split()]
-                )
-                obj = GeometryObject(
-                    name,
-                    frame.parent_joint,
-                    placement,
-                    "mesh",
-                    mesh_path=mesh_path,
-                    mesh_scale=scale,
-                    mesh_color=color,
                 )
             else:  # unknown geometry type: skip
                 continue
-            geometry_model.add_geometry_object(obj)
+            geometry_model.add_geometry_object(
+                GeometryObject(
+                    name,
+                    frame.parent_joint,
+                    placement,
+                    shape,
+                    size,
+                    mesh_path=mesh_path,
+                    mesh_scale=mesh_scale,
+                    mesh_color=color,
+                    parent_frame=frame_id,
+                )
+            )
     return geometry_model
