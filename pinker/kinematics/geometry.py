@@ -37,6 +37,7 @@ class GeometryObject:
         mesh_path: Path to the mesh file, for mesh shapes.
         mesh_scale: Scale applied to the mesh (3,).
         mesh_color: RGBA color in [0, 1].
+        parent_frame: Index of the frame of the body the shape belongs to.
     """
 
     def __init__(
@@ -49,6 +50,7 @@ class GeometryObject:
         mesh_path: str = "",
         mesh_scale: Optional[np.ndarray] = None,
         mesh_color: Optional[np.ndarray] = None,
+        parent_frame: int = 0,
     ):
         """Initialize geometry object.
 
@@ -63,9 +65,12 @@ class GeometryObject:
             mesh_path: Path to the mesh file, for mesh shapes.
             mesh_scale: Scale applied to the mesh (3,), defaults to ones.
             mesh_color: RGBA color in [0, 1], defaults to light gray.
+            parent_frame: Index of the frame of the body the shape belongs
+                to, defaults to the universe frame.
         """
         self.name = name
         self.parent_joint = parent_joint
+        self.parent_frame = parent_frame
         self.placement = placement
         self.shape = shape
         self.size = np.zeros(0) if size is None else np.asarray(size)
