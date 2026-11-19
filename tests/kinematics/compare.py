@@ -166,3 +166,37 @@ def random_configuration(
         pin.neutral(pin_model),
         2.0 * rng.standard_normal(pin_model.nv),
     )
+
+
+def geometry_size(geometry) -> tuple:
+    """Shape and size of a Pinocchio geometry, in pinker.kinematics terms."""
+    shape = type(geometry).__name__
+    if shape == "Box":
+        return "box", 2.0 * np.array(geometry.halfSide)
+    if shape == "Sphere":
+        return "sphere", np.array([geometry.radius])
+    if shape == "Cylinder":
+        return "cylinder", np.array(
+            [geometry.radius, 2.0 * geometry.halfLength]
+        )
+    return "mesh", np.zeros(0)
+
+
+def assert_geometry_models_equal(
+    pin_geometry: pin.GeometryModel, kin_geometry: kin.GeometryModel
+) -> None:
+    """Check that a pinker.kinematics geometry model matches Pinocchio's."""
+    assert pin_geometry.ngeoms == kin_geometry.ngeoms
+    for gp, gm in zip(
+        pin_geometry.geometryObjects, kin_geometry.geometry_objects
+    ):
+        assert gp.name == gm.name
+        assert gp.parentJoint == gm.parent_joint
+        assert gp.parentFrame == gm.parent_frame
+        assert np.allclose(
+            gp.placement.homogeneous, gm.placement.homogeneous, atol=TOL
+        )
+        shape, size = geometry_size(gp.geometry)
+        assert shape == gm.shape
+        if shape != "mesh":
+            assert np.allclose(size, gm.size, atol=TOL)

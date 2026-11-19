@@ -14,6 +14,7 @@ import unittest
 import numpy as np
 import pinocchio as pin
 from compare import (
+    assert_geometry_models_equal,
     assert_kinematics_equal,
     assert_liegroup_equal,
     assert_models_equal,
@@ -30,6 +31,14 @@ URDF_PATHS = [
 ]
 
 ROOT_JOINTS = ["fixed", "freeflyer", "planar"]
+
+GEOMETRY_URDF = os.path.join(ASSETS, "geometries.urdf")
+GEOMETRY_MJCF = os.path.join(ASSETS, "geometries.xml")
+
+GEOMETRY_TYPES = (
+    (pin.GeometryType.VISUAL, kin.GeometryType.VISUAL),
+    (pin.GeometryType.COLLISION, kin.GeometryType.COLLISION),
+)
 
 
 def build_pair(urdf_path: str, root: str):
@@ -137,6 +146,36 @@ class TestVersusPinocchio(unittest.TestCase):
                         q = random_configuration(pin_model, rng)
                         assert_kinematics_equal(pin_model, kin_model, q)
                         assert_liegroup_equal(pin_model, kin_model, q, rng)
+
+    def test_urdf_geometry(self):
+        """Visual and collision models built from URDF match."""
+        for root in ROOT_JOINTS:
+            pin_model, kin_model = build_pair(GEOMETRY_URDF, root)
+            assert_models_equal(pin_model, kin_model)
+            for pin_type, kin_type in GEOMETRY_TYPES:
+                with self.subTest(root=root, geometry_type=kin_type.name):
+                    pin_geometry = pin.buildGeomFromUrdf(
+                        pin_model, GEOMETRY_URDF, pin_type
+                    )
+                    kin_geometry = kin.build_geom_from_urdf(
+                        kin_model, GEOMETRY_URDF, geometry_type=kin_type
+                    )
+                    assert_geometry_models_equal(pin_geometry, kin_geometry)
+
+    def test_mjcf_geometry(self):
+        """Visual and collision models built from MJCF match."""
+        for root in ("fixed", "freeflyer"):
+            pin_model, kin_model = build_mjcf_pair(GEOMETRY_MJCF, root)
+            assert_models_equal(pin_model, kin_model)
+            for pin_type, kin_type in GEOMETRY_TYPES:
+                with self.subTest(root=root, geometry_type=kin_type.name):
+                    pin_geometry = pin.buildGeomFromMJCF(
+                        pin_model, GEOMETRY_MJCF, pin_type
+                    )
+                    kin_geometry = kin.build_geom_from_mjcf(
+                        kin_model, GEOMETRY_MJCF, kin_type
+                    )
+                    assert_geometry_models_equal(pin_geometry, kin_geometry)
 
     def test_spherical_joint(self):
         """Programmatic model with a spherical joint matches Pinocchio."""
