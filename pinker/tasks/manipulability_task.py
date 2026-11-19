@@ -27,7 +27,7 @@ def check_revolute_path(model: kin.Model, frame_name: str) -> None:
     """Check all joints from root to frame are revolute.
 
     Args:
-        model: Pinocchio robot model.
+        model: Robot model.
         frame_name: Name of the frame to check.
 
     Raises:
@@ -70,7 +70,7 @@ class ManipulabilityTask(Task):
     Attributes:
         frame: Frame name for which to compute manipulability.
         cost: Weight for the manipulability task in the QP objective.
-        reference_frame: Pinocchio reference frame for Jacobian computation.
+        reference_frame: Reference frame for Jacobian computation.
         manipulability_rate: Desired rate of change of manipulability
             :math:`\dot{m}_\text{desired}` to achieve.
 
@@ -107,8 +107,8 @@ class ManipulabilityTask(Task):
             frame: Frame name (from the robot model) for which to compute and
                 maximize manipulability. This is typically the end-effector
                 frame name.
-            model: Pinocchio robot model. Used to verify that all joints on
-                the kinematic path to the frame are revolute.
+            model: Robot model used to verify that all joints on the kinematic
+                path to the frame are revolute.
             cost: Weight for the manipulability task in the QP objective.
                 Scales both the Hessian and linear terms. Higher values
                 prioritize manipulability over other tasks. Defaults to 1.0.
@@ -117,9 +117,8 @@ class ManipulabilityTask(Task):
             gain: Task gain :math:`\alpha \in [0, 1]` for additional low-pass
                 filtering. Defaults to 1.0 (no filtering) for dead-beat
                 control.
-            reference_frame: Pinocchio reference frame for Jacobian
-                computation. LOCAL and WORLD are supported.
-                Defaults to LOCAL.
+            reference_frame: Reference frame for Jacobian computation. LOCAL
+                and WORLD are supported. Defaults to LOCAL.
             manipulability_rate: Desired rate of change of manipulability to
                 achieve, in units of manipulability per second. This is the
                 target velocity for the manipulability gradient ascent. Higher
