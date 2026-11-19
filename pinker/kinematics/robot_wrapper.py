@@ -7,7 +7,7 @@ from typing import List, Optional
 import numpy as np
 
 from .algorithms import neutral
-from .geometry import GeometryModel
+from .geometry import GeometryModel, GeometryType
 from .joints import JointModel
 from .mjcf import build_geom_from_mjcf, build_model_from_mjcf
 from .model import Data, Model
@@ -23,28 +23,34 @@ class RobotWrapper:
         q0: Neutral configuration.
         visual_model: Geometry model with the robot's visuals, when built
             from URDF or MJCF.
+        collision_model: Geometry model with the robot's collision shapes,
+            when built from URDF or MJCF.
     """
 
     model: Model
     data: Data
     q0: np.ndarray
     visual_model: Optional[GeometryModel]
+    collision_model: Optional[GeometryModel]
 
     def __init__(
         self,
         model: Model,
         visual_model: Optional[GeometryModel] = None,
+        collision_model: Optional[GeometryModel] = None,
     ):
         """Wrap a robot model.
 
         Args:
             model: Robot model to wrap.
             visual_model: Geometry model with the robot's visuals.
+            collision_model: Geometry model with the robot's collision shapes.
         """
         self.model = model
         self.data = model.create_data()
         self.q0 = neutral(model)
         self.visual_model = visual_model
+        self.collision_model = collision_model
 
     @staticmethod
     def BuildFromURDF(
@@ -65,8 +71,13 @@ class RobotWrapper:
         if isinstance(package_dirs, str):
             package_dirs = [package_dirs]
         model = build_model_from_urdf(filename, root_joint)
-        visual_model = build_geom_from_urdf(model, filename, package_dirs)
-        return RobotWrapper(model, visual_model)
+        visual_model = build_geom_from_urdf(
+            model, filename, package_dirs, GeometryType.VISUAL
+        )
+        collision_model = build_geom_from_urdf(
+            model, filename, package_dirs, GeometryType.COLLISION
+        )
+        return RobotWrapper(model, visual_model, collision_model)
 
     @staticmethod
     def BuildFromMJCF(
@@ -85,8 +96,13 @@ class RobotWrapper:
             Robot wrapper.
         """
         model = build_model_from_mjcf(filename, root_joint)
-        visual_model = build_geom_from_mjcf(model, filename)
-        return RobotWrapper(model, visual_model)
+        visual_model = build_geom_from_mjcf(
+            model, filename, GeometryType.VISUAL
+        )
+        collision_model = build_geom_from_mjcf(
+            model, filename, GeometryType.COLLISION
+        )
+        return RobotWrapper(model, visual_model, collision_model)
 
     @property
     def nq(self) -> int:
