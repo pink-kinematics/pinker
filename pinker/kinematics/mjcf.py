@@ -471,7 +471,9 @@ def build_model_from_mjcf_xml(
             )
         elif parent is None and not joints:
             model.append_body_to_joint(0, inertia, body_pose)
-            body_frame = model.add_body_frame(name, 0, body_pose, 0)
+            body_frame = model.add_frame(
+                Frame(name, 0, 0, body_pose, FrameType.BODY, inertia)
+            )
         elif not joints:
             support_joint = parent_frame.parent_joint
             fixed_frame = model.add_frame(
@@ -481,6 +483,7 @@ def build_model_from_mjcf_xml(
                     parent_frame_id,
                     body_pose,
                     FrameType.FIXED_JOINT,
+                    inertia,
                 )
             )
             model.append_body_to_joint(support_joint, inertia, body_pose)
@@ -590,21 +593,44 @@ def _geom_kind_is_collision(attributes: Dict[str, str]) -> bool:
     return int(attributes.get("group", "0")) > 2
 
 
-def build_geom_from_mjcf(model: Model, filename: str) -> "GeometryModel":
-    """Parse the visual geometries of an MJCF file.
+def _geom_kind_is_visual(attributes: Dict[str, str]) -> bool:
+    """Whether a geom is only meant for display, as Pinocchio reads it.
 
-    Geoms that don't collide, or that collide but are in a group visible by
-    default (0 to 2), are visual geometries. Mesh, box, sphere and cylinder
-    geoms are supported, other shapes are skipped.
+    Args:
+        attributes: Attributes of the geom.
+
+    Returns:
+        True for geoms that don't collide, False otherwise.
+    """
+    contype = int(attributes.get("contype", "1"))
+    conaffinity = int(attributes.get("conaffinity", "1"))
+    return contype == 0 and conaffinity == 0
+
+
+def build_geom_from_mjcf(
+    model: Model,
+    filename: str,
+    geometry_type: Optional["GeometryType"] = None,
+) -> "GeometryModel":
+    """Parse the visual or collision geometries of an MJCF file.
 
     Args:
         model: Model previously built from the same MJCF.
         filename: Path to the MJCF file.
+        geometry_type: Kind of geometries to parse, ``GeometryType.VISUAL``
+            (default) or ``GeometryType.COLLISION``.
 
     Returns:
-        Geometry model with one object per visual geom.
+        Geometry model with one object per geom of the requested kind.
     """
-    from .geometry import GeometryModel, GeometryObject
+    from .geometry import GeometryModel, GeometryObject, GeometryType
+
+    if geometry_type is None:
+        geometry_type = GeometryType.VISUAL
+    if geometry_type == GeometryType.VISUAL:
+        excluded = _geom_kind_is_collision
+    else:
+        excluded = _geom_kind_is_visual
 
     with open(filename, "r", encoding="utf-8") as handle:
         mjcf = _Mjcf(handle.read())
@@ -632,11 +658,11 @@ def build_geom_from_mjcf(model: Model, filename: str) -> "GeometryModel":
             )
 
     body_frames = {
-        frame.name: frame
-        for frame in model.frames
+        frame.name: (frame_id, frame)
+        for frame_id, frame in enumerate(model.frames)
         if frame.type == FrameType.BODY
     }
-    world_frame = model.frames[0]
+    world_frame = (0, model.frames[0])
     elements = [
         (worldbody, "world", "main", world_frame)
         for worldbody in mjcf.root.findall("worldbody")
@@ -648,11 +674,13 @@ def build_geom_from_mjcf(model: Model, filename: str) -> "GeometryModel":
     )
 
     geometry_model = GeometryModel()
-    for body, body_name, childclass, frame in elements:
-        for index, geom in enumerate(body.findall("geom")):
+    for body, body_name, childclass, (frame_id, frame) in elements:
+        index = -1
+        for geom in body.findall("geom"):
             attributes = mjcf.attributes(geom, childclass)
-            if _geom_kind_is_collision(attributes):
+            if excluded(attributes):
                 continue
+            index += 1
             name = attributes.get("name", f"{body_name}_{index}")
             shape = attributes.get("type", "sphere")
             size = _floats(attributes.get("size", "0 0 0"))
@@ -680,6 +708,7 @@ def build_geom_from_mjcf(model: Model, filename: str) -> "GeometryModel":
                     "box",
                     2.0 * size[:3],  # MJCF sizes are half extents
                     mesh_color=color,
+                    parent_frame=frame_id,
                 )
             elif shape == "sphere":
                 obj = GeometryObject(
@@ -689,6 +718,7 @@ def build_geom_from_mjcf(model: Model, filename: str) -> "GeometryModel":
                     "sphere",
                     size[:1],
                     mesh_color=color,
+                    parent_frame=frame_id,
                 )
             elif shape == "cylinder":
                 obj = GeometryObject(
@@ -698,6 +728,7 @@ def build_geom_from_mjcf(model: Model, filename: str) -> "GeometryModel":
                     "cylinder",
                     np.array([size[0], 2.0 * size[1]]),  # half length
                     mesh_color=color,
+                    parent_frame=frame_id,
                 )
             elif shape == "mesh" and attributes.get("mesh") in meshes:
                 mesh_path, scale = meshes[attributes["mesh"]]
@@ -711,6 +742,7 @@ def build_geom_from_mjcf(model: Model, filename: str) -> "GeometryModel":
                     mesh_path=mesh_path,
                     mesh_scale=scale,
                     mesh_color=color,
+                    parent_frame=frame_id,
                 )
             else:  # unsupported geometry type: skip
                 continue
