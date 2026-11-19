@@ -12,6 +12,7 @@ from pinker import kinematics as kin
 
 HERE = os.path.dirname(__file__)
 WHEELED_URDF = os.path.join(HERE, "..", "assets", "wheeled.urdf")
+GEOMETRY_URDF = os.path.join(HERE, "..", "assets", "geometries.urdf")
 DBL_MAX = np.finfo(np.float64).max
 
 VISUAL_URDF = """<?xml version="1.0"?>
@@ -65,6 +66,87 @@ class TestUrdf(unittest.TestCase):
         self.assertTrue(np.allclose(sphere.mesh_color, [1.0, 0.0, 0.0, 0.5]))
         self.assertEqual(cylinder.shape, "cylinder")
         self.assertEqual(cylinder.parent_joint, model.get_joint_id("hinge"))
+
+
+class TestGeometries(unittest.TestCase):
+    """Test the parsing of visual and collision geometries."""
+
+    def setUp(self):
+        """Load the model of the geometry test asset."""
+        self.model = kin.build_model_from_urdf(GEOMETRY_URDF)
+
+    def test_collisions_parser(self):
+        """URDF collisions are parsed separately from visuals."""
+        collision = kin.build_geom_from_urdf(
+            self.model,
+            GEOMETRY_URDF,
+            geometry_type=kin.GeometryType.COLLISION,
+        )
+        self.assertEqual(
+            [obj.name for obj in collision.geometry_objects],
+            ["base_0", "base_1", "arm_0", "tool_0"],
+        )
+        self.assertEqual(
+            [obj.shape for obj in collision.geometry_objects],
+            ["box", "cylinder", "sphere", "box"],
+        )
+        base_box, base_cylinder, arm_sphere, _ = collision.geometry_objects
+        self.assertTrue(np.allclose(base_box.size, [0.3, 0.2, 0.2]))
+        self.assertTrue(np.allclose(base_cylinder.size, [0.05, 0.4]))
+        self.assertTrue(np.allclose(arm_sphere.size, [0.03]))
+        self.assertTrue(
+            np.allclose(arm_sphere.placement.translation, [0.0, 0.0, 0.4])
+        )
+
+    def test_visuals_by_default(self):
+        """Visuals are parsed when no geometry type is given."""
+        default = kin.build_geom_from_urdf(self.model, GEOMETRY_URDF)
+        visual = kin.build_geom_from_urdf(
+            self.model, GEOMETRY_URDF, geometry_type=kin.GeometryType.VISUAL
+        )
+        self.assertEqual(
+            [obj.name for obj in default.geometry_objects],
+            [obj.name for obj in visual.geometry_objects],
+        )
+
+    def test_parent_frames(self):
+        """Geometries are attached to the BODY frame of their link."""
+        for geometry_type in kin.GeometryType:
+            geometry = kin.build_geom_from_urdf(
+                self.model, GEOMETRY_URDF, geometry_type=geometry_type
+            )
+            for obj in geometry.geometry_objects:
+                with self.subTest(geometry=obj.name, type=geometry_type.name):
+                    frame = self.model.frames[obj.parent_frame]
+                    self.assertEqual(frame.type, kin.FrameType.BODY)
+                    self.assertTrue(obj.name.startswith(frame.name + "_"))
+                    self.assertEqual(obj.parent_joint, frame.parent_joint)
+
+    def test_frame_inertias(self):
+        """Root BODY and FIXED_JOINT frames keep the inertia of their link."""
+        masses = {
+            frame.name: frame.inertia.mass
+            for frame in self.model.frames
+            if frame.inertia.mass > 0.0
+        }
+        self.assertEqual(
+            masses, {"base": 2.0, "tool_mount": 0.1, "sensor_mount": 0.001}
+        )
+        tool_mount = self.model.frames[self.model.get_frame_id("tool_mount")]
+        self.assertTrue(np.allclose(tool_mount.inertia.lever, [0.01, 0, 0]))
+        self.assertTrue(
+            np.allclose(
+                tool_mount.inertia.inertia, np.diag([1e-4, 2e-4, 3e-4])
+            )
+        )
+
+    def test_no_root_frame_inertia_with_root_joint(self):
+        """The root link inertia goes to the root joint, not its frame."""
+        model = kin.build_model_from_urdf(
+            GEOMETRY_URDF, kin.JointModelFreeFlyer()
+        )
+        base = model.frames[model.get_frame_id("base")]
+        self.assertEqual(base.inertia.mass, 0.0)
 
 
 class TestWheeledModel(unittest.TestCase):

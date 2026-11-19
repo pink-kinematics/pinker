@@ -1,0 +1,33 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Visual, collision and dual-purpose geoms on movable and fixed bodies -->
+<mujoco model="geometries">
+  <default>
+    <default class="visual">
+      <geom contype="0" conaffinity="0" group="2"/>
+    </default>
+    <default class="collision">
+      <geom group="3"/>
+    </default>
+  </default>
+  <worldbody>
+    <body name="base">
+      <inertial pos="0 0 0.1" mass="2" diaginertia="0.1 0.2 0.3"/>
+      <geom type="box" size="0.1 0.2 0.3" class="collision"/>
+      <geom type="box" size="0.1 0.2 0.3" pos="0 0 0.1" class="visual"/>
+      <geom type="sphere" size="0.05" pos="0.1 0 0"/>
+      <body name="arm" pos="0 0 0.3" euler="0 0 0.5">
+        <joint name="shoulder" axis="0 1 0"/>
+        <inertial pos="0 0 0.2" mass="1" diaginertia="0.01 0.01 0.001"/>
+        <geom type="cylinder" size="0.02 0.2" pos="0 0 0.2" class="visual"/>
+        <geom type="cylinder" fromto="0 0 0 0 0 0.4" size="0.03"
+          class="collision"/>
+        <body name="tool" pos="0 0 0.4" euler="0.3 0 0">
+          <inertial pos="0.01 0 0" mass="0.1" diaginertia="1e-4 2e-4 3e-4"/>
+          <geom type="box" size="0.02 0.01 0.01" pos="0.02 0 0"
+            class="collision"/>
+          <geom type="sphere" size="0.02"/>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>
