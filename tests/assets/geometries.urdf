@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- Visual and collision primitives on movable and fixed joints, with links
+     declared out of the depth-first order of the kinematic tree -->
+<robot name="geometries">
+  <material name="shared">
+    <color rgba="0.1 0.2 0.3 1.0"/>
+  </material>
+  <link name="base">
+    <inertial>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <mass value="2.0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.02" iyz="0" izz="0.03"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.1 0 0.2" rpy="0 0.5 0"/>
+      <geometry><box size="0.3 0.2 0.1"/></geometry>
+      <material name="shared"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.1" rpy="0.1 0 0"/>
+      <geometry><box size="0.3 0.2 0.2"/></geometry>
+    </collision>
+    <collision>
+      <origin xyz="0 0.1 0" rpy="1.5707963267948966 0 0"/>
+      <geometry><cylinder radius="0.05" length="0.4"/></geometry>
+    </collision>
+  </link>
+  <link name="tool">
+    <inertial>
+      <origin xyz="0.01 0 0" rpy="0 0 0"/>
+      <mass value="0.1"/>
+      <inertia ixx="1e-4" ixy="0" ixz="0" iyy="2e-4" iyz="0" izz="3e-4"/>
+    </inertial>
+    <visual>
+      <geometry><sphere radius="0.02"/></geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.02 0 0" rpy="0 0 0.3"/>
+      <geometry><box size="0.04 0.02 0.02"/></geometry>
+    </collision>
+  </link>
+  <link name="arm">
+    <inertial>
+      <origin xyz="0 0 0.2" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.0005"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0.2" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.02" length="0.4"/></geometry>
+      <material name="inline"><color rgba="1 0 0 0.5"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.4" rpy="0 0 0"/>
+      <geometry><sphere radius="0.03"/></geometry>
+    </collision>
+  </link>
+  <link name="sensor">
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="hinge" type="revolute">
+    <parent link="base"/>
+    <child link="arm"/>
+    <origin xyz="0 0 0.25" rpy="0 0 0.2"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1" upper="1" effort="1" velocity="1"/>
+  </joint>
+  <joint name="tool_mount" type="fixed">
+    <parent link="arm"/>
+    <child link="tool"/>
+    <origin xyz="0 0 0.45" rpy="0.3 0 0"/>
+  </joint>
+  <joint name="sensor_mount" type="fixed">
+    <parent link="base"/>
+    <child link="sensor"/>
+    <origin xyz="0 -0.1 0.1" rpy="3.141592653589793 0 0"/>
+  </joint>
+</robot>

@@ -11,6 +11,10 @@ import numpy as np
 from pinker import kinematics as kin
 from pinker.kinematics.geometry import DEFAULT_COLOR
 
+GEOMETRY_MJCF = os.path.join(
+    os.path.dirname(__file__), "..", "assets", "geometries.xml"
+)
+
 TEST_MJCF = """
 <mujoco model="mjcf_test">
   <compiler angle="degree" meshdir="assets"/>
@@ -398,6 +402,78 @@ class TestMjcf(unittest.TestCase):
             )
         )
         self.assertEqual(without_mesh.ngeoms, 3)  # missing mesh file skipped
+
+
+class TestGeometries(unittest.TestCase):
+    """Test the parsing of visual and collision geoms."""
+
+    def setUp(self):
+        """Load the model of the geometry test asset."""
+        self.model = kin.build_model_from_mjcf(GEOMETRY_MJCF)
+
+    def test_visual_and_collision_geoms(self):
+        """Geoms go to the visual model, the collision model, or both.
+
+        Unnamed geoms are indexed among geoms of the same kind in their body,
+        so that the visual box of the base is "base_0" even though it comes
+        after a collision box.
+        """
+        visual = kin.build_geom_from_mjcf(
+            self.model, GEOMETRY_MJCF, kin.GeometryType.VISUAL
+        )
+        collision = kin.build_geom_from_mjcf(
+            self.model, GEOMETRY_MJCF, kin.GeometryType.COLLISION
+        )
+        self.assertEqual(
+            [(obj.name, obj.shape) for obj in visual.geometry_objects],
+            [
+                ("base_0", "box"),
+                ("base_1", "sphere"),
+                ("arm_0", "cylinder"),
+                ("tool_0", "sphere"),
+            ],
+        )
+        self.assertEqual(
+            [(obj.name, obj.shape) for obj in collision.geometry_objects],
+            [
+                ("base_0", "box"),
+                ("base_1", "sphere"),
+                ("arm_0", "cylinder"),
+                ("tool_0", "box"),
+                ("tool_1", "sphere"),
+            ],
+        )
+        self.assertTrue(
+            np.allclose(
+                visual.geometry_objects[0].placement.translation, [0, 0, 0.1]
+            )
+        )
+        self.assertTrue(
+            np.allclose(
+                collision.geometry_objects[0].placement.translation, [0, 0, 0]
+            )
+        )
+
+    def test_parent_frames(self):
+        """Geoms are attached to the BODY frame of their body."""
+        for geometry_type in kin.GeometryType:
+            geometry = kin.build_geom_from_mjcf(
+                self.model, GEOMETRY_MJCF, geometry_type
+            )
+            for obj in geometry.geometry_objects:
+                with self.subTest(geometry=obj.name, type=geometry_type.name):
+                    frame = self.model.frames[obj.parent_frame]
+                    self.assertEqual(frame.type, kin.FrameType.BODY)
+                    self.assertTrue(obj.name.startswith(frame.name + "_"))
+
+    def test_frame_inertias(self):
+        """Root BODY and FIXED_JOINT frames keep the inertia of their body."""
+        masses = {
+            frame.name: frame.inertia.mass
+            for frame in self.model.frames
+            if frame.inertia.mass > 0.0
+        }
+        self.assertEqual(masses, {"base": 2.0, "tool_fixed": 0.1})
 
 
 if __name__ == "__main__":
