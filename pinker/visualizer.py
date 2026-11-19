@@ -5,12 +5,12 @@
 from __future__ import annotations
 
 import time
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional, Sequence
 
 import numpy as np
 
 from . import kinematics as kin
-from .kinematics import GeometryModel, GeometryObject
+from .kinematics import GeometryModel, GeometryObject, GeometryType
 from .kinematics.model import Data, Model
 from .kinematics.so3 import quaternion_wxyz
 
@@ -19,7 +19,7 @@ if TYPE_CHECKING:  # viser is imported lazily, when starting the viewer
 
 
 class ViserVisualizer:
-    """A robot visualizer using Viser, like Pinocchio's.
+    """Robot visualizer using Viser.
 
     The viewer and the scene nodes are created when the visualizer starts:
     :func:`init_viewer` connects to a Viser server, then
@@ -27,6 +27,10 @@ class ViserVisualizer:
     scene.
 
     Attributes:
+        collision_model: Geometry model with the robot's collision shapes.
+        collision_root_frame: Scene node the collision shapes of the model
+            hang from.
+        collision_root_node_name: Name of that scene node.
         data: Data where the visualizer runs its forward kinematics.
         frames: Scene nodes of the robot's visuals and frames, by node name.
         frames_root_frame: Scene node the frames of the model hang from.
@@ -40,6 +44,9 @@ class ViserVisualizer:
         visual_root_node_name: Name of that scene node.
     """
 
+    collision_model: Optional[GeometryModel]
+    collision_root_frame: viser.FrameHandle
+    collision_root_node_name: str
     data: Data
     frames: Dict[str, viser.SceneNodeHandle]
     frames_root_frame: viser.FrameHandle
@@ -55,15 +62,18 @@ class ViserVisualizer:
         self,
         model: Model,
         visual_model: Optional[GeometryModel] = None,
+        collision_model: Optional[GeometryModel] = None,
     ):
         """Initialize visualizer from a model and its geometry models.
 
         Args:
             model: Robot model to visualize.
             visual_model: Geometry model with the robot's visuals.
+            collision_model: Geometry model with the robot's collision shapes.
         """
         self.model = model
         self.visual_model = visual_model
+        self.collision_model = collision_model
         self.data: Data = model.create_data()
         self.viewer = None
         self.frames = {}
@@ -125,15 +135,26 @@ class ViserVisualizer:
         rootNodeName: str = "robot",
         frame_axis_length: float = 0.2,
         frame_axis_radius: float = 0.01,
+        collision_color: Optional[Sequence[float]] = None,
     ) -> None:
-        """Load the visual model in the viewer.
+        """Load the visual and collision models in the viewer.
+
+        Visuals are displayed after loading, collision shapes and frames are
+        hidden. Call :func:`display_collisions` and :func:`display_frames` to
+        show them.
 
         Args:
             rootNodeName: Name of the root node of the robot in the scene.
             frame_axis_length: Length of frame axes in [m].
             frame_axis_radius: Radius of frame axes in [m].
+            collision_color: RGBA color applied to all collision shapes. If
+                None, each shape keeps its own color.
         """
         self.viewer_root_node_name = rootNodeName
+        self.collision_root_node_name = rootNodeName + "/collision"
+        self.collision_root_frame = self._scene.add_frame(
+            self.collision_root_node_name, show_axes=False
+        )
         self.visual_root_node_name = rootNodeName + "/visual"
         self.visual_root_frame = self._scene.add_frame(
             self.visual_root_node_name, show_axes=False
@@ -142,9 +163,17 @@ class ViserVisualizer:
         self.frames_root_frame = self._scene.add_frame(
             self.frames_root_node_name, show_axes=False
         )
+        if self.collision_model is not None:
+            for collision in self.collision_model.geometry_objects:
+                self.load_viewer_geometry_object(
+                    collision, self.collision_root_node_name, collision_color
+                )
+        self.display_collisions(False)
         if self.visual_model is not None:
             for visual in self.visual_model.geometry_objects:
-                self._load_geometry_object(visual, self.visual_root_node_name)
+                self.load_viewer_geometry_object(
+                    visual, self.visual_root_node_name
+                )
         self.display_visuals(True)
         for frame in self.model.frames:
             frame_name = self.frames_root_node_name + "/" + frame.name
@@ -156,14 +185,23 @@ class ViserVisualizer:
             )
         self.display_frames(False)
 
-    def _load_geometry_object(
-        self, geometry_object: GeometryObject, prefix: str
+    def load_viewer_geometry_object(
+        self,
+        geometry_object: GeometryObject,
+        prefix: str,
+        color: Optional[Sequence[float]] = None,
     ) -> None:
         """Add one geometry object to the Viser scene.
+
+        Subclasses can override this function to customize how geometries
+        are displayed, for instance by changing the arguments passed to the
+        scene.
 
         Args:
             geometry_object: Geometry object to add.
             prefix: Name of the parent node in the scene.
+            color: RGBA color of the shape. If None, the color of the
+                geometry object is used.
 
         Raises:
             ValueError: If the shape of the geometry object is not supported.
@@ -171,7 +209,11 @@ class ViserVisualizer:
         import trimesh
 
         name = prefix + "/" + geometry_object.name
-        color = geometry_object.mesh_color
+        color = (
+            geometry_object.mesh_color
+            if color is None
+            else np.asarray(color, dtype=np.float64)
+        )
         if geometry_object.shape == "box":
             handle = self._scene.add_box(
                 name,
@@ -229,10 +271,21 @@ class ViserVisualizer:
         """
         if q is not None:
             kin.forward_kinematics(self.model, self.data, q)
+        if self.collision_root_frame.visible:
+            self.update_placements(GeometryType.COLLISION)
         if self.visual_root_frame.visible:
-            self.update_placements()
+            self.update_placements(GeometryType.VISUAL)
         if self.frames_root_frame.visible:
             self.update_frames()
+
+    def display_collisions(self, visibility: bool) -> None:
+        """Toggle display of the collision model.
+
+        Args:
+            visibility: If true, display the collision model.
+        """
+        self.collision_root_frame.visible = visibility
+        self.update_placements(GeometryType.COLLISION)
 
     def display_visuals(self, visibility: bool) -> None:
         """Toggle display of the visual model.
@@ -241,7 +294,7 @@ class ViserVisualizer:
             visibility: If true, display the visual model.
         """
         self.visual_root_frame.visible = visibility
-        self.update_placements()
+        self.update_placements(GeometryType.VISUAL)
 
     def display_frames(self, visibility: bool) -> None:
         """Toggle display of the model frames.
@@ -253,16 +306,26 @@ class ViserVisualizer:
         if visibility:
             self.update_frames()
 
-    def update_placements(self) -> None:
-        """Update visual geometry placements in the viewer."""
-        if self.visual_model is None:
+    def update_placements(
+        self, geometry_type: GeometryType = GeometryType.VISUAL
+    ) -> None:
+        """Update geometry placements in the viewer.
+
+        Args:
+            geometry_type: Kind of geometries to update, visuals by default.
+        """
+        if geometry_type == GeometryType.VISUAL:
+            geometry_model = self.visual_model
+            prefix = self.visual_root_node_name
+        else:
+            geometry_model = self.collision_model
+            prefix = self.collision_root_node_name
+        if geometry_model is None:
             return
-        for geometry_object in self.visual_model.geometry_objects:
+        for geometry_object in geometry_model.geometry_objects:
             oMi = self.data.oMi[geometry_object.parent_joint]
             oMg = oMi * geometry_object.placement
-            handle = self.frames[
-                self.visual_root_node_name + "/" + geometry_object.name
-            ]
+            handle = self.frames[prefix + "/" + geometry_object.name]
             handle.position = oMg.translation
             handle.wxyz = quaternion_wxyz(oMg.rotation)
 
@@ -289,7 +352,11 @@ def start_viser_visualizer(
     Returns:
         Viser visualizer.
     """
-    visualizer = ViserVisualizer(robot.model, visual_model=robot.visual_model)
+    visualizer = ViserVisualizer(
+        robot.model,
+        visual_model=robot.visual_model,
+        collision_model=robot.collision_model,
+    )
     visualizer.init_viewer(open=open)
     visualizer.load_viewer_model()
     return visualizer
