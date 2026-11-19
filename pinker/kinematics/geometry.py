@@ -1,11 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
-"""Visual geometry attached to a robot model.
+"""Visual and collision geometries attached to a robot model.
 
 Each geometry object carries a primitive shape (box, sphere, cylinder) or a
 mesh file path, together with its placement in the frame of its parent joint.
 """
 
+from enum import IntEnum
 from typing import List, Optional
 
 import numpy as np
@@ -13,6 +14,13 @@ import numpy as np
 from .se3 import SE3
 
 DEFAULT_COLOR = np.array([0.7, 0.7, 0.7, 1.0])
+
+
+class GeometryType(IntEnum):
+    """Kinds of geometries, with the same values as in Pinocchio."""
+
+    VISUAL = 0
+    COLLISION = 1
 
 
 class GeometryObject:

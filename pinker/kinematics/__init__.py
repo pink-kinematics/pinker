@@ -46,7 +46,7 @@ from .algorithms import (
     neutral,
     update_frame_placements,
 )
-from .geometry import GeometryModel, GeometryObject
+from .geometry import GeometryModel, GeometryObject, GeometryType
 from .joints import (
     JointModel,
     JointModelFreeFlyer,
@@ -92,6 +92,7 @@ __all__ = [
     "FrameType",
     "GeometryModel",
     "GeometryObject",
+    "GeometryType",
     "Inertia",
     "Jlog6",
     "Jlog_se2",

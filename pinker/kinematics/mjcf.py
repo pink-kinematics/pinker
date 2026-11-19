@@ -47,7 +47,7 @@ from .so3 import (
 )
 
 if TYPE_CHECKING:
-    from .geometry import GeometryModel
+    from .geometry import GeometryModel, GeometryType
 
 ORIENTATION_KEYS = ("quat", "axisangle", "euler", "xyaxes", "zaxis")
 """Attributes that specify an orientation, at most one per element."""
