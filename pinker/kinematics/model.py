@@ -43,6 +43,8 @@ class Frame:
         parent_frame: Index of the previous frame in the tree.
         placement: Pose of the frame in the support joint frame.
         type: Frame type.
+        inertia: Inertia of the body the frame was created for, before it
+            was merged into its support joint, expressed in the frame.
     """
 
     def __init__(
@@ -52,6 +54,7 @@ class Frame:
         parent_frame: int,
         placement: SE3,
         type: FrameType,
+        inertia: Optional[Inertia] = None,
     ):
         """Initialize frame.
 
@@ -61,12 +64,15 @@ class Frame:
             parent_frame: Index of the previous frame in the tree.
             placement: Pose of the frame in the support joint frame.
             type: Frame type.
+            inertia: Inertia of the body the frame was created for, defaults
+                to zero.
         """
         self.name = name
         self.parent_joint = parent_joint
         self.parent_frame = parent_frame
         self.placement = placement
         self.type = type
+        self.inertia = Inertia.Zero() if inertia is None else inertia
 
     def __repr__(self) -> str:
         """String representation.

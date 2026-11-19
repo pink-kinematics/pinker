@@ -96,6 +96,8 @@ class GeometryObject:
 class GeometryModel:
     """Collection of geometry objects attached to a robot model."""
 
+    geometry_objects: List[GeometryObject]
+
     def __init__(self):
         """Initialize an empty geometry model."""
         self.geometry_objects: List[GeometryObject] = []
