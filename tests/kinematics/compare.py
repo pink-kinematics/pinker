@@ -19,6 +19,16 @@ REFERENCE_FRAMES = (
 )
 
 
+def assert_inertias_equal(
+    pin_inertia: pin.Inertia, kin_inertia: kin.Inertia
+) -> None:
+    """Check that a pinker.kinematics inertia matches a Pinocchio inertia."""
+    assert np.isclose(pin_inertia.mass, kin_inertia.mass)
+    if pin_inertia.mass > 0.0:
+        assert np.allclose(pin_inertia.lever, kin_inertia.lever, atol=TOL)
+        assert np.allclose(pin_inertia.inertia, kin_inertia.inertia, atol=TOL)
+
+
 def assert_models_equal(pin_model: pin.Model, kin_model: kin.Model) -> None:
     """Check that a pinker.kinematics model matches a Pinocchio model."""
     assert (
@@ -60,6 +70,7 @@ def assert_models_equal(pin_model: pin.Model, kin_model: kin.Model) -> None:
         assert np.allclose(
             fp.placement.homogeneous, fm.placement.homogeneous, atol=TOL
         )
+        assert_inertias_equal(fp.inertia, fm.inertia)
     assert np.allclose(
         pin_model.lowerPositionLimit, kin_model.lower_position_limit
     )
