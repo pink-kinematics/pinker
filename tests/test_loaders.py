@@ -32,11 +32,12 @@ class TestLoadRobotUrdf(unittest.TestCase):
     """Test that robots load from URDF files."""
 
     def test_urdf_file(self):
-        """A URDF file is loaded with its visuals."""
+        """A URDF file is loaded with its visuals and collision shapes."""
         robot = load_robot_urdf(URDF_PATH)
         self.assertEqual(robot.nq, 2)
         self.assertEqual(robot.nv, 2)
         self.assertIsNotNone(robot.visual_model)
+        self.assertIsNotNone(robot.collision_model)
 
     def test_configuration_from_robot(self):
         """The loaded robot has what a configuration is built from."""
@@ -66,11 +67,12 @@ class TestLoadRobotMjcf(unittest.TestCase):
     """Test that robots load from MJCF files."""
 
     def test_mjcf_file(self):
-        """An MJCF file is loaded with its visuals and sites."""
+        """An MJCF file is loaded with its geometries and sites."""
         robot = load_robot_mjcf(MJCF_PATH)
         self.assertEqual(robot.nq, 2)
         self.assertEqual(robot.nv, 2)
         self.assertEqual(robot.visual_model.ngeoms, 3)
+        self.assertIsNotNone(robot.collision_model)
         self.assertTrue(robot.model.exist_frame("tip"))
 
     def test_same_model_as_urdf(self):
