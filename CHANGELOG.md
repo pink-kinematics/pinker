@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- kinematics: Collision geometries are now read by the MJCF parser
+- kinematics: Collision geometries are now read by the URDF parser
+- kinematics: `Frame.inertia` of the body a frame was created for
+- kinematics: `GeometryType` to choose between visual and collision geometries
+- kinematics: `RobotWrapper.collision_model` read from URDF and MJCF files
+- visualizer: `ViserVisualizer.display_collisions` to show collision shapes
+- visualizer: `collision_color` argument to `ViserVisualizer.load_viewer_model`
+
+### Changed
+
+- kinematics: List URDF geometries in the depth-first order of the kinematic tree
+- kinematics: Unnamed MJCF geoms are indexed among geoms of the same kind in their body
+
 ## [1.2.0] - 2026-11-05
 
 ### Added
