@@ -376,7 +376,7 @@ class TestMjcf(unittest.TestCase):
             without_mesh = kin.build_geom_from_mjcf(model, mjcf_path)
         self.assertEqual(
             [obj.name for obj in geometry.geometry_objects],
-            ["base_0", "upper_arm_0", "tool_0", "tool_1"],  # base_1 collides
+            ["baseGeom_0", "upper_armGeom_0", "toolGeom_0", "toolGeom_1"],
         )
         box, mesh, cylinder, fromto = geometry.geometry_objects
         self.assertEqual(box.shape, "box")
@@ -412,12 +412,7 @@ class TestGeometries(unittest.TestCase):
         self.model = kin.build_model_from_mjcf(GEOMETRY_MJCF)
 
     def test_visual_and_collision_geoms(self):
-        """Geoms go to the visual model, the collision model, or both.
-
-        Unnamed geoms are indexed among geoms of the same kind in their body,
-        so that the visual box of the base is "base_0" even though it comes
-        after a collision box.
-        """
+        """Geoms go to the visual model, the collision model, or both."""
         visual = kin.build_geom_from_mjcf(
             self.model, GEOMETRY_MJCF, kin.GeometryType.VISUAL
         )
@@ -427,20 +422,20 @@ class TestGeometries(unittest.TestCase):
         self.assertEqual(
             [(obj.name, obj.shape) for obj in visual.geometry_objects],
             [
-                ("base_0", "box"),
-                ("base_1", "sphere"),
-                ("arm_0", "cylinder"),
-                ("tool_0", "sphere"),
+                ("baseGeom_1", "box"),
+                ("baseGeom_2", "sphere"),
+                ("armGeom_0", "cylinder"),
+                ("toolGeom_1", "sphere"),
             ],
         )
         self.assertEqual(
             [(obj.name, obj.shape) for obj in collision.geometry_objects],
             [
-                ("base_0", "box"),
-                ("base_1", "sphere"),
-                ("arm_0", "cylinder"),
-                ("tool_0", "box"),
-                ("tool_1", "sphere"),
+                ("baseGeom_0", "box"),
+                ("baseGeom_2", "sphere"),
+                ("armGeom_1", "cylinder"),
+                ("toolGeom_0", "box"),
+                ("toolGeom_1", "sphere"),
             ],
         )
         self.assertTrue(
@@ -464,7 +459,7 @@ class TestGeometries(unittest.TestCase):
                 with self.subTest(geometry=obj.name, type=geometry_type.name):
                     frame = self.model.frames[obj.parent_frame]
                     self.assertEqual(frame.type, kin.FrameType.BODY)
-                    self.assertTrue(obj.name.startswith(frame.name + "_"))
+                    self.assertTrue(obj.name.startswith(frame.name + "Geom_"))
 
     def test_frame_inertias(self):
         """Root BODY and FIXED_JOINT frames keep the inertia of their body."""

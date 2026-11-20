@@ -675,13 +675,11 @@ def build_geom_from_mjcf(
 
     geometry_model = GeometryModel()
     for body, body_name, childclass, (frame_id, frame) in elements:
-        index = -1
-        for geom in body.findall("geom"):
+        for index, geom in enumerate(body.findall("geom")):
             attributes = mjcf.attributes(geom, childclass)
             if excluded(attributes):
                 continue
-            index += 1
-            name = attributes.get("name", f"{body_name}_{index}")
+            name = attributes.get("name", f"{body_name}Geom_{index}")
             shape = attributes.get("type", "sphere")
             size = _floats(attributes.get("size", "0 0 0"))
             if "fromto" in attributes and shape == "cylinder":
