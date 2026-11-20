@@ -209,7 +209,7 @@ class ViserVisualizer:
         import trimesh
 
         name = prefix + "/" + geometry_object.name
-        color = (
+        rgba = (
             geometry_object.mesh_color
             if color is None
             else np.asarray(color, dtype=np.float64)
@@ -218,15 +218,15 @@ class ViserVisualizer:
             handle = self._scene.add_box(
                 name,
                 dimensions=geometry_object.size,
-                color=color[:3],
-                opacity=color[3],
+                color=rgba[:3],
+                opacity=rgba[3],
             )
         elif geometry_object.shape == "sphere":
             handle = self._scene.add_icosphere(
                 name,
                 radius=geometry_object.size[0],
-                color=color[:3],
-                opacity=color[3],
+                color=rgba[:3],
+                opacity=rgba[3],
             )
         elif geometry_object.shape == "cylinder":
             mesh = trimesh.creation.cylinder(
@@ -237,8 +237,8 @@ class ViserVisualizer:
                 name,
                 mesh.vertices,
                 mesh.faces,
-                color=color[:3],
-                opacity=color[3],
+                color=rgba[:3],
+                opacity=rgba[3],
             )
         elif geometry_object.shape == "mesh":
             path = geometry_object.mesh_path
@@ -253,8 +253,8 @@ class ViserVisualizer:
                     name,
                     mesh.vertices,
                     mesh.faces,
-                    color=color[:3],
-                    opacity=color[3],
+                    color=rgba[:3],
+                    opacity=rgba[3],
                 )
         else:  # pragma: no cover
             raise ValueError(
