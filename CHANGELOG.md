@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - kinematics: List URDF geometries in the depth-first order of the kinematic tree
-- kinematics: Unnamed MJCF geoms are indexed among geoms of the same kind in their body
+- kinematics: Unnamed MJCF geoms are named `<body>Geom_<index>`
 
 ## [1.2.0] - 2026-11-05
 
