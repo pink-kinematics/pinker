@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-11-22
+
+### Fixed
+
+- dist: Include all unit tests and their assets in the source distribution
+
 ## [1.3.0] - 2026-11-20
 
 ### Added
@@ -98,7 +104,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog as of Pink 4.4.0.
 
-[unreleased]: https://github.com/pink-kinematics/pinker/compare/v1.3.0...HEAD
+[unreleased]: https://github.com/pink-kinematics/pinker/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/pink-kinematics/pinker/releases/tag/v1.3.1
 [1.3.0]: https://github.com/pink-kinematics/pinker/releases/tag/v1.3.0
 [1.2.0]: https://github.com/pink-kinematics/pinker/releases/tag/v1.2.0
 [1.1.0]: https://github.com/pink-kinematics/pinker/releases/tag/v1.1.0
